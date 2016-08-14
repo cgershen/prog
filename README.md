@@ -5,11 +5,14 @@
 [Dr. Carlos Gershenson-García](http://turing.iimas.unam.mx/~cgg/) 
 
 ---
+
 ## Objetivo General
 Se abordaran los conceptos y técnicas avanzadas de programación, centrando la atención en el paradigma de
 programación orientada a objetos, concurrencia y el modelo cliente-servidor. Los conceptos se implementarán con el
 lenguaje de modelado unificado UML.
+
 ---
+
 ## Contenido del curso
 [Temario](https://github.com/cgershen/prog/blob/master/temario.pdf) 
 
