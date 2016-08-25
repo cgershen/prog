@@ -32,3 +32,6 @@ siguiente =''
 while (siguiente != 'n'):
 	print next(generador)
 	siguiente = raw_input("¿Deseas obtener otro elemento? [S/n]")
+
+
+Referencia: http://stackoverflow.com/questions/3953749/python-fibonacci-generator
