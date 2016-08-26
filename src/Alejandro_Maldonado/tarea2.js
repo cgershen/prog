@@ -27,3 +27,21 @@ console.log(gen.next().value); // 2
 
 
 //referencia https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators
+
+function TryCatch(x) {
+    try { 
+        if(x == "") throw "is empty";
+        if(isNaN(x)) throw "is not a number";
+        x = Number(x);
+        if(x > 10) throw "is too high";
+        if(x < 5) throw "is too low";
+    }
+    catch(err) {
+        console.log("Error: " + err + ".");
+    }
+}
+TryCatch();
+TryCatch("a");
+TryCatch(2);
+TryCatch(7);
+TryCatch(9);
