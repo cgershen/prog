@@ -11,5 +11,11 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.unam.alex.pumaride.MapActivity"
     tools:showIn="@layout/app_bar_map">
+    
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/mapFragment"/>
 
 </RelativeLayout>
