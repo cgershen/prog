@@ -48,7 +48,17 @@ end         (tuple)     Coordinates
 
 @return Array of points
 """
-def getShortestPath(builder, director, start, end):
+def getShortestPath(layer, start, end):
+
+    # Prepare for conversion 
+    # TODO fix road directions
+    director = QgsLineVectorLayerDirector(layer, -1, '', '', '', 3)
+    properter = QgsDistanceArcProperter()
+    director.addProperter(properter)
+
+    # TODO set proper reference system
+    crs = QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.PostgisCrsId)
+    builder = QgsGraphBuilder(crs)
 
     startPoint = QgsPoint(start[0], start[1])
     endPoint = QgsPoint(end[0], end[1])
@@ -142,16 +152,6 @@ if __name__ == '__main__':
         print "error loading geojson: invalid"
         sys.exit(1)
 
-    # Prepare for conversion 
-    # TODO fix road directions
-    director = QgsLineVectorLayerDirector(layer, -1, '', '', '', 3)
-    properter = QgsDistanceArcProperter()
-    director.addProperter(properter)
-
-    # TODO set proper reference system
-    crs = QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.PostgisCrsId)
-    builder = QgsGraphBuilder(crs)
-
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('127.0.0.1', 8011))
     sock.listen(10)
@@ -172,7 +172,7 @@ if __name__ == '__main__':
             pointA = (float(parts[0]), float(parts[1]))
             pointB = (float(parts[2]), float(parts[3]))
 
-            path = getShortestPath(builder, director, pointA, pointB)
+            path = getShortestPath(layer, pointA, pointB)
             replyWith(client, path)
 
             print "Handled request for %s" % message
