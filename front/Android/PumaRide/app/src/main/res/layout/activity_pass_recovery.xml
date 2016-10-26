@@ -49,7 +49,7 @@
             <Button
                 android:layout_margin="8dp"
                 android:fontFamily="sans-serif-light"
-                android:id="@+id/act_login_btn_register"
+                android:id="@+id/activity_pass_recovery_cancel"
                 android:layout_width="0dp"
                 android:layout_weight="0.4"
                 android:background="@android:color/transparent"

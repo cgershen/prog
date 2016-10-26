@@ -78,9 +78,10 @@
             android:orientation="horizontal"
             android:weightSum="1">
             <Button
+
                 android:layout_margin="8dp"
                 android:fontFamily="sans-serif-light"
-                android:id="@+id/act_login_btn_register"
+                android:id="@+id/activity_register_btn_cancel"
                 android:layout_width="0dp"
                 android:layout_weight="0.4"
                 android:background="@android:color/transparent"
@@ -93,7 +94,7 @@
                 />
             <Button
                 android:fontFamily="sans-serif-light"
-                android:id="@+id/act_login_btn_recovery_password"
+                android:id="@+id/activity_register_btn_recovery"
                 android:layout_width="0dp"
                 android:layout_weight="0.6"
                 android:textColor="@android:color/white"

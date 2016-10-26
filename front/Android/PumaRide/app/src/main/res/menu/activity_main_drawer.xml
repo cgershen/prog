@@ -20,22 +20,19 @@
             android:icon="@drawable/ic_build_black_24dp"
             android:title="Setting" />
 
-        <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/ic_error_outline_black_24dp"
-            android:title="About" />
+
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_chat"
+                android:icon="@drawable/ic_message_black_24dp"
+                android:title="Chat" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_error_outline_black_24dp"
+                android:title="About" />
         </menu>
     </item>
 

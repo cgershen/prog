@@ -13,9 +13,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity {
-    @BindView(R.id.activity_login_login)
+    @BindView(R.id.activity_login_btn_login)
     LinearLayout login;
-
+    @BindView(R.id.activity_login_recovery)
+    Button recovery;
+    @BindView(R.id.activity_login_register)
+    Button register;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,15 +26,17 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
     }
+    @OnClick(R.id.activity_login_register)
     public void register(View v){
         Intent i  = new Intent(this,RegisterActivity.class);
         startActivity(i);
     }
-    public void password(View v){
+    @OnClick(R.id.activity_login_recovery)
+    public void recovery(View v){
         Intent i  = new Intent(this,PassRecoveryActivity.class);
         startActivity(i);
     }
-    @OnClick(R.id.activity_login_login)
+    @OnClick(R.id.activity_login_btn_login)
     public void login(View view) {
         Intent i  = new Intent(this,MainActivity.class);
         startActivity(i);
