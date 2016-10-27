@@ -29,4 +29,10 @@ public class RegisterActivity extends AppCompatActivity {
     public void cancel(View v){
         finish();
     }
+    
+    public void politicasDePrivacidad(View v)
+    {
+        Intent i = new Intent(this, PoliticasPrivacidad.class);
+        startActivity(i);
+    }
 }
