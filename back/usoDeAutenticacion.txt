@@ -1,0 +1,65 @@
+Uso de la API de sesiones de Pumaride
+
+* Registro
+ - URL: 162.243.135.137:8000/pumaride/registro/
+ - Campos de la solicitud (POST):
+    email (obligatorio)
+    password (obligatorio)
+    nombre (obligatorio)
+    apellido (obligatorio)
+ - Ejemplo de prueba:
+  $ curl -X POST -H "Content-Type: application/json" http://162.243.135.137:8000/pumaride/registro/ -d '{"email": "test@unam.mx", "password": "contraseña"}'
+
+ - Ejemplo de respuesta:
+  {"email":"test@unam.mx","last_name":"","first_name":""}
+
+  
+* Login
+ - URL: 162.243.135.137:8000/pumaride/login/
+ - Campos de solicitud (POST):
+    email (obligatorio)
+    password (obligatorio)
+
+ - Ejemplo de respuesta: 
+  {"token":"2b7ca8e8ec8c1d25e6fe4ad95c01a9a8c1eb54af"}
+
+
+* Logout
+ - URL: 162.243.135.137:8000/pumaride/logout
+ - Campos de la solicitud (Encabezado HTTP)
+  Authorization: Token -token-
+ 
+ - Ejemplo de prueba:
+  wget -S --header='Authorization: Token c295c68571432450a41521eed3b054cb2d2aa17e' http://localhost:8000/pumaride/logout/
+ - Ejemplo de respuesta exitosa:
+  {"success":"User logged out."}
+
+
+* Cambio de contraseña
+ - URL: 162.243.135.137:8000/pumaride/password/change
+ - Campos de la solicitud (Encabezado HTTP)
+  Authorization: Token -token-
+ - Campos de la solicitud (POST)
+  password
+
+* Reestablecimiento de contraseña (se envía correo al usuario)
+ - URL: http://162.243.135.137:8000/pumaride/password/reset/
+ - Campos de solicitud (POST)
+    email
+
+ - Ejemplo de prueba: 
+  curl -v -X POST -H "Content-Type: application/json" http://162.243.135.137:8000/pumaride/password/reset/ -d '{"email": "test@unam.mx"}'
+
+ - Ejemplo de respuesta:
+  {"email":"test@unam.mx"}
+
+  
+  
+  
+  ***********
+  TODO
+    
+   - Contemplar que se vuelva a enviar el mensaje de verifiación de registro.
+    - Puede ser en la parte en donde, si intenta iniciar sesión sin haber verificado el correo.
+    
+    - Nombre y apellido (obligatorio)
