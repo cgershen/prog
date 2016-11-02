@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.unam.alex.pumaride.fragments.MyMapFragment">
 
-    <fragment
+    <com.google.android.gms.maps.MapView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/mapFragment"/>
+        android:name="com.google.android.gms.maps.MapView"
+        android:id="@+id/mapFragment"
+        />
 
 </FrameLayout>
