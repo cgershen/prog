@@ -28,13 +28,13 @@
             android:gravity="center"
             style="@style/input"
             android:hint="Correo"
-            android:text="alex@hotmail.com"
+            android:text=""
             android:id="@+id/activity_login_tv_email" />
         <EditText
             android:gravity="center"
             style="@style/input"
             android:hint="Contraseña"
-            android:text="contraseña"
+            android:text=""
             android:id="@+id/activity_login_tv_password"
             android:imeOptions="actionGo"
             android:singleLine="true"

@@ -16,6 +16,7 @@ import com.unam.alex.pumaride.utils.Statics;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,9 +65,9 @@ public class RegisterActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                /*new SweetAlertDialog(activity, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText("Good job!")
-                        .setContentText("Usuario registrado \n con exito!")
+                new SweetAlertDialog(activity, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText("Registro exitoso!")
+                        .setContentText("En un momento recibirás un correo de confirmación")
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
@@ -74,12 +75,12 @@ public class RegisterActivity extends AppCompatActivity {
                                 finish();
                             }
                         })
-                        .show();*/
+                        .show();
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                /*new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Error!")
                         .setContentText("Hubo un error al registrar el usuario")
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -88,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 sDialog.dismissWithAnimation();
                             }
                         })
-                        .show();*/
+                        .show();
             }
         });
     }

@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity
         WebServices webServices = retrofit.create(WebServices.class);
 
         Call<User> call = webServices.getUserMe("token "+token);
+        Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-
+                Toast.makeText(getApplicationContext(),"ando fallando",Toast.LENGTH_SHORT).show();
             }
         });
         /*
