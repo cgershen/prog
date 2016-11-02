@@ -41,7 +41,7 @@
             android:layout_marginRight="5dp"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@drawable/ic_send_black_24px"
+            android:src="@drawable/ic_send_white_24px"
             android:id="@+id/activity_message_btn_send"
             android:layout_alignBottom="@+id/activity_message_et_message"
             android:layout_alignParentRight="true"

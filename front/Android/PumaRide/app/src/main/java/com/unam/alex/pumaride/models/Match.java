@@ -1,13 +1,16 @@
 package com.unam.alex.pumaride.models;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by alex on 25/10/16.
  */
-public class Match {
+public class Match extends RealmObject {
+    @PrimaryKey
     private int id;
     private String name;
     private String image;
-
     public int getId() {
         return id;
     }

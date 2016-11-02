@@ -2,6 +2,7 @@ package com.unam.alex.pumaride.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.unam.alex.pumaride.R;
@@ -20,7 +21,7 @@ public class MatchViewHolder extends RecyclerView.ViewHolder implements View.OnC
     public void onClick(View v) {
         if (clickListener != null) {
             // If not long clicked, pass last variable as false.
-            //clickListener.onClick(v, getPosition(), false,getId());
+            clickListener.onClick(v, getPosition(), false,getId());
         }
     }
     @Override
@@ -29,16 +30,34 @@ public class MatchViewHolder extends RecyclerView.ViewHolder implements View.OnC
         //clickListener.onClick(v, getPosition(), true,getId());
         return true;
     }
+
+    public ImageView getiImage() {
+        return iImage;
+    }
+
+    public void setiImage(ImageView iImage) {
+        this.iImage = iImage;
+    }
+
     @BindView(R.id.fragment_match_list_item_name)
     TextView tName;
-
-
+    @BindView(R.id.fragment_match_list_item_image)
+    ImageView iImage;
+    private int id;
     public MatchViewHolder(View itemView, RecyclerViewClickListener clickListener) {
         super(itemView);
         this.clickListener = clickListener;
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
         ButterKnife.bind(this, itemView);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public TextView gettName() {

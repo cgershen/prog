@@ -27,13 +27,15 @@
         <EditText
             android:gravity="center"
             style="@style/input"
-            android:hint="Usuario"
-            android:id="@+id/user" />
+            android:hint="Correo"
+            android:text="alex@hotmail.com"
+            android:id="@+id/activity_login_tv_email" />
         <EditText
             android:gravity="center"
             style="@style/input"
             android:hint="Contraseña"
-            android:id="@+id/act_login_edt_password"
+            android:text="contraseña"
+            android:id="@+id/activity_login_tv_password"
             android:imeOptions="actionGo"
             android:singleLine="true"
             android:inputType="textPassword"

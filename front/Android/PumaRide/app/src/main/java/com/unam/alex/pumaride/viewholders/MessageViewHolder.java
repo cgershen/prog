@@ -20,7 +20,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder implements View.O
     public void onClick(View v) {
         if (clickListener != null) {
             // If not long clicked, pass last variable as false.
-            //clickListener.onClick(v, getPosition(), false,getId());
+            //clickListener.onClick(v, getPosition(), false, getId());
         }
     }
     @Override
@@ -35,6 +35,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder implements View.O
     TextView tvDatetime;
     @BindView(R.id.activity_message_list_item_ll_message)
     LinearLayout llMessage;
+
     public MessageViewHolder(View itemView, RecyclerViewClickListener clickListener) {
         super(itemView);
         this.clickListener = clickListener;
@@ -42,6 +43,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder implements View.O
         itemView.setOnLongClickListener(this);
         ButterKnife.bind(this, itemView);
     }
+
 
     public TextView getTvDatetime() {
         return tvDatetime;
