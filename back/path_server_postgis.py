@@ -32,7 +32,12 @@ from qgis.networkanalysis import *
 Configuration
 """
 
-CALLES_ARCHIVO = "CallesCoyoacan.geojson"
+PG_PORT = 1337
+PG_USER = "user"
+PG_PASS = "hunter2"
+PG_TABLE = "calles"
+PG_COL = "the_geometry"
+
 MAX_BUFFER = 2056 # Maximum message length
 
 """
@@ -54,13 +59,12 @@ def getShortestPath(layer, start, end):
     # layer, field_idx, 'yes', '1', 'no', 3
     # where 'yes' is expected for one way, '1' for one way reverse, etc
     #
-    # TODO is this accurate?
-    director = QgsLineVectorLayerDirector(layer, 3, '1', '2', '3', 3)
+    # director = QgsLineVectorLayerDirector(layer, -1, '', '', '', 3)
+    director = QgsLineVectorLayerDirector(layer, -1, '', '', '', 3)
 
     properter = QgsDistanceArcProperter()
     director.addProperter(properter)
 
-    # TODO set proper reference system
     crs = QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.PostgisCrsId)
     builder = QgsGraphBuilder(crs)
 
@@ -150,11 +154,11 @@ if __name__ == '__main__':
     qgs = QgsApplication([], False) # False for no GUI
     qgs.initQgis()
 
-    # Load layer
-    layer = QgsVectorLayer(CALLES_ARCHIVO, "calles", "ogr")
-    if not layer.isValid():
-        print "error loading geojson: invalid"
-        sys.exit(1)
+    # Load layer from postgis
+    uri = QgsDataSourceURI()
+    uri.setConnection("localhost", PG_PORT, PG_DB, PG_USER, PG_PASS)
+    usi.setDataSource("public", PG_TABLE, PG_COL)
+    layer = QgsVectorLayer(uri.uri(False), "calles", "postgres")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('127.0.0.1', 8011))
