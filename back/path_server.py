@@ -32,7 +32,8 @@ from qgis.networkanalysis import *
 Configuration
 """
 
-CALLES_ARCHIVO = "CallesCoyoacan.geojson"
+# Use ogr2ogr to convert geojson to shp as needed
+CALLES_ARCHIVO = "CallesDF/OGRGeoJSON.shp"
 MAX_BUFFER = 2056 # Maximum message length
 
 """
@@ -55,7 +56,7 @@ def getShortestPath(layer, start, end):
     # where 'yes' is expected for one way, '1' for one way reverse, etc
     #
     # TODO is this accurate?
-    director = QgsLineVectorLayerDirector(layer, 3, '1', '2', '3', 3)
+    director = QgsLineVectorLayerDirector(layer, 3, '1', '', '2', 3)
 
     properter = QgsDistanceArcProperter()
     director.addProperter(properter)
