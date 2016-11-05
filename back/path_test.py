@@ -19,6 +19,6 @@ def sendRequest(a_x, a_y, b_x, b_y):
 # Agricola Oriental a IMASS
 # print sendRequest(-99.1660,19.3585, -99.18, 19.33)
 
-# Calles de uno sentido
-print sendRequest(-99.186096,19.478058, -99.18697, 19.478362)
-print sendRequest(-99.18697, 19.478362, -99.186096,19.478058)
+# Cuauhtemoc con y contra sentido
+print sendRequest(-99.159447,19.378247, -99.160381, 19.374220)
+print sendRequest(-99.160381, 19.374220, -99.159447,19.378247)
