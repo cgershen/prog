@@ -28,13 +28,15 @@
         </activity>
         <activity
             android:name=".RegisterActivity"
+            android:label="Registro"
             android:theme="@style/ThemeActionBarTransparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unam.alex.pumaride.MainActivity" />
         </activity>
         <activity
-            android:name=".PassRecoveryActivity"
+            android:name=".ResetPasswordActivity"
+            android:label="Recuperar Contraseña"
             android:theme="@style/ThemeActionBarTransparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -56,7 +58,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unam.alex.pumaride.MainActivity" />
         </activity>
-        <activity android:name=".PoliticasPrivacidad">
+        <activity
+            android:name=".PrivacyPolicyActivity"
+            android:label="Politicas de privacidad">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unam.alex.pumaride.MainActivity" />
@@ -67,16 +71,36 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".MatchDetailActivity" />
+        <activity
+            android:name=".MatchDetailActivity"
+            android:label=""
+            android:theme="@style/ThemeActionBarTransparent">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.unam.alex.pumaride.MainActivity" />
+        </activity>
 
-        <service
-            android:name=".firebase.TokenService">
+        <service android:name=".firebase.TokenService">
+
             <!--
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
             -->
         </service>
+
+        <activity
+            android:name=".RouteDetailActivity"
+            android:label="Detalles">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.unam.alex.pumaride.MainActivity" />
+        </activity>
+        <activity android:name=".AboutActivity"
+            android:label="Sobre la app">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.unam.alex.pumaride.MainActivity" /></activity>
     </application>
 
 </manifest>

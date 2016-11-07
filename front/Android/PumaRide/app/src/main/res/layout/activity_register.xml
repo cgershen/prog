@@ -19,23 +19,26 @@
             android:gravity="center"
             style="@style/input"
             android:hint="Correo UNAM"
+            android:text="alex_machine2@hotmail.com"
             android:id="@+id/activity_register_edt_email"
-            android:singleLine="true"
+            android:maxLines="1"
             />
 
         <EditText
             android:gravity="center"
             style="@style/input"
             android:hint="Contraseña"
+            android:text="123123"
             android:id="@+id/activity_register_edt_password"
             android:imeOptions="actionGo"
-            android:singleLine="true"
+            android:maxLines="1"
             android:inputType="textPassword"
             />
         <EditText
             android:gravity="center"
             style="@style/input"
             android:hint="Repetir Contraseña"
+            android:text="123123"
             android:id="@+id/activity_register_edt_password2"
             android:imeOptions="actionGo"
             android:singleLine="true"
@@ -44,29 +47,32 @@
         <EditText
             android:gravity="center"
             style="@style/input"
+            android:text="alex"
             android:hint="Nombre"
             android:id="@+id/activity_register_edt_name"
-            android:singleLine="true"
+            android:maxLines="1"
             />
         <EditText
             android:gravity="center"
             style="@style/input"
             android:hint="Apellidos"
+            android:text="maldonado"
             android:id="@+id/activity_register_edt_lastname"
-            android:singleLine="true"
+            android:maxLines="1"
             />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            style="@style/input"
             >
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/activity_register_chk_box_politicas"
-                android:background="@drawable/button_background" />
+                android:id="@+id/activity_register_chk_box_policy"/>
             <TextView
-                android:id="@+id/activity_register_tv_politicas_privacidad"
+                android:clickable="true"
+                android:id="@+id/activity_register_btn_privacy_policy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -74,7 +80,6 @@
                 android:paddingLeft="6dp"
                 android:textColor="@android:color/white"
                 android:text="@string/activity_register_politicas_texto"
-                android:onClick="politicasDePrivacidad"
                 android:textSize="16sp" />
         </LinearLayout>
         <LinearLayout android:id="@+id/act_login_btn_login"
@@ -98,24 +103,6 @@
                 android:layout_marginLeft="8dp"
                 android:fontFamily="sans-serif-light"
                 />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:fontFamily="sans-serif-light"
-                android:id="@+id/activity_register_btn_recovery"
-                android:layout_width="0dp"
-                android:layout_weight="0.6"
-                android:textColor="@android:color/white"
-                android:background="@android:color/transparent"
-                android:layout_height="wrap_content"
-                android:text="Recuperar contraseña"
-                android:textAllCaps="false"
-                android:layout_margin="8dp"
-                android:gravity="left|center_vertical"
-                android:paddingRight="6dp"/>
         </LinearLayout>
     </LinearLayout>
 

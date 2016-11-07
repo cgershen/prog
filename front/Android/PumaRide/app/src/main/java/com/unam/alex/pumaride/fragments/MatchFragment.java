@@ -1,5 +1,6 @@
 package com.unam.alex.pumaride.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.unam.alex.pumaride.MessageActivity;
 import com.unam.alex.pumaride.R;
 import com.unam.alex.pumaride.adapters.MatchListViewAdapter;
+import com.unam.alex.pumaride.fragments.listeners.OnFragmentInteractionListener;
 import com.unam.alex.pumaride.listeners.RecyclerViewClickListener;
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.retrofit.WebServices;
@@ -21,6 +23,7 @@ import com.unam.alex.pumaride.services.MessageService;
 import com.unam.alex.pumaride.utils.NetworkUtils;
 import com.unam.alex.pumaride.utils.Statics;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,11 +42,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * <p/>
  * interface.
  */
-public class MatchFragment extends Fragment {
+public class MatchFragment extends ComunicationFragmentManager {
     @BindView(R.id.fragment_match_list_rv)
     RecyclerView rvMatch;
     MatchListViewAdapter mAdapter;
     Realm realm = null;
+
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
@@ -80,6 +84,9 @@ public class MatchFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_match_list, container, false);
         ButterKnife.bind(this, view);
+        if (mListener != null) {
+            mListener.onFragmentInteraction("Matches");
+        }
         // Initialize Realm
         Realm.init(getContext());
         // Get a Realm instance for this thread
@@ -89,12 +96,12 @@ public class MatchFragment extends Fragment {
         if (view instanceof RecyclerView) {
             if(NetworkUtils.isNetworkAvailable(getContext())){
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(Statics.CHAT_SERVER_BASE_URL)
+                        .baseUrl(Statics.SERVER_BASE_URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
                 WebServices webServices = retrofit.create(WebServices.class);
-                Call<List<Match>> call = webServices.listMatches("12");
+                Call<List<Match>> call = webServices.listMatches();
                 call.enqueue(new Callback<List<Match>>() {
                     @Override
                     public void onResponse(Call<List<Match>> call, Response<List<Match>> response) {
@@ -104,8 +111,8 @@ public class MatchFragment extends Fragment {
                             RealmObject realmMatch= realm.copyToRealmOrUpdate(match);
                         }
                         realm.commitTransaction();
-
                         loadRealmMatches();
+
                     }
 
                     @Override
@@ -121,7 +128,7 @@ public class MatchFragment extends Fragment {
     }
     public void loadRealmMatches(){
         RealmResults<Match> matches = realm.where(Match.class).findAll();
-        mAdapter = new MatchListViewAdapter(matches,getContext());
+        mAdapter = new MatchListViewAdapter(new ArrayList<Match>(matches),getContext());
         rvMatch.setAdapter(mAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -131,7 +138,7 @@ public class MatchFragment extends Fragment {
         mAdapter.SetRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position, boolean isLongClick, int id) {
-                getActivity().startService(new Intent(getContext(), MessageService.class));
+                //getActivity().startService(new Intent(getContext(), MessageService.class));
                 Intent i  = new Intent(getContext(),MessageActivity.class);
                 MessageActivity.id2 = id;
                 startActivity(i);
@@ -142,20 +149,4 @@ public class MatchFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
 }

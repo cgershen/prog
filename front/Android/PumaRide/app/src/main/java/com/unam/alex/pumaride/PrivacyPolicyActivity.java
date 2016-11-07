@@ -8,15 +8,14 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PoliticasPrivacidad extends AppCompatActivity {
+public class PrivacyPolicyActivity extends AppCompatActivity {
     @BindView(R.id.activity_politicas_tv_politicas_privacidad)
     TextView tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_politicas_privacidad);
+        setContentView(R.layout.activity_privacy_policy);
         ButterKnife.bind(this);
-
         tv.setMovementMethod(new ScrollingMovementMethod());
     }
 }

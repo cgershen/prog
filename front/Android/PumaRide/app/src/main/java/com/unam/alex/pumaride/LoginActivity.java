@@ -1,6 +1,8 @@
 package com.unam.alex.pumaride;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -8,14 +10,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.unam.alex.pumaride.models.User;
+import com.unam.alex.pumaride.models.WebServiceError;
 import com.unam.alex.pumaride.retrofit.WebServices;
 import com.unam.alex.pumaride.services.MessageService;
 import com.unam.alex.pumaride.utils.Statics;
+
+import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,25 +39,37 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity  implements Validator.ValidationListener {
     @BindView(R.id.activity_login_btn_login)
     LinearLayout login;
     @BindView(R.id.activity_login_recovery)
     Button recovery;
+    @NotEmpty
+    @Email(message = "Correo no valido.")
     @BindView(R.id.activity_login_tv_email)
     TextView tvEmail;
+    @NotEmpty(message = "Este campo es requerido.")
     @BindView(R.id.activity_login_tv_password)
     TextView tvPassword;
     SweetAlertDialog pDialog;
+    Validator validator;
+    Activity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        //startService(new Intent(this, MessageService.class));
-        //Intent i  = new Intent(this,PassRecoveryActivity.class);
-        //startActivity(i);
+        activity = this;
+        if(isLogged()){
+            finish();
+
+            Intent i  = new Intent(this,MainActivity.class);
+            startActivity(i);
+        }
+        validator = new Validator(this);
+        validator.setValidationListener(this);
         //login.callOnClick();
 
     }
@@ -56,12 +80,15 @@ public class LoginActivity extends AppCompatActivity {
     }
     @OnClick(R.id.activity_login_recovery)
     public void recovery(View v){
-        Intent i  = new Intent(this,PassRecoveryActivity.class);
+        Intent i  = new Intent(this,ResetPasswordActivity.class);
         startActivity(i);
     }
     @OnClick(R.id.activity_login_btn_login)
     public void login(View view) {
+        validator.validate();
 
+    }
+    public void loginInServer(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -78,27 +105,74 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-            Call<User> c = call;
-                User u = response.body();
-                SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString("token", u.getToken());
-                editor.putString("email",tvEmail.getText().toString());
-                editor.putString("password",tvPassword.getText().toString());
-                editor.putString("nombre",tvPassword.getText().toString());
-                editor.putString("apellido",tvPassword.getText().toString());
-                editor.commit();
-                pDialog.dismissWithAnimation();
-                Intent i  = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(i);
+                Call<User> c = call;
+                if(response.isSuccessful()) {
+                    User u = response.body();
+                    SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("token", u.getToken());
+                    editor.putString("email", tvEmail.getText().toString());
+                    editor.putString("password", tvPassword.getText().toString());
+                    editor.putString("first_name", tvPassword.getText().toString());
+                    editor.putString("last_name", tvPassword.getText().toString());
+                    editor.commit();
+                    pDialog.dismissWithAnimation();
+                    finish();
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(i);
+                }else{
+                    pDialog.dismissWithAnimation();
+                    try {
+                        WebServiceError wse = new Gson().fromJson(response.errorBody().string(),WebServiceError.class);
+                        new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Error!")
+                                .setContentText(wse.getDetail())
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 pDialog.dismissWithAnimation();
-                Toast.makeText(getApplicationContext(),"Hubo un error",Toast.LENGTH_SHORT).show();
+                new SweetAlertDialog(activity, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Error")
+                        .setContentText("¡Hubo un error de conexión!")
+                        .show();
             }
         });
-
     }
+    public boolean isLogged(){
+        SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
+        String token = sp.getString("token", "");
+        return (token.equals(""))? false: true;
+    }
+    @Override
+    public void onValidationSucceeded() {
+        loginInServer();
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
+            // Display error messages ;)
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 }

@@ -12,9 +12,16 @@ import com.bumptech.glide.Glide;
 import com.unam.alex.pumaride.R;
 import com.unam.alex.pumaride.listeners.RecyclerViewClickListener;
 import com.unam.alex.pumaride.models.Match;
+import com.unam.alex.pumaride.models.Message;
 import com.unam.alex.pumaride.viewholders.MatchViewHolder;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by alex on 25/10/16.
@@ -23,6 +30,7 @@ import java.util.List;
 public class MatchListViewAdapter extends RecyclerView.Adapter<MatchViewHolder> {
     private final List<Match> Match_list;
     RecyclerViewClickListener mItemClickListener;
+    Realm realm = null;
     private Context context;
     public void SetRecyclerViewClickListener( RecyclerViewClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
@@ -30,6 +38,9 @@ public class MatchListViewAdapter extends RecyclerView.Adapter<MatchViewHolder> 
     public MatchListViewAdapter(List<Match> Match_list,Context context) {
         this.Match_list = Match_list;
         this.context = context;
+        Realm.init(context);
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
     }
     @Override
     public MatchViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -42,17 +53,30 @@ public class MatchListViewAdapter extends RecyclerView.Adapter<MatchViewHolder> 
     public void onBindViewHolder(MatchViewHolder Match_ViewHolder, int i) {
         Match_ViewHolder.setId(Match_list.get(i).getId());
         TextView tvName = Match_ViewHolder.gettName();
-        tvName.setText(Match_list.get(i).getName()+" id:"+Match_list.get(i).getId());
+        tvName.setText(Match_list.get(i).getFirst_name()+" id:"+Match_list.get(i).getId());
         ImageView ivImage = Match_ViewHolder.getiImage();
-        if(Match_list.get(i).getImage()!="") {
+        if(Match_list.get(i).getImage()!=null) {
             Glide.with(context).load(Match_list.get(i).getImage()).into(ivImage);
         }
         Match_ViewHolder.settName(tvName);
-        //Match_ViewHolder.settImage(ivImage);
+        try {
+            Message message = realm.where(Message.class).equalTo("user_id", Match_list.get(i).getId()).or().equalTo("user_id2", Match_list.get(i).getId()).
+                    findAllSorted("id", Sort.DESCENDING).first();
+            Match_ViewHolder.gettLastMessage().setText(message.getMessage() + " " + getFormatedTime(message.getDatetime()));
+        }catch(Exception e){
+
+        }
+            //Match_ViewHolder.settImage(ivImage);
     }
     @Override
     public int getItemCount() {
         return Match_list.size();
+    }
+    public String getFormatedTime(long Milliseconds){
+        Calendar c =  Calendar.getInstance();
+        c.setTimeInMillis(Milliseconds);
+        SimpleDateFormat format1 = new SimpleDateFormat("hh:mm");
+        return format1.format(c.getTime());
     }
 
 }

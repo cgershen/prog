@@ -10,19 +10,18 @@ import com.unam.alex.pumaride.listeners.RecyclerViewClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by alex on 25/10/16.
+ * Created by alex on 5/11/16.
  */
-public class MatchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener  {
+public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener  {
     RecyclerViewClickListener clickListener;
 
     @Override
     public void onClick(View v) {
         if (clickListener != null) {
             // If not long clicked, pass last variable as false.
-            clickListener.onClick(v, getPosition(), false,getId());
+            clickListener.onClick(v, getPosition(), false, getId());
         }
     }
     @Override
@@ -32,36 +31,25 @@ public class MatchViewHolder extends RecyclerView.ViewHolder implements View.OnC
         return true;
     }
 
-    public CircleImageView getiImage() {
+    public ImageView getiImage() {
         return iImage;
     }
 
-    public void setiImage(CircleImageView iImage) {
+    public void setiImage(ImageView iImage) {
         this.iImage = iImage;
     }
 
-    @BindView(R.id.fragment_match_list_item_name)
-    TextView tName;
-    @BindView(R.id.fragment_match_list_item_last_message)
-    TextView tLastMessage;
-    @BindView(R.id.fragment_match_list_item_image)
-    CircleImageView iImage;
-
+    @BindView(R.id.activity_match_detail_list_item_start_end)
+    TextView tvStart_End;
+    @BindView(R.id.activity_match_detail_list_item_image)
+    ImageView iImage;
     private int id;
-    public MatchViewHolder(View itemView, RecyclerViewClickListener clickListener) {
+    public RouteViewHolder(View itemView, RecyclerViewClickListener clickListener) {
         super(itemView);
         this.clickListener = clickListener;
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
         ButterKnife.bind(this, itemView);
-    }
-
-    public TextView gettLastMessage() {
-        return tLastMessage;
-    }
-
-    public void settLastMessage(TextView tLastMessage) {
-        this.tLastMessage = tLastMessage;
     }
 
     public int getId() {
@@ -72,11 +60,11 @@ public class MatchViewHolder extends RecyclerView.ViewHolder implements View.OnC
         this.id = id;
     }
 
-    public TextView gettName() {
-        return tName;
+    public TextView getTvStart_End() {
+        return tvStart_End;
     }
 
-    public void settName(TextView tName) {
-        this.tName = tName;
+    public void setTvStart_End(TextView tvStart_End) {
+        this.tvStart_End = tvStart_End;
     }
 }

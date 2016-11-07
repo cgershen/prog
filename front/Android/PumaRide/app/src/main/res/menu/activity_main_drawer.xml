@@ -23,12 +23,8 @@
 
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="">
         <menu>
-            <item
-                android:id="@+id/nav_chat"
-                android:icon="@drawable/ic_message_black_24dp"
-                android:title="Chat" />
             <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_error_outline_black_24dp"

@@ -19,8 +19,8 @@ import retrofit2.http.Path;
  * Created by alex on 30/10/16.
  */
 public interface WebServices {
-    @GET("matches/{user}")
-    Call<List<Match>> listMatches(@Path("user") String user);
+    @GET("pumaride/users/")
+    Call<List<Match>> listMatches();
     @POST("pumaride/registro/")
     Call<User> createUser(@Body User user);
     @FormUrlEncoded
@@ -29,6 +29,6 @@ public interface WebServices {
     @GET("pumaride/users/me")
     Call<User> getUserMe(@Header("Authorization") String authorization);
     @FormUrlEncoded
-    @POST("resetpassword")
+    @POST("pumaride/password/reset/")
     Call<User> resetPassword(@Field("email") String email);
 }

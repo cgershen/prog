@@ -1,6 +1,8 @@
 package com.unam.alex.pumaride;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,17 +20,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
+import com.unam.alex.pumaride.fragments.AboutFragment;
 import com.unam.alex.pumaride.fragments.ExampleFragment;
 import com.unam.alex.pumaride.fragments.MatchFragment;
 import com.unam.alex.pumaride.fragments.MyMapFragment;
+import com.unam.alex.pumaride.fragments.RouteFragment;
 import com.unam.alex.pumaride.fragments.SettingsFragment;
+import com.unam.alex.pumaride.fragments.listeners.OnFragmentInteractionListener;
 import com.unam.alex.pumaride.models.User;
 import com.unam.alex.pumaride.retrofit.WebServices;
+import com.unam.alex.pumaride.services.MessageService;
 import com.unam.alex.pumaride.utils.Statics;
 
 import butterknife.BindView;
@@ -40,7 +47,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener {
     @BindView(R.id.fab)
     FloatingActionMenu fab;
     @Override
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity
         init();
         SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
         String token = sp.getString("token", "");
+        String email = sp.getString("email","");
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.SERVER_BASE_URL)
@@ -72,6 +80,9 @@ public class MainActivity extends AppCompatActivity
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putInt("userid",u.getId());
                 editor.commit();
+                if(!isMyServiceRunning( MessageService.class)){
+                    startService(new Intent(getApplicationContext(), MessageService.class));
+                }
             }
 
             @Override
@@ -97,6 +108,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvEmail = (TextView) headerView.findViewById(R.id.nav_header_main_email);
+        tvEmail.setText(email);
+        TextView tvName = (TextView) headerView.findViewById(R.id.nav_header_main_name);
+        tvName.setText(email);
     }
     public void init(){
         MyMapFragment firstFragment = new MyMapFragment();
@@ -135,7 +152,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         fab.setVisibility(View.INVISIBLE);
-        Fragment newFragment = new MyMapFragment();
+        Fragment newFragment = null;
         if (id == R.id.nav_home) {
             // Handle the camera action
             newFragment = new MyMapFragment();
@@ -143,30 +160,39 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_matches) {
             newFragment = new MatchFragment();
         } else if (id == R.id.nav_routes) {
-            newFragment = new MatchFragment();
+            newFragment = new RouteFragment();
         } else if (id == R.id.nav_about) {
-            newFragment = new ExampleFragment();
+            Intent i  = new Intent(this,AboutActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_settings) {
             newFragment = new SettingsFragment();
-        } else if (id == R.id.nav_chat) {
+        } /*else if (id == R.id.nav_chat) {
             Intent i  = new Intent(this,MessageActivity.class);
             startActivity(i);
-        }
+        }*/
         // Insert the fragment by replacing any existing fragment
-
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-// Replace whatever is in the fragment_container view with this fragment,
-// and add the transaction to the back stack
-        transaction.replace(R.id.app_bar_main_fragment, newFragment);
-        transaction.addToBackStack(null);
-
-// Commit the transaction
-        transaction.commit();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if(newFragment!=null){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.app_bar_main_fragment, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(String title) {
+        getSupportActionBar().setTitle(title);
+    }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

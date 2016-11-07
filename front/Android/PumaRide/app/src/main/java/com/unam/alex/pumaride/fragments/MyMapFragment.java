@@ -30,7 +30,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.unam.alex.pumaride.OnFabClickListener;
 import com.unam.alex.pumaride.R;
 
 /**
@@ -41,7 +40,7 @@ import com.unam.alex.pumaride.R;
  * Use the {@link MyMapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMapLongClickListener {
+public class MyMapFragment extends ComunicationFragmentManager implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMapLongClickListener {
         GoogleMap mGoogleMap;
         GoogleApiClient mGoogleApiClient;
         Location mLastLocation;
@@ -49,8 +48,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         final String MARKER_TAG = "Mi Ubicacion";
         final int REQUEST_LOCATION = 1;
         private MapView mapView;
-
-
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -62,7 +59,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         private String mParam1;
         private String mParam2;
 
-        private OnFragmentInteractionListener mListener;
 
         public MyMapFragment() {
         // Required empty public constructor
@@ -107,6 +103,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //set title in actionbar
+        mListener.onFragmentInteraction("Home");
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -129,19 +127,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         mapView.onResume();
         mapView.getMapAsync(this);
 
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -247,6 +233,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         mGoogleMap.addMarker(new MarkerOptions().position(posicion).title(MARKER_TAG));
         //Movemos la vista del mapa a las cercanias del punto obtenido
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicion, ZOOM));
+        Polyline line = mGoogleMap.addPolyline(new PolylineOptions()
+                .add(new LatLng(19.328454, -99.159181), new LatLng(19.325477, -99.161723))
+                .width(5)
+                .color(Color.RED));
     }
 
     @Override

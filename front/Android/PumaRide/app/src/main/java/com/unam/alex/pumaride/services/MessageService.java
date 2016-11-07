@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -36,6 +37,7 @@ public class MessageService extends Service {
     PendingIntent contentIntent;
     LocalBroadcastManager broadcaster;
     int id = 10;
+    Match match;
     private Socket mSocket;
     {
         try {
@@ -68,7 +70,7 @@ public class MessageService extends Service {
         broadcaster = LocalBroadcastManager.getInstance(this);
         mSocket.on("chat"+id, onNewMessage);
         mSocket.connect();
-        return Service.START_NOT_STICKY;
+        return Service.START_STICKY;
     }
     public void notifyMessage(ArrayList<Message> messages){
 
@@ -77,7 +79,7 @@ public class MessageService extends Service {
         int id=1;
         mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                getApplicationContext()).setSmallIcon(R.drawable.ic_add_alert_black_24dp)
+                getApplicationContext()).setSmallIcon(R.drawable.ic_pumaride_alert)
                 .setContentTitle("PumarRide")
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -89,8 +91,8 @@ public class MessageService extends Service {
         for (Message m:messages){
             String name = "Usuario";
             try {
-                Match match = (Match) realm.where(Match.class).equalTo("id", m.getUser_id()).findFirst();
-                name = match.getName();
+                match = (Match) realm.where(Match.class).equalTo("id", m.getUser_id()).findFirst();
+                name = match.getFirst_name();
                 MessageActivity.id2 = match.getId();
             }catch(Exception e) {
 
@@ -136,10 +138,6 @@ public class MessageService extends Service {
                 } // This is your code
             };
             mainHandler.post(myRunnable);
-
-
-
-
         }else {
             Intent intent = new Intent(MESSAGE_RESULT);
             if (message != null) {
