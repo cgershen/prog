@@ -65,6 +65,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_directions_car_white_24dp"
+            android:onClick="dibujaCamino"
+            android:tag="1"
             fab:fab_size="mini"
             fab:fab_label="Automóvil" />
         <com.github.clans.fab.FloatingActionButton
