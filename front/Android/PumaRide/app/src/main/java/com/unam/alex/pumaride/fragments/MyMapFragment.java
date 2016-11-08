@@ -252,15 +252,52 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         }
     }
 
-    public void TrazaCamino(int opc)
+   public void TrazaCamino(int opc)
     {
         if (mGoogleMap!= null) {
             mGoogleMap.clear();
             // Add a thin red line from London to New York.
             Polyline line = mGoogleMap.addPolyline(new PolylineOptions()
-                    .add(new LatLng(51.5, -0.1), new LatLng(40.7, -74.0))
-                    .width(5)
+                    .add(new LatLng(19.3585,-99.166), new LatLng(19.358643,-99.167367))
+                    .add(new LatLng(19.358778,-99.170101), new LatLng(19.359095,-99.170657))
+                    .add(new LatLng(19.359769,-99.171687), new LatLng(19.359574,-99.171785))
+                    .add(new LatLng(19.359378,-99.171886), new LatLng(19.358691,-99.170834))
+                    .add(new LatLng(19.358549,-99.170579), new LatLng(19.358414,-99.170421))
+                    .add(new LatLng(19.358301,-99.170316), new LatLng(19.358209,-99.169377))
+                    .add(new LatLng(19.358109,-99.167988), new LatLng(19.358102,-99.167041), new LatLng(19.358053,-99.166553),
+                            new LatLng(19.357982,-99.165096), new LatLng(19.357924,-99.163687), new LatLng(19.357307,-99.163733),
+                            new LatLng(19.357026,-99.163743), new LatLng(19.356409,-99.163733), new LatLng(19.356156,-99.163733),
+                            new LatLng(19.355508,-99.163675), new LatLng(19.354575,-99.163664), new LatLng(19.353664,-99.163745),
+                            new LatLng(19.35328,-99.163733), new LatLng(19.352731,-99.163768), new LatLng(19.352259,-99.163815),
+                            new LatLng(19.351767,-99.163859), new LatLng(19.351254,-99.163957), new LatLng(19.35059,-99.164136),
+                            new LatLng(19.349086,-99.164484), new LatLng(19.348371,-99.164617), new LatLng(19.347631,-99.164751),
+                            new LatLng(19.347076,-99.16484), new LatLng(19.346959,-99.164858), new LatLng(19.346261,-99.164974),
+                            new LatLng(19.346143,-99.165009), new LatLng(19.344721,-99.16525), new LatLng(19.344498,-99.165243),
+                            new LatLng(19.34442,-99.164639), new LatLng(19.344392,-99.164313), new LatLng(19.344181,-99.162272),
+                            new LatLng(19.344003,-99.160926), new LatLng(19.343814,-99.159547), new LatLng(19.343722,-99.158754),
+                            new LatLng(19.343502,-99.156851), new LatLng(19.343419,-99.156197), new LatLng(19.343377,-99.155885),
+                            new LatLng(19.342987,-99.155556), new LatLng(19.342192,-99.15478), new LatLng(19.34185,-99.154355),
+                            new LatLng(19.34185,-99.154346), new LatLng(19.341592,-99.154074), new LatLng(19.340488,-99.15303),
+                            new LatLng(19.340301,-99.152832), new LatLng(19.340132,-99.152686), new LatLng(19.339997,-99.152526),
+                            new LatLng(19.339334,-99.152858), new LatLng(19.33897,-99.153033), new LatLng(19.33872,-99.153137),
+                            new LatLng(19.338416,-99.153232), new LatLng(19.337954,-99.153384), new LatLng(19.33737,-99.153559),
+                            new LatLng(19.337036,-99.153678), new LatLng(19.336626,-99.153782), new LatLng(19.336384,-99.15379),
+                            new LatLng(19.336186,-99.153813), new LatLng(19.336043,-99.153824), new LatLng(19.335717,-99.153805),
+                            new LatLng(19.334973,-99.154331), new LatLng(19.334868,-99.154244), new LatLng(19.33476,-99.154228),
+                            new LatLng(19.334371,-99.154225), new LatLng(19.334858,-99.156298), new LatLng(19.334883,-99.156462),
+                            new LatLng(19.334907,-99.157821), new LatLng(19.335037,-99.159577), new LatLng(19.335053,-99.159956),
+                            new LatLng(19.335094,-99.160566), new LatLng(19.335257,-99.161076), new LatLng(19.33528,-99.161507),
+                            new LatLng(19.335315,-99.162031), new LatLng(19.335353,-99.162644), new LatLng(19.335399,-99.163205),
+                            new LatLng(19.335415,-99.163433), new LatLng(19.335438,-99.16377), new LatLng(19.33545,-99.163994),
+                            new LatLng(19.335465,-99.164156), new LatLng(19.335503,-99.164688), new LatLng(19.335515,-99.164867),
+                            new LatLng(19.335522,-99.165066), new LatLng(19.33553,-99.165217), new LatLng(19.335548,-99.165377),
+                            new LatLng(19.335613,-99.166143), new LatLng(19.335646,-99.166564), new LatLng(19.335646,-99.166693),
+                            new LatLng(19.33567,-99.166934), new LatLng(19.33567,-99.167037), new LatLng(19.335678,-99.167132))
+
+                    .width(7)
                     .color(Color.RED));
+
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.33567,-99.166934), 13));
         }
         else
         {
