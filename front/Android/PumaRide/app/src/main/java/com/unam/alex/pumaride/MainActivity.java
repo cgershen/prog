@@ -195,4 +195,9 @@ public class MainActivity extends AppCompatActivity
         }
         return false;
     }
+    
+    public void dibujaCamino(View v){
+        MyMapFragment fragmento = (MyMapFragment) getSupportFragmentManager().findFragmentById(R.id.app_bar_main_fragment);
+        fragmento.TrazaCamino(Integer.parseInt(v.getTag().toString()));
+    }
 }
