@@ -1,7 +1,7 @@
 package com.unam.alex.pumaride.fragments;
 
 import android.Manifest;
-import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.content.pm.PackageManager;
@@ -22,24 +22,33 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 import com.unam.alex.pumaride.R;
+import com.unam.alex.pumaride.models.Match;
+import com.unam.alex.pumaride.models.Route2;
+import com.unam.alex.pumaride.retrofit.WebServices;
+import com.unam.alex.pumaride.utils.Statics;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MyMapFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MyMapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.RealmObject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MyMapFragment extends ComunicationFragmentManager implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMapLongClickListener {
         GoogleMap mGoogleMap;
         GoogleApiClient mGoogleApiClient;
@@ -48,37 +57,18 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         final String MARKER_TAG = "Mi Ubicacion";
         final int REQUEST_LOCATION = 1;
         private MapView mapView;
-
-
-    // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private static final String ARG_PARAM1 = "param1";
-        private static final String ARG_PARAM2 = "param2";
-
-        // TODO: Rename and change types of parameters
-        private String mParam1;
-        private String mParam2;
+        private Marker mMarker1 = null;
+        private Marker mMarker2 = null;
+        private Polyline line = null;
+        private int clickCounter = 0;
 
 
         public MyMapFragment() {
-        // Required empty public constructor
         }
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyMapFragment.
-         */
-        // TODO: Rename and change types and number of parameters
 
     public static MyMapFragment newInstance(String param1, String param2) {
         MyMapFragment fragment = new MyMapFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,19 +76,8 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
     }
 
-   /* @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_map, container, false);
-    }*/
     private static View view;
 
     @Override
@@ -126,8 +105,6 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
-
-
     }
 
     @Override
@@ -142,29 +119,6 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         }
     }
 
-//    @Override
-//    public void onStart(){
-//        super.onStart();
-//        if (mGoogleMap == null)
-//        {
-//            SupportMapFragment.newInstance().getMapAsync(this);
-//        }
-//    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
     private void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
@@ -181,8 +135,62 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
                 .build();
 
         mGoogleApiClient.connect();
+        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                switch (clickCounter){
+                    case 3:
+                        clickCounter = 1;
+                        mMarker1.remove();
+                        mMarker2.remove();
+                        line.remove();
+                    case 1:
+                        mMarker1 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Source").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_green_a_24px)));
+                        break;
+                    case 2:
+                        mMarker2 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Target").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_orange_b_24px)));
+                        drawPoliLineFromServer();
+                        break;
+                }
+                clickCounter+=1;
+            }
+        });
     }
+    public void drawPoliLineFromServer(){
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Statics.SERVER_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WebServices webServices = retrofit.create(WebServices.class);
+        String source,target;
+        source = "\"("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")\"";
+        target = "\"("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")\"";
+
+        //Call<Route2> call = webServices.getShortestPath(source,target);
+        Call<Route2> call = webServices.getShortestPath();
+        call.enqueue(new Callback<Route2>() {
+            @Override
+            public void onResponse(Call<Route2> call, Response<Route2> response) {
+                Toast.makeText(getContext(),new Gson().toJson(response.body()),Toast.LENGTH_SHORT).show();
+                ArrayList<LatLng> positions = new ArrayList<LatLng>();
+                Route2 res  = response.body();
+                for(float[] r:res.getShortest_path()){
+                    LatLng latlng = new LatLng(r[0],r[1]);
+                    positions.add(latlng);
+                }
+                line = mGoogleMap.addPolyline(new PolylineOptions()
+                        .addAll(positions)
+                        .width(5)
+                        .color(Color.RED));
+            }
+            @Override
+            public void onFailure(Call<Route2> call, Throwable t) {
+                Toast.makeText(getContext(),new Gson().toJson(call),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         realizarPeticionUbicacion();
@@ -230,13 +238,10 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         //Se pone un marcador en la ubicacion obtenida
 
 
-        mGoogleMap.addMarker(new MarkerOptions().position(posicion).title(MARKER_TAG));
+        //mGoogleMap.addMarker(new MarkerOptions().position(posicion).title(MARKER_TAG));
         //Movemos la vista del mapa a las cercanias del punto obtenido
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicion, ZOOM));
-        Polyline line = mGoogleMap.addPolyline(new PolylineOptions()
-                .add(new LatLng(19.328454, -99.159181), new LatLng(19.325477, -99.161723))
-                .width(5)
-                .color(Color.RED));
+
     }
 
     @Override

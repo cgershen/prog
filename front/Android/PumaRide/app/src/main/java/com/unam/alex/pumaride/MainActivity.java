@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
         String token = sp.getString("token", "");
         String email = sp.getString("email","");
+        String first_name = sp.getString("first_name","");
+        String last_name = sp.getString("last_name","");
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.SERVER_BASE_URL)
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity
                 SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putInt("userid",u.getId());
+                editor.putString("first_name", u.getFirst_name());
+                editor.putString("last_name", u.getLast_name());
                 editor.commit();
                 if(!isMyServiceRunning( MessageService.class)){
                     startService(new Intent(getApplicationContext(), MessageService.class));
@@ -113,7 +117,9 @@ public class MainActivity extends AppCompatActivity
         TextView tvEmail = (TextView) headerView.findViewById(R.id.nav_header_main_email);
         tvEmail.setText(email);
         TextView tvName = (TextView) headerView.findViewById(R.id.nav_header_main_name);
-        tvName.setText(email);
+        tvName.setText(first_name +" "+ last_name);
+
+
     }
     public void init(){
         MyMapFragment firstFragment = new MyMapFragment();
@@ -198,6 +204,6 @@ public class MainActivity extends AppCompatActivity
     
     public void dibujaCamino(View v){
         MyMapFragment fragmento = (MyMapFragment) getSupportFragmentManager().findFragmentById(R.id.app_bar_main_fragment);
-        fragmento.TrazaCamino(Integer.parseInt(v.getTag().toString()));
+        //fragmento.TrazaCamino(Integer.parseInt(v.getTag().toString()));
     }
 }
