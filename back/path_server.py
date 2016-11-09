@@ -54,7 +54,7 @@ def getShortestPath(layer, start, end):
     # layer, field_idx, one way, one way reverse, bidirectional, default
     # layer, field_idx, 'yes', '1', 'no', 3
     # where 'yes' is expected for one way, '1' for one way reverse, etc
-    director = QgsLineVectorLayerDirector(layer, 3, '1', '', '2', 3)
+    director = QgsLineVectorLayerDirector(layer, 2, '1', '', '2', 3)
 
     # si no importa el sentido
     # director = QgsLineVectorLayerDirector(layer, -1, '', '', '', 3)
