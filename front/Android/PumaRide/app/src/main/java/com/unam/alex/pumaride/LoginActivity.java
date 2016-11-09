@@ -113,8 +113,8 @@ public class LoginActivity extends AppCompatActivity  implements Validator.Valid
                     editor.putString("token", u.getToken());
                     editor.putString("email", tvEmail.getText().toString());
                     editor.putString("password", tvPassword.getText().toString());
-                    editor.putString("first_name", tvPassword.getText().toString());
-                    editor.putString("last_name", tvPassword.getText().toString());
+                    editor.putString("first_name", u.getFirst_name());
+                    editor.putString("last_name", u.getLast_name());
                     editor.commit();
                     pDialog.dismissWithAnimation();
                     finish();

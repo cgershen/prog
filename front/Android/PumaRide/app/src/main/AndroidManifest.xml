@@ -29,7 +29,7 @@
         <activity
             android:name=".RegisterActivity"
             android:label="Registro"
-            android:theme="@style/ThemeActionBarTransparent">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unam.alex.pumaride.MainActivity" />
@@ -37,7 +37,7 @@
         <activity
             android:name=".ResetPasswordActivity"
             android:label="Recuperar Contraseña"
-            android:theme="@style/ThemeActionBarTransparent">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unam.alex.pumaride.MainActivity" />
@@ -74,7 +74,7 @@
         <activity
             android:name=".MatchDetailActivity"
             android:label=""
-            android:theme="@style/ThemeActionBarTransparent">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unam.alex.pumaride.MainActivity" />

@@ -2,6 +2,7 @@ package com.unam.alex.pumaride;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -60,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
     CheckBox chkPolicy;
     Activity activity;
     Validator validator;
+    SweetAlertDialog pDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +83,11 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
         startActivity(i);
     }
     public void registerInServer(){
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Registrando");
+        pDialog.setCancelable(false);
+        pDialog.show();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -89,15 +96,15 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
         WebServices webServices = retrofit.create(WebServices.class);
         User u = new User();
         u.setId(0);
-        u.setNombre(etName.getText().toString());
-        u.setApellido(etLastname.getText().toString());
+        u.setFirst_name(etName.getText().toString());
+        u.setLast_name(etLastname.getText().toString());
         u.setPassword(etPassword.getText().toString());
         u.setEmail(etEmail.getText().toString());
         Call<User> call = webServices.createUser(u);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-
+                pDialog.dismissWithAnimation();
                 if(response.isSuccessful()){
                 new SweetAlertDialog(activity, SweetAlertDialog.SUCCESS_TYPE)
                         .setTitleText("Registro exitoso!")
@@ -132,6 +139,7 @@ public class RegisterActivity extends AppCompatActivity implements Validator.Val
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                pDialog.dismissWithAnimation();
                 new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Error!")
                         .setContentText("Hubo un error al registrar el usuario")

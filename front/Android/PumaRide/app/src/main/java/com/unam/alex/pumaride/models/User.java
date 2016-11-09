@@ -5,8 +5,8 @@ package com.unam.alex.pumaride.models;
  */
 public class User {
     private int id;
-    private String nombre;
-    private String apellido;
+    private String first_name;
+    private String last_name;
     private String password;
     private String token;
     private String email;
@@ -19,20 +19,20 @@ public class User {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getPassword() {
