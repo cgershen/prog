@@ -2,6 +2,7 @@ package com.unam.alex.pumaride.retrofit;
 
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.Route2;
+import com.unam.alex.pumaride.models.Route3;
 import com.unam.alex.pumaride.models.User;
 
 import java.util.ArrayList;
@@ -32,8 +33,7 @@ public interface WebServices {
     @FormUrlEncoded
     @POST("pumaride/password/reset/")
     Call<User> resetPassword(@Field("email") String email);
-    //@FormUrlEncoded
-    //@POST("static/dummy.json")
-    @GET("static/dummy.json")
-    Call<Route2> getShortestPath();
+    @FormUrlEncoded
+    @POST("api/lines/")
+    Call<Route2> getShortestPath(@Field("p_origen") String source, @Field("p_destino") String target);
 }

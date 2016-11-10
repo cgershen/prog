@@ -7,8 +7,8 @@ import java.util.ArrayList;
  */
 public class Route2 {
     private int id;
-    private float[] p_origen;
-    private float[] p_destino;
+    private float[] origin_point;
+    private float[] destination_point;
     private ArrayList<float[]> shortest_path;
 
     public int getId() {
@@ -19,20 +19,20 @@ public class Route2 {
         this.id = id;
     }
 
-    public float[] getP_origen() {
-        return p_origen;
+    public float[] getOrigin_point() {
+        return origin_point;
     }
 
-    public void setP_origen(float[] p_origen) {
-        this.p_origen = p_origen;
+    public void setOrigin_point(float[] origin_point) {
+        this.origin_point = origin_point;
     }
 
-    public float[] getP_destino() {
-        return p_destino;
+    public float[] getDestination_point() {
+        return destination_point;
     }
 
-    public void setP_destino(float[] p_destino) {
-        this.p_destino = p_destino;
+    public void setDestination_point(float[] destination_point) {
+        this.destination_point = destination_point;
     }
 
     public ArrayList<float[]> getShortest_path() {

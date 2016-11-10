@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.unam.alex.pumaride.R;
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.Route2;
+import com.unam.alex.pumaride.models.Route3;
 import com.unam.alex.pumaride.retrofit.WebServices;
 import com.unam.alex.pumaride.utils.Statics;
 
@@ -139,15 +140,15 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
             @Override
             public void onMapClick(LatLng latLng) {
                 switch (clickCounter){
-                    case 3:
-                        clickCounter = 1;
+                    case 2:
+                        clickCounter = 0;
                         mMarker1.remove();
                         mMarker2.remove();
                         line.remove();
-                    case 1:
+                    case 0:
                         mMarker1 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Source").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_green_a_24px)));
                         break;
-                    case 2:
+                    case 1:
                         mMarker2 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Target").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_orange_b_24px)));
                         drawPoliLineFromServer();
                         break;
@@ -159,7 +160,7 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
     public void drawPoliLineFromServer(){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Statics.SERVER_BASE_URL)
+                .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -168,8 +169,7 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         source = "\"("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")\"";
         target = "\"("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")\"";
 
-        //Call<Route2> call = webServices.getShortestPath(source,target);
-        Call<Route2> call = webServices.getShortestPath();
+        Call<Route2> call = webServices.getShortestPath(source,target);
         call.enqueue(new Callback<Route2>() {
             @Override
             public void onResponse(Call<Route2> call, Response<Route2> response) {
@@ -177,7 +177,7 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
                 ArrayList<LatLng> positions = new ArrayList<LatLng>();
                 Route2 res  = response.body();
                 for(float[] r:res.getShortest_path()){
-                    LatLng latlng = new LatLng(r[0],r[1]);
+                    LatLng latlng = new LatLng(r[1],r[0]);
                     positions.add(latlng);
                 }
                 line = mGoogleMap.addPolyline(new PolylineOptions()

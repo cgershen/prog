@@ -13,5 +13,6 @@ public class Statics {
     private Statics() {
     }
     public static String SERVER_BASE_URL = "http://pumaride.codingo.mx/";
+    public static String AUXILIAR_SERVER_BASE_URL = "http://35.160.229.64:8000/";
     public static String CHAT_SERVER_BASE_URL = "http://184.173.94.0:12439/";
 }
