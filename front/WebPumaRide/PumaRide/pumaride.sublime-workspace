@@ -1,0 +1,449 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"To",
+				"toString"
+			],
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"clic",
+				"click"
+			],
+			[
+				"d_",
+				"d_long"
+			],
+			[
+				"o_l",
+				"o_lat"
+			],
+			[
+				"o_",
+				"o_long"
+			],
+			[
+				"My",
+				"myIcon"
+			],
+			[
+				"L",
+				"Latlng"
+			],
+			[
+				"static",
+				"static_dirs"
+			],
+			[
+				"stat",
+				"static_dirs"
+			],
+			[
+				"BA",
+				"BASE_DIR	(global, instance)"
+			],
+			[
+				"pa",
+				"path"
+			],
+			[
+				"MEDIA",
+				"MEDIA_ROOT"
+			],
+			[
+				"p",
+				"path"
+			],
+			[
+				"te",
+				"template"
+			],
+			[
+				"con",
+				"context"
+			],
+			[
+				"pos",
+				"post_delete"
+			],
+			[
+				"post",
+				"post_detail"
+			],
+			[
+				"po",
+				"post_create"
+			],
+			[
+				"sl",
+				"slug"
+			],
+			[
+				"in",
+				"instance	(local, instance)"
+			],
+			[
+				"file",
+				"filename"
+			],
+			[
+				"suc",
+				"Successfully"
+			],
+			[
+				"Htt",
+				"HttpResponseRedirect	(imported, instance)"
+			],
+			[
+				"Po",
+				"PostForm	(imported, instance)"
+			],
+			[
+				"Create",
+				"Create"
+			],
+			[
+				"lis",
+				"list_display	(local, instance)"
+			],
+			[
+				"Post",
+				"PostModelAdmin	(global, class)"
+			],
+			[
+				"ti",
+				"title	(attribute, instance)"
+			],
+			[
+				"au",
+				"auto_now_add"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "pumaride/static/static_dirs/maps/leaf-demo.js",
+			"settings":
+			{
+				"buffer_size": 4104,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "pumaride/templates/pages/register.html",
+			"settings":
+			{
+				"buffer_size": 6103,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "pumaride/templates/index.html",
+			"settings":
+			{
+				"buffer_size": 4167,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"pytho",
+				"Set Syntax: Python"
+			]
+		],
+		"width": 467.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/pakation/Escritorio/PumaRide/pumaride/templates/index.html",
+		"/home/pakation/Escritorio/PumaRide/pumaride/templates/pages/maps.html",
+		"/home/pakation/Escritorio/PumaRide/pumaride/static/static_dirs/maps/markers.json",
+		"/home/pakation/Escritorio/PumaRide/pumaride/static/static_dirs/leaflet/leaflet.css",
+		"/home/pakation/Escritorio/PumaRide/pumaride/static/static_dirs/leaflet/leaflet.js",
+		"/home/pakation/Escritorio/PumaRide/pumaride/static/static_dirs/maps/leaf-demo.js",
+		"/home/pakation/Escritorio/PumaRide/PumaRide/settings.py",
+		"/media/pakation/HRM_CENA_X64FREE_ES-ES_DV5/WebDjango/PumaRide/pumaride/settings.py",
+		"/home/pakation/Escritorio/PumaRide/pumaride/static/static_dirs/maps/images/leaf-demo.js",
+		"/home/pakation/Escritorio/PumaRide/pumaride/static/static_dirs/maps/draw-polyline.js",
+		"/home/pakation/Escritorio/PumaRide/pumaride/static/static_dirs/maps/draw-polyline",
+		"/home/pakation/Escritorio/PumaRide/PumaRide/urls.py",
+		"/home/pakation/Escritorio/PumaRide/pumaride/views.py",
+		"/home/pakation/Escritorio/PumaRide/pumaride/templates/pages/restore.html",
+		"/home/pakation/Escritorio/PumaRide/pumaride/templates/pages/terms.html",
+		"/home/pakation/Escritorio/PumaRide/pumaride/templates/pages/register.html",
+		"/home/pakation/Escritorio/PumaRide/pumaride/static/static_dirs/leaflet/leaflet-src.js",
+		"/home/pakation/Escritorio/PumaRide/pumaride/static/static_dirs/leaflet/leaflet-src.map",
+		"/home/pakation/PumaRide/src/PumaRide/urls.py",
+		"/home/pakation/PumaRide/src/pumaride/templates/index.html",
+		"/home/pakation/PumaRide/src/pumaride/views.py",
+		"/home/pakation/PumaRide/src/PumaRide/settings.py",
+		"/home/pakation/trydjango19/src/posts/views.py",
+		"/home/pakation/trydjango19/src/trydjango19/urls.py",
+		"/home/pakation/trydjango19/src/posts/urls.py",
+		"/home/pakation/trydjango19/src/posts/models.py",
+		"/home/pakation/trydjango19/src/templates/post_update.html",
+		"/home/pakation/trydjango19/src/templates/post_list.html",
+		"/home/pakation/trydjango19/src/templates/post_detail.html",
+		"/home/pakation/trydjango19/src/templates/post_form.html",
+		"/home/pakation/trydjango19/src/posts/forms.py",
+		"/home/pakation/trydjango19/media_cdn/hola.jpeg",
+		"/home/pakation/trydjango19/src/templates/base.html",
+		"/home/pakation/trydjango19/src/trydjango19/settings.py",
+		"/home/pakation/trydjango19/src/static/css/base.css",
+		"/home/pakation/trydjango19/src/templates/messages_display.html",
+		"/home/pakation/trydjango19/src/templates/index.html",
+		"/home/pakation/trydjango19/src/crud.md",
+		"/home/pakation/trydjango19/src/posts/admin.py",
+		"/usr/share/applications/sublime.desktop"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"jpg",
+			"Alex",
+			"boostrap.min",
+			"boo",
+			"id=",
+			"id",
+			");",
+			"leaf",
+			"leaft",
+			"leaflet",
+			"leafleat",
+			"leaf",
+			"leaflet-",
+			"lea",
+			"form",
+			"function requestPoliline(origen,destino,map){	",
+			"demo",
+			"leaflet",
+			"),\n",
+			"Alexander",
+			"user",
+			"markers",
+			".html",
+			"login.html",
+			"login",
+			".html",
+			"terms",
+			"pages/",
+			"/dist/img/user2-160x160.jpg",
+			"user2-160",
+			"user2",
+			"bootstrap.min\n",
+			"demo.js\n",
+			"app.min.js\n",
+			"dashboard.js",
+			"url"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "pumaride/static/static_dirs/maps/leaf-demo.js",
+					"settings":
+					{
+						"buffer_size": 4104,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3246,
+								3246
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1022.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "pumaride/templates/pages/register.html",
+					"settings":
+					{
+						"buffer_size": 6103,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5468,
+								5468
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1074.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "pumaride/templates/index.html",
+					"settings":
+					{
+						"buffer_size": 4167,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3423,
+								3423
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 360.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 226.0,
+	"status_bar_visible": true
+}
