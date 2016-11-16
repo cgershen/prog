@@ -34,6 +34,7 @@ Configuration
 
 # Use ogr2ogr to convert geojson to shp as needed
 CALLES_ARCHIVO = "CallesDF/OGRGeoJSON.shp"
+#CALLES_ARCHIVO = "Capas/Metrobus std.MAP"
 MAX_BUFFER = 2056 # Maximum message length
 
 """
@@ -153,9 +154,14 @@ if __name__ == '__main__':
     qgs.initQgis()
 
     # Load layer
-    layer = QgsVectorLayer(CALLES_ARCHIVO, "calles", "ogr")
-    if not layer.isValid():
-        print "error loading geojson: invalid"
+    layer_a = QgsVectorLayer(CALLES_ARCHIVO, "calles_a", "ogr")
+    if not layer_a.isValid():
+        print "error loading layer: invalid"
+        sys.exit(1)
+
+    layer_b = QgsVectorLayer(CALLES_ARCHIVO, "calles_b", "ogr")
+    if not layer_b.isValid():
+        print "error loading layer: invalid"
         sys.exit(1)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -173,16 +179,28 @@ if __name__ == '__main__':
         message = recieveMessage(client)
         parts = message.split(" ")
 
+        if len(parts) == 5:
+
+            layer_id = parts[0]
+            if layer_id == 2:
+                layer = layer_b
+            else:
+                layer = layer_a
+
+            pointA = (float(parts[1]), float(parts[2]))
+            pointB = (float(parts[3]), float(parts[4]))
+            
         if len(parts) == 4:
+            # Legacy
+            layer = layer_a
 
             pointA = (float(parts[0]), float(parts[1]))
             pointB = (float(parts[2]), float(parts[3]))
 
+        if len(parts) >= 4:
             path = getShortestPath(layer, pointB, pointA)
             replyWith(client, path)
-
             print "Handled request for %s" % message
-
         client.close()
 
     # TODO put this finish under sigint
