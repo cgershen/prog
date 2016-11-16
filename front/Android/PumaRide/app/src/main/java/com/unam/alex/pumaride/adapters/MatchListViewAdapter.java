@@ -53,7 +53,7 @@ public class MatchListViewAdapter extends RecyclerView.Adapter<MatchViewHolder> 
     public void onBindViewHolder(MatchViewHolder Match_ViewHolder, int i) {
         Match_ViewHolder.setId(Match_list.get(i).getId());
         TextView tvName = Match_ViewHolder.gettName();
-        tvName.setText(Match_list.get(i).getFirst_name()+" id:"+Match_list.get(i).getId());
+        tvName.setText(Match_list.get(i).getFirst_name());
         ImageView ivImage = Match_ViewHolder.getiImage();
         if(Match_list.get(i).getImage()!=null) {
             Glide.with(context).load(Match_list.get(i).getImage()).into(ivImage);
@@ -62,7 +62,8 @@ public class MatchListViewAdapter extends RecyclerView.Adapter<MatchViewHolder> 
         try {
             Message message = realm.where(Message.class).equalTo("user_id", Match_list.get(i).getId()).or().equalTo("user_id2", Match_list.get(i).getId()).
                     findAllSorted("id", Sort.DESCENDING).first();
-            Match_ViewHolder.gettLastMessage().setText(message.getMessage() + " " + getFormatedTime(message.getDatetime()));
+            Match_ViewHolder.gettLastMessage().setText(message.getMessage());
+            Match_ViewHolder.gettDateTime().setText(getFormatedTime(message.getDatetime()));
         }catch(Exception e){
 
         }
@@ -73,10 +74,24 @@ public class MatchListViewAdapter extends RecyclerView.Adapter<MatchViewHolder> 
         return Match_list.size();
     }
     public String getFormatedTime(long Milliseconds){
+        String time ="";
         Calendar c =  Calendar.getInstance();
         c.setTimeInMillis(Milliseconds);
-        SimpleDateFormat format1 = new SimpleDateFormat("hh:mm");
-        return format1.format(c.getTime());
+        SimpleDateFormat format1 = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat format2 = new SimpleDateFormat("dd / MM");
+        Calendar c2 = Calendar.getInstance();
+        if ((c.get(Calendar.YEAR) == c2.get(Calendar.YEAR))&&(c.get(Calendar.MONTH) == c2.get(Calendar.MONTH))){
+            if(c.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH)){
+                time = format1.format(c.getTime());
+            }else if(c.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH)-1){
+                //It was yesterday
+                time = "AYER";
+            }
+        }else{
+            time = format2.format(c.getTime());
+        }
+
+        return time;
     }
 
 }

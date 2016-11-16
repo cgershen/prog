@@ -167,8 +167,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             Intent i  = new Intent(this,AboutActivity.class);
             startActivity(i);
-        } else if (id == R.id.nav_settings) {
-            newFragment = new SettingsFragment();
         } /*else if (id == R.id.nav_chat) {
             Intent i  = new Intent(this,MessageActivity.class);
             startActivity(i);

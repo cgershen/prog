@@ -268,6 +268,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
         // Handle item selection
         switch (item.getItemId()) {
             case android.R.id.home:
+                setResult(Activity.RESULT_OK);
                 finish();
                 return true;
             default:
@@ -307,5 +308,11 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
             this.messages.add(0,messages.get(i));
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        setResult(Activity.RESULT_OK);
+        super.onDestroy();
     }
 }

@@ -44,6 +44,8 @@ public class MatchViewHolder extends RecyclerView.ViewHolder implements View.OnC
     TextView tName;
     @BindView(R.id.fragment_match_list_item_last_message)
     TextView tLastMessage;
+    @BindView(R.id.fragment_match_list_item_date_time)
+    TextView tDateTime;
     @BindView(R.id.fragment_match_list_item_image)
     CircleImageView iImage;
 
@@ -78,5 +80,13 @@ public class MatchViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     public void settName(TextView tName) {
         this.tName = tName;
+    }
+
+    public TextView gettDateTime() {
+        return tDateTime;
+    }
+
+    public void settDateTime(TextView tDateTime) {
+        this.tDateTime = tDateTime;
     }
 }

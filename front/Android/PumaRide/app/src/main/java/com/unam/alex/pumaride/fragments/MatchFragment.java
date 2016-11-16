@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -141,12 +142,20 @@ public class MatchFragment extends ComunicationFragmentManager {
                 //getActivity().startService(new Intent(getContext(), MessageService.class));
                 Intent i  = new Intent(getContext(),MessageActivity.class);
                 MessageActivity.id2 = id;
-                startActivity(i);
+                startActivityForResult(i, 10001);
             }
         });
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+            // recreate your fragment here
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.detach(this).attach(this).commit();
     }
 }
