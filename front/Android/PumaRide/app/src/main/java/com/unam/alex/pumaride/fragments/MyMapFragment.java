@@ -110,6 +110,7 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
 
     @Override
     public void onMapLongClick(LatLng latLng) {
+        Toast.makeText(getContext(),"No hay mapa",Toast.LENGTH_LONG).show();
         if(mGoogleMap!=null)
         {
             PosicionarMapa(latLng.latitude,latLng.longitude);
