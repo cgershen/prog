@@ -1,8 +1,0 @@
-Tarea 1
-
-Creación de clases con objetos, herencia e interfaces.
-
-
-Tarea 2
-
-Manejo de Excepciones
