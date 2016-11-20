@@ -1,0 +1,40 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 28
+    rev Char (5) Index 1 ;
+    Id_ITS Char (15) Index 2 ;
+    ID_TA Char (15) Index 3 ;
+    Sistema Char (20) ;
+    Linea Integer ;
+    Nombre Char (200) ;
+    TIPO_INVENTARIO Char (100) Index 4 ;
+    Thoroughfare_number Char (50) ;
+    Direccion Char (100) ;
+    Ciudad Char (150) ;
+    Estado Char (50) ;
+    country Char (2) ;
+    CP Char (8) ;
+    Latitude Float ;
+    Longitude Float ;
+    Telefono Char (50) ;
+    Tipo Char (100) ;
+    content Integer ;
+    Colonia Char (150) ;
+    direccion2 Char (254) Index 5 ;
+    Status Integer Index 6 ;
+    Municipio Char (100) ;
+    City Char (100) Index 7 ;
+    Compuesto Char (254) Index 8 ;
+    WWW Char (60) ;
+    Trabajofca Integer Index 9 ;
+    REPETIDOS Char (200) ;
+    REP Integer Index 10 ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "1d055ebf-48c7-4fdf-ad31-dde402fe5b97"
+end_metadata

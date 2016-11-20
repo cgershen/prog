@@ -1,0 +1,15 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 3
+    Tipo_Call Smallint Index 1 ;
+    Nombre Char (50) ;
+    GEO_DIR Char (5) Index 2 ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "2a19e723-cae1-4c50-a7ad-289ce1b30343"
+end_metadata

@@ -1,0 +1,18 @@
+!table
+!version 700
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 6
+    Colonia Char (60) ;
+    Cp Char (5) ;
+    Localidad Char (60) ;
+    Estado Char (60) ;
+    Nse Char (10) ;
+    Id Char (4) ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "93ffe812-36f7-4699-b828-9fd1ec4aaebd"
+end_metadata

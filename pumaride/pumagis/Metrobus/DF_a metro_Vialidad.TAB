@@ -1,0 +1,32 @@
+!table
+!version 700
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 7
+    Ctrl Decimal (6, 0) Index 1 ;
+    Tipo Decimal (6, 0) ;
+    Nombre Char (60) ;
+    Sentido Decimal (11, 0) Index 2 ;
+    Nivel Decimal (11, 0) Index 3 ;
+    Ciudad Char (60) ;
+    Estado Char (60) ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\Shapefile" = ""
+"\Shapefile\PersistentCache" = "FALSE"
+"\Spatial Reference" = ""
+"\Spatial Reference\Geographic" = ""
+"\Spatial Reference\Geographic\Projection" = ""
+"\Spatial Reference\Geographic\Projection\Clause" = "CoordSys Earth Projection 1, 0"
+"\DefaultStyles" = ""
+"\DefaultStyles\LinePen" = ""
+"\DefaultStyles\LinePen\LineWidth" = "1"
+"\DefaultStyles\LinePen\LineStyle" = "0"
+"\DefaultStyles\LinePen\Color" = "16711680"
+"\DefaultStyles\LinePen\Pattern" = "2"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "732da256-6d64-4a8d-b9e3-bf202d85e317"
+"\MapInfo\ParentTableID" = "79182736-bd43-415e-aea6-c9e2abf45db3"
+end_metadata

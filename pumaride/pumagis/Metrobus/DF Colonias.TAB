@@ -1,0 +1,36 @@
+!table
+!version 700
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 6
+    Colonia Char (60) ;
+    Cp Char (5) ;
+    Localidad Char (60) ;
+    Estado Char (60) ;
+    Nse Char (10) ;
+    Id Char (4) ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\Shapefile" = ""
+"\Shapefile\PersistentCache" = "FALSE"
+"\Spatial Reference" = ""
+"\Spatial Reference\Geographic" = ""
+"\Spatial Reference\Geographic\Projection" = ""
+"\Spatial Reference\Geographic\Projection\Clause" = "CoordSys Earth Projection 1, 0"
+"\DefaultStyles" = ""
+"\DefaultStyles\Pen" = ""
+"\DefaultStyles\Pen\LineWidth" = "1"
+"\DefaultStyles\Pen\LineStyle" = "0"
+"\DefaultStyles\Pen\Color" = "0"
+"\DefaultStyles\Pen\Pattern" = "2"
+"\DefaultStyles\Brush" = ""
+"\DefaultStyles\Brush\Pattern" = "2"
+"\DefaultStyles\Brush\Forecolor" = "16777215"
+"\DefaultStyles\Brush\Backcolor" = "16777215"
+"\DefaultStyles\Brush\Transparent" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "bd05272a-5312-4c8f-aed7-441bf24c5011"
+"\MapInfo\ParentTableID" = "6979e048-d76c-4f59-977a-b1ca26ae0e19"
+end_metadata
