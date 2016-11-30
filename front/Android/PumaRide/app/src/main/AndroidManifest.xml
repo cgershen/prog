@@ -96,11 +96,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unam.alex.pumaride.MainActivity" />
         </activity>
-        <activity android:name=".AboutActivity"
+        <activity
+            android:name=".AboutActivity"
             android:label="Sobre la app">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.unam.alex.pumaride.MainActivity" /></activity>
+                android:value="com.unam.alex.pumaride.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MainTabActivity"
+            android:label="@string/title_activity_main_tab"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

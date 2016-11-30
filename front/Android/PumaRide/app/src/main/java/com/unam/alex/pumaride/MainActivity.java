@@ -117,6 +117,9 @@ public class MainActivity extends AppCompatActivity
         tvEmail.setText(email);
         TextView tvName = (TextView) headerView.findViewById(R.id.nav_header_main_name);
         tvName.setText(first_name +" "+ last_name);
+
+        Intent in =  new Intent(getApplicationContext(),MainTabActivity.class);
+        startActivity(in);
     }
     public void init(){
         MyMapFragment firstFragment = new MyMapFragment();

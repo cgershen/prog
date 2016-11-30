@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -81,16 +83,19 @@ public class RouteFragment extends ComunicationFragmentManager {
         r1.setId(1);
         r1.setStart("Xalapa");
         r1.setEnd("DF");
+        r1.setType_(0);
 
         Route r2 = new Route();
         r2.setId(1);
         r2.setStart("Xalapa");
         r2.setEnd("DF");
+        r2.setType_(1);
 
         Route r3 = new Route();
         r3.setId(1);
         r3.setStart("Xalapa");
         r3.setEnd("DF");
+        r3.setType_(2);
 
         routes.add(r1);
         routes.add(r2);
@@ -111,6 +116,11 @@ public class RouteFragment extends ComunicationFragmentManager {
         rvRoute.setHasFixedSize(true);
         return view;
     }
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_main_tab, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
 }

@@ -12,4 +12,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_chat">Chat</string>
     <string name="activity_register_politicas_texto"><u>Políticas de Privacidad</u></string>
+    <string name="title_activity_main_tab">MainTabActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

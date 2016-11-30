@@ -12,11 +12,22 @@ public class Route {
     ArrayList<LatLng> points;
     private String start;
     private String end;
-
+    private int type_;
     private String image;
+    public static final int WALK = 0;
+    public static final int CAR = 1;
+    public static final int BIKE  =2;
 
     public int getId() {
         return id;
+    }
+
+    public int getType_() {
+        return type_;
+    }
+
+    public void setType_(int type_) {
+        this.type_ = type_;
     }
 
     public void setId(int id) {
