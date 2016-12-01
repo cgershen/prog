@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -151,10 +153,16 @@
       </div>
       <BR/>
     
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:24px; color:white" class="fa fa-automobile"></i>
+     <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:24px; color:white" class="fa fa-automobile"></i>
                         &nbsp;&nbsp;&nbsp;&nbsp;<i style="font-size:24px; color:white" class="fa fa-bicycle"></i>
-                                     &nbsp;&nbsp;&nbsp;&nbsp;<i style="font-size:24px; color:white" class="fa fa-bus"></i>
+                                     &nbsp;&nbsp;&nbsp;&nbsp;<i style="font-size:24px; color:white" class="fa fa-bus"></i>-->
+    
+    <!--http://zavoloklom.github.io/material-design-iconic-font/examples.html-->                        
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:30px; color:white" class="zmdi zmdi-walk"></i>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:30px; color:white" class="zmdi zmdi-bike"></i>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:30px; color:white" class="zmdi zmdi-bus"></i>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:30px; color:white" class="zmdi zmdi-car"></i>
                               
       <!-- search form -->
       <form action="#" method="get" class="sidebar-form">
@@ -174,13 +182,16 @@
               </span>
         </div>
       </form>
+      <!--<form action="#" method="get" class="sidebar-form"> 
+        <button type="button" class="btn btn-default navbar-btn">Find a Match</button>
+      </form>-->
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">Options</li>
         <li class="active treeview">
           <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Active Route</span>
+            <i class="fa fa-dashboard"></i> <span>Current Route</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -190,35 +201,36 @@
         </li>      
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-pie-chart"></i>
-            <span>Statistics</span>
+            <i class="fa fa-map-o"></i>
+            <span>Trips</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
+            <li><a href="pages/charts/chartjs.html"><i class="zmdi zmdi-walk">&nbsp;&nbsp;&nbsp;&nbsp;</i>Walking trips</a></li>
+            <li><a href="pages/charts/morris.html"><i class="zmdi zmdi-bike">&nbsp;&nbsp;</i>Bike Trips</a></li>
+            <li><a href="pages/charts/morris.html"><i class="zmdi zmdi-bus">&nbsp;&nbsp;&nbsp;</i>Bus Trips</a></li>
+            <li><a href="pages/charts/morris.html"><i class="zmdi zmdi-car">&nbsp;&nbsp;&nbsp;</i>Car Trips</a></li>
           </ul>
         </li>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-laptop"></i>
-            <span>Records</span>
+            <i class="fa fa-users"></i>
+            <span>Friends</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="pages/UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
-            <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
-            <li><a href="pages/UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
+            <li><a href="pages/UI/general.html"><i class="fa-star-o">&nbsp;&nbsp;&nbsp;</i>Favorites</a></li>
+            <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i>Others</a></li>
           </ul>
         </li>
         
         <li class="treeview">
           <a href="#">
-             <i class="fa fa-circle-o"></i><span class="">Help</span>
+             <i class="fa fa-question"></i><span class="">Help</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -500,6 +512,10 @@ function geolocate2() {
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjRBSmn8erbF3Bd4a-ZN27s3a5_MEPioE&libraries=places&callback=initAutocomplete"
         async defer></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFKCZkFobhAbIilPD36eIFhOw-lXwfLzI"
+        async defer></script>
+
 
 
 
