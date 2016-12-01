@@ -88,7 +88,7 @@ public class MatchFragment extends ComunicationFragmentManager {
         View view = inflater.inflate(R.layout.fragment_match_list, container, false);
         ButterKnife.bind(this, view);
         if (mListener != null) {
-            mListener.onFragmentInteraction("Matches");
+           // mListener.onFragmentInteraction("Matches");
         }
         // Initialize Realm
         Realm.init(getContext());
