@@ -20,44 +20,18 @@
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="../plugins/iCheck/flat/blue.css">
-  <!-- Morris chart -->
-  <link rel="stylesheet" href="../plugins/morris/morris.css">
-  <!-- jvectormap -->
-  <link rel="stylesheet" href="../plugins/jvectormap/jquery-jvectormap-1.2.2.css">
-  <!-- Date Picker -->
-  <link rel="stylesheet" href="../plugins/datepicker/datepicker3.css">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="../plugins/daterangepicker/daterangepicker.css">
-  <!-- bootstrap wysihtml5 - text editor -->
-  <link rel="stylesheet" href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
+  <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
   <!--Agregar Archivos que se encuentran local -->
   <link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}" />
   <script src="{% static 'leaflet/leaflet.js' %}"></script>
   <script src="{% static 'leaflet/jquery-3.1.1.min.js' %}"></script>
-   <script src="/javascripts/application.js" type="text/javascript" charset="utf-8" async defer>
-  $(document).ready(function(){
-                            $.ajax({
-    url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
-    data: {
-       location:'-33.8670,151.1957'
-          },
-    dataType:'jsonp',
-    success: function (data) {
-        alert(data)
-    }
-});
 
-});
 
-   </script>
-
-  <!--Agregar Archivos que se encuentran en la web
+  <!--Agregar Archivos que se encuentran en la web-->
   <link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
   <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
-  <scripte type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>-->
+  <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
   
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -167,15 +141,15 @@
       <!-- search form -->
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
-          <input name="q" class="form-control" placeholder="Origin..." type="text" id="origen" style="position: absolute;top: 0px;left: 0px; width: 99%;"  onfocus="geolocate1()">
+          <input name="q" class="form-control" placeholder="Origin..." type="text" id="origen" style="position: absolute;top: 0px;left: 0px; width: 99%;"  onFocus="geolocateO()">
               <span class="input-group-btn">
-                <button type="submit" name="origin" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                <button type="submit" name="origin" id="search-btn" class="btn btn-flat"><i class="fa fa-search" onclick="geocodeLatLng()"></i>
                 </button>
               </span>
         </div>
         <br/>
         <div class="input-group">
-          <input name="q" class="form-control" placeholder="Destine..." type="text" id="destino" style="position: absolute;top: 0px;left: 0px; width: 99%;" onfocus="geolocate2()">
+          <input name="q" class="form-control" placeholder="Destine..." type="text" id="destino" style="position: absolute;top: 0px;left: 0px; width: 99%;" onfocus="geolocateD()">
               <span class="input-group-btn">
                 <button type="submit" name="origin" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
@@ -382,9 +356,6 @@
   <div class="control-sidebar-bg" style="position: fixed; height: auto;"></div>
 </div>
 <!-- ./wrapper -->
-
-<!-- jQuery 2.2.3 -->
-<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -395,37 +366,33 @@
 <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 <!-- Morris.js charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="../plugins/morris/morris.min.js"></script>
-<!-- Sparkline -->
-<script src="../plugins/sparkline/jquery.sparkline.min.js"></script>
-<!-- jvectormap -->
-<script src="../plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="../plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="../plugins/knob/jquery.knob.js"></script>
 <!-- daterangepicker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<script src="../plugins/daterangepicker/daterangepicker.js"></script>
-<!-- datepicker -->
-<script src="../plugins/datepicker/bootstrap-datepicker.js"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-<!-- Slimscroll -->
-<script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="../plugins/fastclick/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="{% static 'dist/js/app.min.js' %}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{% static 'dist/js/demo.js' %}"></script>
+
 
 <script>
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
+function geocodeLatLng() {
+  var geocoder = new google.maps.Geocoder;
+  var input = '40.714224,-73.961452';
+  var latlngStr = input.split(',', 2);
+  var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+  geocoder.geocode({'location': latlng}, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+      if (results[1]) {
+        alert(results[1].formatted_address);
+      } else {
+        window.alert('No results found');
+      }
+    } else {
+      window.alert('Geocoder failed due to: ' + status);
+    }
+  });
+}
 
-var placeSearch, autocomplete;
+var placeSearch, autocompleteO,autocompleteD;
+var origenLocation,destinoLocation;
 var componentForm = {
   street_number: 'short_name',
   route: 'long_name',
@@ -438,48 +405,42 @@ var componentForm = {
 function initAutocomplete() {
   // Create the autocomplete object, restricting the search to geographical
   // location types.
-  autocomplete = new google.maps.places.Autocomplete(
+  autocompleteO = new google.maps.places.Autocomplete(
       /** @type {!HTMLInputElement} */(document.getElementById('origen')),
       {types: ['geocode']});
 
-    autocomplete = new google.maps.places.Autocomplete(
+  autocompleteD = new google.maps.places.Autocomplete(
       /** @type {!HTMLInputElement} */(document.getElementById('destino')),
       {types: ['geocode']});
 
   // When the user selects an address from the dropdown, populate the address
   // fields in the form.
-  autocomplete.addListener('place_changed', fillInAddress);
+  autocompleteO.addListener('place_changed', fillInAddressO);
+  autocompleteD.addListener('place_changed', fillInAddressD);
 }
 
 // [START region_fillform]
-function fillInAddress() {
+function fillInAddressO() {
   // Get the place details from the autocomplete object.
-  var place = autocomplete.getPlace();
-
-  for (var component in componentForm) {
-    document.getElementById(component).value = '';
-    document.getElementById(component).disabled = false;
-  }
-
-  // Get each component of the address from the place details
-  // and fill the corresponding field on the form.
-  for (var i = 0; i < place.address_components.length; i++) {
-    var addressType = place.address_components[i].types[0];
-    if (componentForm[addressType]) {
-      var val = place.address_components[i][componentForm[addressType]];
-      document.getElementById(addressType).value = val;
-    }
-  }
+  var place = autocompleteO.getPlace();
+  alert("Origen "+place.geometry.location);
+  origenLocation=place.geometry.location;
+}
+function fillInAddressD() {
+  // Get the place details from the autocomplete object.
+  var place = autocompleteD.getPlace();
+  alert("Destino "+place.geometry.location);
+  destinoLocation = place.geometry.location;
 }
 // [END region_fillform]
 
 // [START region_geolocation]
 // Bias the autocomplete object to the user's geographical location,
 // as supplied by the browser's 'navigator.geolocation' object.
-function geolocate1() {
+function geolocateO() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      var geolocation1 = {
+      var geolocation = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
@@ -487,15 +448,15 @@ function geolocate1() {
         center: geolocation,
         radius: position.coords.accuracy
       });
-      autocomplete.setBounds(circle.getBounds());
+      autocompleteO.setBounds(circle.getBounds());
     });
   }
 }
 
-function geolocate2() {
+function geolocateD() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      var geolocation2 = {
+      var geolocation = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
@@ -503,7 +464,7 @@ function geolocate2() {
         center: geolocation,
         radius: position.coords.accuracy
       });
-      autocomplete.setBounds(circle.getBounds());
+      autocompleteD.setBounds(circle.getBounds());
     });
   }
 }
@@ -515,10 +476,6 @@ function geolocate2() {
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFKCZkFobhAbIilPD36eIFhOw-lXwfLzI"
         async defer></script>
-
-
-
-
 
 
 

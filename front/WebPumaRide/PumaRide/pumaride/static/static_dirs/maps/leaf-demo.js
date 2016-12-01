@@ -111,6 +111,7 @@ function onMapClick(e) {
     getReverseGeocodingData(destino,d_lat, d_long);
     drawPolyline();
 }
+
 map.on('click', onMapClick);
 
 function drawPolyline() {
@@ -120,7 +121,7 @@ function drawPolyline() {
                       console.log(d_long);
                       console.log(d_lat);
                      $.ajax({
-                        url : "http://35.160.229.64:8000/api/lines/", 
+                        url : "http://35.164.20.251:8000/api/lines/", 
                         type : "POST",
                         dataType: "json", 
                         data : {
