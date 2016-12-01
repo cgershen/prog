@@ -82,7 +82,7 @@ public class RouteFragment extends ComunicationFragmentManager {
         ButterKnife.bind(this, view);
         // Inflate the layout for this fragment
         if (mListener != null) {
-            mListener.onFragmentInteraction("Routes");
+            //mListener.onFragmentInteraction("Routes");
         }
         Realm.init(getContext());
         // Get a Realm instance for this thread
