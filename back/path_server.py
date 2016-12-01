@@ -3,19 +3,18 @@
 """
 Basic script using qgis to return the shortest route via python
 
-Usage: python shortest-path.py
-
 Prerequisites (Debian):
     apt-get install qgis python-qgis qgis-plugin-grass
 
+Instructions:
+    1. Run this script
+    2. Connect over the port specified
+    3. Send 4 comma separated strings as the lat,long coordinates
+        for start, end over that connection. Alternatively
+        send 5 strings, the first string is an identifier for the
+        map to use
+
 Tested on QGIS 2.4.0
-
-TODO initializing qgis for every query is inefficient, better to use
-a daemon pattern
-
-TODO Regenerating the graph from geojson may also be inefficient, but
-may be inextricably linked with start and end points
-
 """
 
 import sys
@@ -33,8 +32,11 @@ Configuration
 """
 
 # Use ogr2ogr to convert geojson to shp as needed
-CALLES_ARCHIVO = "CallesDF/OGRGeoJSON.shp"
-#CALLES_ARCHIVO = "Capas/Metrobus std.MAP"
+
+DF_Calles = "Capas/CallesDF.shp"
+DF_Metro_Vialidad = "Capas/DF_a metro_Vialidad_polyline.shp"
+DF_Bicis = "Capas/Rutas Bicis_polyline.shp"
+
 MAX_BUFFER = 2056 # Maximum message length
 
 """
@@ -130,6 +132,15 @@ def replyWith(sock, message):
 
     sock.shutdown(1)
 
+def loadLayerSafely(Filename, Name):
+    layer = QgsVectorLayer(Filename, Name, "ogr")
+    if layer.isValid():
+        print "Loaded %s" % Name
+    else:
+        print "error loading layer %s: %s invalid" % (Name, Filename)
+        #sys.exit(1)
+    return layer
+
 if __name__ == '__main__':
 
     print "Initializing"
@@ -154,15 +165,9 @@ if __name__ == '__main__':
     qgs.initQgis()
 
     # Load layer
-    layer_a = QgsVectorLayer(CALLES_ARCHIVO, "calles_a", "ogr")
-    if not layer_a.isValid():
-        print "error loading layer: invalid"
-        sys.exit(1)
-
-    layer_b = QgsVectorLayer(CALLES_ARCHIVO, "calles_b", "ogr")
-    if not layer_b.isValid():
-        print "error loading layer: invalid"
-        sys.exit(1)
+    layer_calles = loadLayerSafely(DF_Calles, "DF_Calles")
+    layer_bicis = loadLayerSafely(DF_Bicis, "DF_Bicis")
+    layer_metro_vialidad = loadLayerSafely(DF_Metro_Vialidad, "DF_Metro_Vialidad")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('127.0.0.1', 8011))
@@ -181,11 +186,19 @@ if __name__ == '__main__':
 
         if len(parts) == 5:
 
-            layer_id = parts[0]
-            if layer_id == 2:
-                layer = layer_b
+            try: 
+                layer_id = int(parts[0])
+            except ValueError:
+                print "Bad client sent %s as layer id, expected int" % layer_id
+                client.close()
+                continue
+
+            if layer_id == 3:
+                layer = layer_metro_vialidad
+            elif layer_id == 2:
+                layer = layer_bicis
             else:
-                layer = layer_a
+                layer = layer_calles
 
             pointA = (float(parts[1]), float(parts[2]))
             pointB = (float(parts[3]), float(parts[4]))
@@ -201,6 +214,7 @@ if __name__ == '__main__':
             path = getShortestPath(layer, pointB, pointA)
             replyWith(client, path)
             print "Handled request for %s" % message
+
         client.close()
 
     # TODO put this finish under sigint
