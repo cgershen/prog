@@ -20,15 +20,51 @@ var myIcon = L.icon({
   popupAnchor: [0, -14]
 })
 
+var myIcon_green = L.icon({
+  iconUrl: myURL + 'images/pin_green_24.png',
+  iconRetinaUrl: myURL + 'images/pin_green_48.png',
+  iconSize: [29, 24],
+  iconAnchor: [9, 21],
+  popupAnchor: [0, -14]
+})
+
+var myIcon_red = L.icon({
+  iconUrl: myURL + 'images/pin_red_24.png',
+  iconRetinaUrl: myURL + 'images/pin_red_48.png',
+  iconSize: [29, 24],
+  iconAnchor: [9, 21],
+  popupAnchor: [0, -14]
+})
+
+  var marker_origen;
+  var marker_destino;
+  
+  var o_lat=0;
+  var o_long=0;
+  var d_lat=0;
+  var d_long=0;
 
   function onLocationFound(e) {
     var radius = e.accuracy / 2;
-
-      //document.getElementById("origen").value = e.latlng.toString();
-      //L.marker(e.latlng,{icon:myIcon})
-      //.bindPopup('<b> Usted esta aqui </b>')
-      //.addTo(map);
-      //L.circle(e.latlng, radius).addTo(map);
+  
+    //Módulo para obtener la posición del usuario como Origen.
+    marker_origen = new L.marker(e.latlng,{draggable:'true'})
+    document.getElementById("origen").value = e.latlng.toString();
+    marker_origen.on('dragend', function(event){
+      var marker_origen = event.target;
+      var position = marker_origen.getLatLng();
+      marker_origen.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
+      map.panTo(new L.LatLng(position.lat, position.lng))
+      document.getElementById("origen").value = position.toString();
+      o_lat=position.lat;
+      o_long=position.lng;
+      drawPolyline();
+    });
+    marker_origen.setIcon(myIcon);
+    marker_origen.addTo(map);
+    o_lat=e.latlng.lat;
+    o_long=e.latlng.lng;
+    drawPolyline();
   }
 
   function onLocationError(e) {
@@ -41,40 +77,39 @@ var myIcon = L.icon({
   map.locate({setView: true, maxZoom: 18});
 
 
-var o_lat=0;
-var o_long=0;
-var d_lat=0;
-var d_long=0;
 
-var popup = L.popup();
 
-  function onMapClick(e) {
+function onMapClick(e) {
+  if(document.getElementById("destino").value!=""){
+    map.removeLayer(marker_destino);
+  }
 
-    popup
-      .setLatLng(e.latlng)
-      .setContent("Usted dió clic en " + e.latlng.toString())
-      .openOn(map);
-         
-         if(document.getElementById("origen").value==""){
-            document.getElementById("origen").value = e.latlng.toString();
-                      o_lat=e.latlng.lat;
-                      o_long=e.latlng.lng;
-                      L.marker([o_lat,o_long],{icon:myIcon})
-                      .bindPopup('<b> Origen </b>')
-                      .addTo( map );
-            }
-          else{
-          if(document.getElementById("destino").value==""){
-             document.getElementById("destino").value = e.latlng.toString();             
-                      d_lat=e.latlng.lat;
-                      d_long=e.latlng.lng;
-                      L.marker([d_lat,d_long],{icon:myIcon})
-                      .bindPopup('<b> Destino </b>')
-                      .addTo( map );
-                   }
-         }
+    marker_destino = new L.marker(e.latlng,{draggable:'true'})
+    document.getElementById("destino").value = e.latlng.toString();
+    marker_destino.on('dragend', function(event){
+      var marker_destino = event.target;
+      var position = marker_destino.getLatLng();
+      marker_destino.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
+      map.panTo(new L.LatLng(position.lat, position.lng))
+      document.getElementById("destino").value = position.toString();
+      d_lat=position.lat;
+      d_long=position.lng;
+      drawPolyline();
+    });
+    marker_destino.setIcon(myIcon);
+    marker_destino.addTo(map);
+    d_lat=e.latlng.lat;
+    d_long=e.latlng.lng;
+    drawPolyline();
+}
+map.on('click', onMapClick);
 
-       if(document.getElementById("origen").value!="" && document.getElementById("destino").value!=""){
+function drawPolyline() {
+  if(document.getElementById("origen").value!="" && document.getElementById("destino").value!=""){
+                      console.log(o_long);
+                      console.log(o_lat);
+                      console.log(d_long);
+                      console.log(d_lat);
                      $.ajax({
                         url : "http://35.160.229.64:8000/api/lines/", 
                         type : "POST",
@@ -112,6 +147,6 @@ var popup = L.popup();
 
                         },
                     });
-         }
   }
-  map.on('click', onMapClick);
+    return this;
+}

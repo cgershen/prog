@@ -32,7 +32,6 @@
   <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">Password Restore</p>
-
     <form action="../maps.html" method="post">
       <div class="form-group has-feedback">
         <input type="email" class="form-control" placeholder="Email" required/>
@@ -44,11 +43,40 @@
         </div>
         <!-- /.col -->
         <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Restore</button>
+          <button type="submit" class="btn btn-primary btn-block btn-flat" onclick="restore();return false">Restore</button>
         </div>
         <!-- /.col -->
       </div>
     </form>
+
+     <script type="text/javascript">
+       function restore()
+        {          
+
+                    $.ajax({
+                        url : "http://162.243.135.137:8000/pumaride/password/reset/", 
+                        type : "POST",
+                        dataType: "json",
+                        //contentType: "application/json; charset=", 
+                        data : {
+                           email: document.getElementById("email").value
+                               },
+                        success : function(json) {
+                            console.log(json);
+                            window.location="../index.html";
+                              },
+                        statusCode: { 403: function() {
+                        // Only if your server returns a 403 status code can it come in this block. :-)
+                        alert("Username already no exist");
+                                                      }
+                                    },
+                        error: function(){
+                            alert("Cannot get data");
+                              }
+                    });
+         }
+          </script>
+
 
     <div class="social-auth-links text-center">
     </div>
