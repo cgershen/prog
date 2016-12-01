@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity  implements Validator.Valid
         if(isLogged()){
             finish();
 
-            Intent i  = new Intent(this,MainActivity.class);
+            Intent i  = new Intent(this,MainTabActivity.class);
             startActivity(i);
         }
         validator = new Validator(this);

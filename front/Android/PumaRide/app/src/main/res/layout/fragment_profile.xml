@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/profile_background_gray">
+        android:background="@android:color/darker_gray">
 
         <TextView
             android:text="Sobre tí:"
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/fragment_profile_about_detail"
-            android:text="@string/fragment_profile_default_detail_about"
+            android:text="Sobre mi"
             android:layout_marginTop="10dp"
             android:paddingLeft="10dp" />
 

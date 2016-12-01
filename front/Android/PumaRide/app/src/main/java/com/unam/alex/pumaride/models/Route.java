@@ -3,20 +3,35 @@ package com.unam.alex.pumaride.models;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 /**
  * Created by alex on 5/11/16.
  */
-public class Route {
+public class Route extends RealmObject{
     private int id;
-    ArrayList<LatLng> points;
+    private RealmList<MyLatLng> shortest_path = new RealmList<MyLatLng>();
     private String start;
     private String end;
-
+    private int mode;
     private String image;
+    public static final int WALK = 0;
+    public static final int CAR = 1;
+    public static final int BIKE  =2;
 
     public int getId() {
         return id;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     public void setId(int id) {
@@ -31,12 +46,12 @@ public class Route {
         this.image = image;
     }
 
-    public ArrayList<LatLng> getPoints() {
-        return points;
+    public RealmList<MyLatLng> getShortest_path() {
+        return shortest_path;
     }
 
-    public void setPoints(ArrayList<LatLng> points) {
-        this.points = points;
+    public void setShortest_path(RealmList<MyLatLng> shortest_path) {
+        this.shortest_path = shortest_path;
     }
 
     public String getStart() {

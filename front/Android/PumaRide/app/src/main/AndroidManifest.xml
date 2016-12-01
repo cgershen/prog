@@ -96,8 +96,26 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unam.alex.pumaride.MainActivity" />
         </activity>
-        <activity android:name=".AboutActivity"
+        <activity
+            android:name=".AboutActivity"
             android:label="Sobre la app">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.unam.alex.pumaride.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MapsActivity"
+            android:label="Agregar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.unam.alex.pumaride.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MainTabActivity"
+            android:label="PumaRide"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ProfileActivity"
+            android:label="Perfil">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unam.alex.pumaride.MainActivity" /></activity>

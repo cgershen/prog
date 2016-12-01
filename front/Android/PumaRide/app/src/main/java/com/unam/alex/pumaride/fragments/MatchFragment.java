@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -74,7 +76,7 @@ public class MatchFragment extends ComunicationFragmentManager {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -86,7 +88,7 @@ public class MatchFragment extends ComunicationFragmentManager {
         View view = inflater.inflate(R.layout.fragment_match_list, container, false);
         ButterKnife.bind(this, view);
         if (mListener != null) {
-            mListener.onFragmentInteraction("Matches");
+           // mListener.onFragmentInteraction("Matches");
         }
         // Initialize Realm
         Realm.init(getContext());
@@ -157,5 +159,11 @@ public class MatchFragment extends ComunicationFragmentManager {
             // recreate your fragment here
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(this).attach(this).commit();
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_main_tab_friends, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

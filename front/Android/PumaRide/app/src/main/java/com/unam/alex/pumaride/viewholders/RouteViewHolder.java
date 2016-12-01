@@ -2,7 +2,9 @@ package com.unam.alex.pumaride.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.unam.alex.pumaride.R;
@@ -43,6 +45,10 @@ public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnC
     TextView tvStart_End;
     @BindView(R.id.activity_match_detail_list_item_image)
     ImageView iImage;
+    @BindView(R.id.activity_match_detail_list_item_ll_type)
+    LinearLayout llType;
+    @BindView(R.id.activity_match_detail_list_item_ib_type)
+    ImageButton ibType;
     private int id;
     public RouteViewHolder(View itemView, RecyclerViewClickListener clickListener) {
         super(itemView);
@@ -50,6 +56,22 @@ public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnC
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
         ButterKnife.bind(this, itemView);
+    }
+
+    public LinearLayout getLlType() {
+        return llType;
+    }
+
+    public void setLlType(LinearLayout llType) {
+        this.llType = llType;
+    }
+
+    public ImageButton getIbType() {
+        return ibType;
+    }
+
+    public void setIbType(ImageButton ibType) {
+        this.ibType = ibType;
     }
 
     public int getId() {

@@ -45,6 +45,7 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.mobsandgeeks:android-saripaar:2.0.3'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.github.rey5137:material:1.2.4'
 
 }
 //apply plugin: 'com.google.gms.google-services'
