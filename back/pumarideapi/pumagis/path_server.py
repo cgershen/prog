@@ -3,19 +3,18 @@
 """
 Basic script using qgis to return the shortest route via python
 
-Usage: python shortest-path.py
-
 Prerequisites (Debian):
     apt-get install qgis python-qgis qgis-plugin-grass
 
+Instructions:
+    1. Run this script
+    2. Connect over the port specified
+    3. Send 4 comma separated strings as the lat,long coordinates
+        for start, end over that connection. Alternatively
+        send 5 strings, the first string is an identifier for the
+        map to use
+
 Tested on QGIS 2.4.0
-
-TODO initializing qgis for every query is inefficient, better to use
-a daemon pattern
-
-TODO Regenerating the graph from geojson may also be inefficient, but
-may be inextricably linked with start and end points
-
 """
 
 import sys
@@ -32,9 +31,12 @@ from qgis.networkanalysis import *
 Configuration
 """
 
-#CALLES_ARCHIVO = "CallesCoyoacan.geojson"
-# CALLES_ARCHIVO = "CallesDF.geojson"
-CALLES_ARCHIVO = "CallesDF/OGRGeoJSON.shp"
+# Use ogr2ogr to convert geojson to shp as needed
+
+DF_Calles = "Capas/CallesDF.shp"
+DF_Metro_Vialidad = "Capas/DF_a metro_Vialidad_polyline.shp"
+DF_Bicis = "Capas/Rutas Bicis_polyline.shp"
+
 MAX_BUFFER = 2056 # Maximum message length
 
 """
@@ -52,9 +54,14 @@ end         (tuple)     Coordinates
 """
 def getShortestPath(layer, start, end):
 
-    # Prepare for conversion 
-    # TODO fix road directions
-    director = QgsLineVectorLayerDirector(layer, 3, '1', '', '2', 3)
+    # layer, field_idx, one way, one way reverse, bidirectional, default
+    # layer, field_idx, 'yes', '1', 'no', 3
+    # where 'yes' is expected for one way, '1' for one way reverse, etc
+    director = QgsLineVectorLayerDirector(layer, 2, '1', '', '2', 3)
+
+    # si no importa el sentido
+    # director = QgsLineVectorLayerDirector(layer, -1, '', '', '', 3)
+
     properter = QgsDistanceArcProperter()
     director.addProperter(properter)
 
@@ -123,10 +130,16 @@ def replyWith(sock, message):
             return
         sent = sent + part
 
-    try:
-    	sock.shutdown(1)
-    except socket.error:
-	pass
+    sock.shutdown(1)
+
+def loadLayerSafely(Filename, Name):
+    layer = QgsVectorLayer(Filename, Name, "ogr")
+    if layer.isValid():
+        print "Loaded %s" % Name
+    else:
+        print "error loading layer %s: %s invalid" % (Name, Filename)
+        #sys.exit(1)
+    return layer
 
 if __name__ == '__main__':
 
@@ -152,10 +165,9 @@ if __name__ == '__main__':
     qgs.initQgis()
 
     # Load layer
-    layer = QgsVectorLayer(CALLES_ARCHIVO, "calles", "ogr")
-    if not layer.isValid():
-        print "error loading geojson: invalid"
-        sys.exit(1)
+    layer_calles = loadLayerSafely(DF_Calles, "DF_Calles")
+    layer_bicis = loadLayerSafely(DF_Bicis, "DF_Bicis")
+    layer_metro_vialidad = loadLayerSafely(DF_Metro_Vialidad, "DF_Metro_Vialidad")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('127.0.0.1', 8011))
@@ -172,14 +184,35 @@ if __name__ == '__main__':
         message = recieveMessage(client)
         parts = message.split(" ")
 
+        if len(parts) == 5:
+
+            try: 
+                layer_id = int(parts[0])
+            except ValueError:
+                print "Bad client sent %s as layer id, expected int" % layer_id
+                client.close()
+                continue
+
+            if layer_id == 3:
+                layer = layer_metro_vialidad
+            elif layer_id == 2:
+                layer = layer_bicis
+            else:
+                layer = layer_calles
+
+            pointA = (float(parts[1]), float(parts[2]))
+            pointB = (float(parts[3]), float(parts[4]))
+            
         if len(parts) == 4:
+            # Legacy
+            layer = layer_a
 
             pointA = (float(parts[0]), float(parts[1]))
             pointB = (float(parts[2]), float(parts[3]))
 
+        if len(parts) >= 4:
             path = getShortestPath(layer, pointB, pointA)
             replyWith(client, path)
-
             print "Handled request for %s" % message
 
         client.close()
