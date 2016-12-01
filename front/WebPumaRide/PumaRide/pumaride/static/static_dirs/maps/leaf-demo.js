@@ -201,7 +201,31 @@ var d_long=0;
 
 var popup = L.popup();
 
+
+
+
+      function getLocation() {
+          var latdegrees=40.2298;
+          var londegrees=-41.88754;
+          var url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + latdegrees + "," + londegrees + "&radius=50&key=AIzaSyDjRBSmn8erbF3Bd4a-ZN27s3a5_MEPioE";
+              $.getJSON(url,function (data, textStatus) {
+                        var streetaddress=data.results[0].formatted_address;
+                       alert(streetaddress);
+                       });
+       }
+
   function onMapClick(e) {
+
+                          $.ajax({
+    url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
+    data: {
+       location:'-33.8670,151.1957'
+          },
+    dataType:'jsonp',
+    success: function (data) {
+        alert(data)
+    }
+});
 
     popup
       .setLatLng(e.latlng)
@@ -218,7 +242,10 @@ var popup = L.popup();
             }
           else{
           if(document.getElementById("destino").value==""){
-             document.getElementById("destino").value = e.latlng.toString();             
+
+
+                      document.getElementById("destino").value = e.latlng.toString();  
+
                       d_lat=e.latlng.lat;
                       d_long=e.latlng.lng;
                       L.marker([d_lat,d_long],{icon:myIcon})
