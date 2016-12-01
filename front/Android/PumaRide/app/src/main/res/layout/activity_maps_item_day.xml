@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_width="85dp"
+    android:layout_height="60dp"
+    android:id="@+id/activity_maps_item_day">
+    <TextView
+        android:id="@+id/activity_maps_item_day_day"
+        android:paddingBottom="5dp"
+        android:textColor="#7b84ff"
+        android:gravity="center"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:text="Lunes"
+        />
+    <TextView
+        android:id="@+id/activity_maps_item_day_hour"
+        android:textColor="#7b84ff"
+        android:gravity="center"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:text="13:00"
+        />
+</LinearLayout>

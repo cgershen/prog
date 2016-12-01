@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.unam.alex.pumaride.R;
 import com.unam.alex.pumaride.models.Match;
+import com.unam.alex.pumaride.models.Route;
 import com.unam.alex.pumaride.models.Route2;
 import com.unam.alex.pumaride.models.Route3;
 import com.unam.alex.pumaride.retrofit.WebServices;
@@ -174,27 +175,6 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         source = "\"("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")\"";
         target = "\"("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")\"";
 
-        Call<Route2> call = webServices.getShortestPath(source,target);
-        call.enqueue(new Callback<Route2>() {
-            @Override
-            public void onResponse(Call<Route2> call, Response<Route2> response) {
-                Toast.makeText(getContext(),new Gson().toJson(response.body()),Toast.LENGTH_SHORT).show();
-                ArrayList<LatLng> positions = new ArrayList<LatLng>();
-                Route2 res  = response.body();
-                for(float[] r:res.getShortest_path()){
-                    LatLng latlng = new LatLng(r[1],r[0]);
-                    positions.add(latlng);
-                }
-                line = mGoogleMap.addPolyline(new PolylineOptions()
-                        .addAll(positions)
-                        .width(5)
-                        .color(Color.RED));
-            }
-            @Override
-            public void onFailure(Call<Route2> call, Throwable t) {
-                Toast.makeText(getContext(),new Gson().toJson(call),Toast.LENGTH_SHORT).show();
-            }
-        });
     }
     @Override
     public void onConnected(@Nullable Bundle bundle) {

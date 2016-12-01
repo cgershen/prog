@@ -48,7 +48,7 @@ public class RouteListViewAdapter
         if(Route_list.get(i).getImage()!=null) {
             Glide.with(context).load(Route_list.get(i).getImage()).into(Route_ViewHolder.getiImage());
         }
-        switch (Route_list.get(i).getType_()){
+        switch (Route_list.get(i).getMode()){
             case Route.WALK:
                 Route_ViewHolder.getLlType().setBackgroundDrawable(context.getResources().getDrawable(R.drawable.rounded_background_walk));
                 Route_ViewHolder.getIbType().setBackgroundResource(R.drawable.ic_directions_walk_white_24dp);

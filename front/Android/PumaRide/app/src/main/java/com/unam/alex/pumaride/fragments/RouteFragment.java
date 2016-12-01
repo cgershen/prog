@@ -24,11 +24,15 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class RouteFragment extends ComunicationFragmentManager {
     @BindView(R.id.fragment_route_rv)
     RecyclerView rvRoute;
     RouteListViewAdapter mAdapter;
+    Realm realm = null;
+
     ArrayList<Route> routes = new ArrayList<Route>();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters,| e.g. ARG_ITEM_NUMBER
@@ -80,28 +84,11 @@ public class RouteFragment extends ComunicationFragmentManager {
         if (mListener != null) {
             mListener.onFragmentInteraction("Routes");
         }
-        Route r1 = new Route();
-        r1.setId(1);
-        r1.setStart("Xalapa");
-        r1.setEnd("DF");
-        r1.setType_(0);
-
-        Route r2 = new Route();
-        r2.setId(1);
-        r2.setStart("Xalapa");
-        r2.setEnd("DF");
-        r2.setType_(1);
-
-        Route r3 = new Route();
-        r3.setId(1);
-        r3.setStart("Xalapa");
-        r3.setEnd("DF");
-        r3.setType_(2);
-
-        routes.add(r1);
-        routes.add(r2);
-        routes.add(r3);
-
+        Realm.init(getContext());
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        RealmResults<Route> routes_ = realm.where(Route.class).findAll();
+        routes.addAll(routes_);
         mAdapter = new RouteListViewAdapter(routes,getContext());
         mAdapter.SetRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override

@@ -2,6 +2,7 @@ package com.unam.alex.pumaride;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -60,7 +61,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
+        setTitle("PumaRide");
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -82,8 +83,17 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.about) {
-            return true;
+        if (id == R.id.add_route) {
+            Intent i = new Intent(getApplicationContext(),MapsActivity.class);
+            startActivity(i);
+        }else if (id == R.id.profile){
+            Intent i = new Intent(getApplicationContext(),ProfileActivity.class);
+            startActivity(i);
+        }else if (id == R.id.about){
+            Intent i = new Intent(getApplicationContext(),AboutActivity.class);
+            startActivity(i);
+        }else if (id == R.id.logout){
+
         }
 
         return super.onOptionsItemSelected(item);
