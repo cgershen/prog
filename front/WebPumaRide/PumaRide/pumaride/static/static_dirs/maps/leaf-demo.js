@@ -215,18 +215,7 @@ var popup = L.popup();
        }
 
   function onMapClick(e) {
-
-                          $.ajax({
-    url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
-    data: {
-       location:'-33.8670,151.1957'
-          },
-    dataType:'jsonp',
-    success: function (data) {
-        alert(data)
-    }
-});
-
+    
     popup
       .setLatLng(e.latlng)
       .setContent("Usted dió clic en " + e.latlng.toString())
