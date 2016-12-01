@@ -43,27 +43,32 @@ var myIcon_red = L.icon({
   var o_long=0;
   var d_lat=0;
   var d_long=0;
+  var destino = "";
 
   function onLocationFound(e) {
     var radius = e.accuracy / 2;
-  
+    console.log("Cargué origen");
     //Módulo para obtener la posición del usuario como Origen.
     marker_origen = new L.marker(e.latlng,{draggable:'true'})
-    document.getElementById("origen").value = e.latlng.toString();
+    //document.getElementById("origen").value = e.latlng.toString();
     marker_origen.on('dragend', function(event){
       var marker_origen = event.target;
       var position = marker_origen.getLatLng();
       marker_origen.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
       map.panTo(new L.LatLng(position.lat, position.lng))
-      document.getElementById("origen").value = position.toString();
+      //document.getElementById("origen").value = position.toString();
       o_lat=position.lat;
       o_long=position.lng;
+      destino = "origen";
+      getReverseGeocodingData(destino,o_lat, o_long);
       drawPolyline();
     });
     marker_origen.setIcon(myIcon);
     marker_origen.addTo(map);
     o_lat=e.latlng.lat;
     o_long=e.latlng.lng;
+    destino= "origen";
+    getReverseGeocodingData(destino,o_lat, o_long);
     drawPolyline();
   }
 
@@ -85,21 +90,25 @@ function onMapClick(e) {
   }
 
     marker_destino = new L.marker(e.latlng,{draggable:'true'})
-    document.getElementById("destino").value = e.latlng.toString();
+    //document.getElementById("destino").value = e.latlng.toString();
     marker_destino.on('dragend', function(event){
       var marker_destino = event.target;
       var position = marker_destino.getLatLng();
       marker_destino.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
       map.panTo(new L.LatLng(position.lat, position.lng))
-      document.getElementById("destino").value = position.toString();
+      //document.getElementById("destino").value = position.toString();
       d_lat=position.lat;
       d_long=position.lng;
+      destino= "destino";
+      getReverseGeocodingData(destino,d_lat, d_long);
       drawPolyline();
     });
     marker_destino.setIcon(myIcon);
     marker_destino.addTo(map);
     d_lat=e.latlng.lat;
     d_long=e.latlng.lng;
+    destino= "destino";
+    getReverseGeocodingData(destino,d_lat, d_long);
     drawPolyline();
 }
 map.on('click', onMapClick);
@@ -148,5 +157,32 @@ function drawPolyline() {
                         },
                     });
   }
+    return this;
+}
+
+function getReverseGeocodingData(des, lat, lng) {
+    var latlng = new google.maps.LatLng(lat, lng);
+    
+    // This is making the Geocode request
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+        if (status !== google.maps.GeocoderStatus.OK) {
+            alert(status);
+        }
+        // This is checking to see if the Geoeode Status is OK before proceeding
+        if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results);
+            var address = (results[0].formatted_address);
+            console.log(address);
+            if (des == "origen")
+            {
+              document.getElementById("origen").value = address.toString();
+            }
+            else
+            {
+              document.getElementById("destino").value = address.toString();
+            }
+        }
+    });
     return this;
 }
