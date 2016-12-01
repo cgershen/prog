@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#f2f2f2"
+        android:background="@drawable/profile_background_gray"
         android:weightSum="1">
         <TextView
             android:text="Sobre tí:"
