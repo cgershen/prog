@@ -31,13 +31,13 @@ class Point(models.Model):
 
 
 class Line(models.Model):
+	
 	p_origen=models.CharField(max_length=50,default="(0.0,0.0)")
 	p_destino=models.CharField(max_length=50,default="(0.0,0.0)")
 
 	class Meta:
 		verbose_name = "Line"
         verbose_name_plural = "Lines"
-
 	
 	@property
 	def shortest_path(self):
@@ -49,4 +49,18 @@ class Line(models.Model):
 		#print "HERE"
 		poly_line=sendRequest(a_lat,a_lon,b_lat,b_lon)
 		print poly_line
-		return poly_line		
+		#return poly_line
+		poly_linef=[]
+		poly_line=poly_line.split(";")
+		for point in poly_line:
+		    points=point.split(",")
+		    if len(points)==2:
+			poly_linef.append([float(points[0]),float(points[1])])
+		return poly_linef
+	@property			
+	def origin_point(self):
+		print "Yo esto aqui"
+		print self.p_origen.split(",")
+		return [float(self.p_origen.split(",")[0].split("(")[1]),float(self.p_origen.split(",")[1].split(")")[0])]
+	def destination_point(self):
+		return [float(self.p_destino.split(",")[0].split("(")[1]),float(self.p_destino.split(",")[1].split(")")[0])]
