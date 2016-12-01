@@ -1,0 +1,5 @@
+*.shp
+*.shx
+*.dbf
+*.prj
+*.geojson
