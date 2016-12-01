@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.unam.alex.pumaride.fragments.ProfileFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ImageView
+        android:layout_marginTop="5dp"
+        android:layout_width="200sp"
+        android:layout_height="200sp"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:padding="10dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/edit_profile"
+        android:id="@+id/logo" />
+
+    <TextView
+        android:text="John Smith"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragmet_edit_profile_name"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="normal|bold" />
+
+    <TextView
+        android:text="John@Smith.com"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_profile_mail"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="normal|bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/profile_background_gray">
+
+        <TextView
+            android:text="Sobre tí:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_profile_about_text"
+            android:layout_marginTop="68dp"
+            android:paddingLeft="10dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_profile_about_detail"
+            android:text="@string/fragment_profile_default_detail_about"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp" />
+
+    </LinearLayout>
+</LinearLayout>
