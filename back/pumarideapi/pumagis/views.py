@@ -54,9 +54,13 @@ def matches(request):
 def line(request):
 	if request.method=='GET':
 		print "GEEET"
-		Lines=Line.objects.all()
-		serializer=LineSerializer(Lines,many=True)
-		return Response(serializer.data)
+
+		# Don't do this, this floods the server with requests!
+		#Lines=Line.objects.all()
+		#serializer=LineSerializer(Lines,many=True)
+		#return Response(serializer.data)
+
+		return Response(dict())
 	elif request.method=='POST':
 		serializer=LineSerializer(data=request.data)
 		if serializer.is_valid():

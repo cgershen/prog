@@ -130,7 +130,10 @@ def replyWith(sock, message):
             return
         sent = sent + part
 
-    sock.shutdown(1)
+    try:
+    	sock.shutdown(1)
+    except:
+	pass
 
 def loadLayerSafely(Filename, Name):
     layer = QgsVectorLayer(Filename, Name, "ogr")
