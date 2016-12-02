@@ -31,7 +31,7 @@ def lines_list(request,p_ori,p_des):
 	if request.method=='GET':
 		p_ori=request.query_params.get('p_origen')
 		p_des=request.query_params.get('p_destino')
-		lines=Line.objects.filter(p_origen=p_or,p_destino=p_des)
+		lines=Line.objects.filter(p_origen=p_ori,p_destino=p_des)
 		lines=Line.objects.filter(p_origen=p_ori,p_destino=p_des)
 		serializer=LineSerializer(lines,many=True)
 		return Response(serializer.data)

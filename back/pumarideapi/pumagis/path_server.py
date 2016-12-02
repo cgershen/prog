@@ -205,7 +205,7 @@ if __name__ == '__main__':
             
         if len(parts) == 4:
             # Legacy
-            layer = layer_a
+            layer = layer_calles
 
             pointA = (float(parts[0]), float(parts[1]))
             pointB = (float(parts[2]), float(parts[3]))
