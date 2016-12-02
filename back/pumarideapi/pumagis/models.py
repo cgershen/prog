@@ -27,7 +27,7 @@ class Point(models.Model):
 
 	class Meta:
 		verbose_name = "Point"
-        verbose_name_plural = "Points"
+        	verbose_name_plural = "Points"
 
 
 class Line(models.Model):
@@ -37,7 +37,7 @@ class Line(models.Model):
 
 	class Meta:
 		verbose_name = "Line"
-        verbose_name_plural = "Lines"
+	        verbose_name_plural = "Lines"
 	
 	@property
 	def shortest_path(self):
