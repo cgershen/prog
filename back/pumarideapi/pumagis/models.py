@@ -51,24 +51,24 @@ class Line(models.Model):
 		#print "HERE"
 		poly_line=sendRequest(a_lat,a_lon,b_lat,b_lon)
 		#print poly_line
+
 		self.camino_mas_corto=poly_line
-		#return poly_line
+
 		poly_linef=[]
-
-		poly_line_o = poly_line
-
 		poly_line=poly_line.split(";")
 		for point in poly_line:
 		    points=point.split(",")
 		    if len(points)==2:
 			poly_linef.append([float(points[0]),float(points[1])])
 		
-		poly_linet = poly_line_o.replace(",", " ")
-		poly_linet = poly_linet.replace(";", ",")
 
-		(con, c) = postgis_connect.connect()
-		postgis_connect.agregar_ruta(c, self.id, poly_linet, self.tipo_transporte)
-		con.commit()
+		if len(poly_linef) > 0:
+			poly_linet = self.camino_mas_corto.replace(",", " ")
+			poly_linet = poly_linet.replace(";", ",")
+
+			(con, c) = postgis_connect.connect()
+			postgis_connect.agregar_ruta(c, self.id, "%s %s" % (a_lat, a_lon), "%s %s" % (b_lat, b_lon), poly_linet, self.tipo_transporte)
+			con.commit()
 
 		return poly_linef
 
