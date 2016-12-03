@@ -34,6 +34,8 @@ class Line(models.Model):
 	
 	p_origen=models.CharField(max_length=50,default="(0.0,0.0)")
 	p_destino=models.CharField(max_length=50,default="(0.0,0.0)")
+	camino_mas_corto=models.CharField(max_length=250,default="")
+	tipo_transporte=models.CharField(max_length=50,default="")
 
 	class Meta:
 		verbose_name = "Line"
@@ -49,6 +51,7 @@ class Line(models.Model):
 		#print "HERE"
 		poly_line=sendRequest(a_lat,a_lon,b_lat,b_lon)
 		print poly_line
+		self.camino_mas_corto=poly_line
 		#return poly_line
 		poly_linef=[]
 		poly_line=poly_line.split(";")

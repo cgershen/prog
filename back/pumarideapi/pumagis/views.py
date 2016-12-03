@@ -27,7 +27,7 @@ def points_list(request):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET','POST','DELETE'])
-def lines_list(request,p_ori,p_des):
+def lines_list(request,p_ori,p_des,tipo_transporte):
 	if request.method=='GET':
 		p_ori=request.query_params.get('p_origen')
 		p_des=request.query_params.get('p_destino')
