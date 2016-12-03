@@ -21,6 +21,13 @@ def agregar_ruta(c, id, PuntosTexto, Capa):
     query = "insert into ruta values(%s, ST_GeomFromText('LINESTRING(%s)',4326), %s)" % (id, PuntosTexto, Capa)
     c.execute(query)
 
+def borrar(c, id):
+    c.execute("DELETE FROM ruta WHERE id_ruta=%s", [id])
+
+def consultar_rutas(c):
+    c.execute("SELECT id_ruta,ST_AsText(puntos),modo FROM ruta")
+    return c.fetchall()
+
 # create table ruta (id_ruta integer primary key, puntos geography(LINESTRING,4326), modo integer);
 # 
 # create table horario_ruta (id_ruta integer references ruta(id_ruta), origen geography(POINT,4326), destino geography(POINT,4326), origen_hora timestamp, destino_hora timestamp);

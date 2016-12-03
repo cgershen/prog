@@ -17,9 +17,12 @@ def sendRequest(layer, a_x, a_y, b_x, b_y):
     return(reply)
 
 # Agricola Oriental a IMASS
-print sendRequest(1, -99.1660,19.3585, -99.18, 19.33)
-print sendRequest(2, -99.1660,19.3585, -99.18, 19.33)
-print sendRequest(3, -99.1660,19.3585, -99.18, 19.33)
+# print sendRequest(1, -99.1660,19.3585, -99.18, 19.33)
+# print sendRequest(2, -99.1660,19.3585, -99.18, 19.33)
+# print sendRequest(3, -99.1660,19.3585, -99.18, 19.33)
+
+print sendRequest(1, -99.191258,19.487249, -99.247098, 19.481647)
+print sendRequest(1, -99.200447,19.499475, -99.247098, 19.481647)
 
 # Cuauhtemoc con y contra sentido
 #print sendRequest(-99.159447,19.378247, -99.160381, 19.374220)

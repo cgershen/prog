@@ -67,17 +67,22 @@ def matches(request):
 @api_view(['GET','POST'])
 def line(request):
 	if request.method=='GET':
-		print "GEEET"
+		(conn, c) = postgis_connect.connect()
+		data = postgis_connect.consultar_rutas(c)
 
-		# Don't do this, this floods the server with requests!
-		#Lines=Line.objects.all()
-		#serializer=LineSerializer(Lines,many=True)
-		#return Response(serializer.data)
-
-		return Response(dict())
+		return Response(data)
 	elif request.method=='POST':
-		serializer=LineSerializer(data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+		if "ruta_id" in request.data and "borrar" in request.data:
+			ruta_id = request.data["ruta_id"]
+			(conn, c) = postgis_connect.connect()
+			postgis_connect.borrar(c, ruta_id)
+			conn.commit()
+
+			return Response({"success":1})
+		else:
+			serializer=LineSerializer(data=request.data)
+			if serializer.is_valid():
+				serializer.save()
+				return Response(serializer.data, status=status.HTTP_201_CREATED)
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
