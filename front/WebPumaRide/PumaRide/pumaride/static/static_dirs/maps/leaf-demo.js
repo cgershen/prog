@@ -44,6 +44,8 @@ var myIcon_red = L.icon({
   var d_lat=0;
   var d_long=0;
   var destino = "";
+  var polyline;
+  var clen_pol=false;
 
   function onLocationFound(e) {
     var radius = e.accuracy / 2;
@@ -61,15 +63,13 @@ var myIcon_red = L.icon({
       o_long=position.lng;
       destino = "origen";
       getReverseGeocodingData(destino,o_lat, o_long);
-      drawPolyline();
     });
-    marker_origen.setIcon(myIcon);
+    marker_origen.setIcon(myIcon_green);
     marker_origen.addTo(map);
     o_lat=e.latlng.lat;
     o_long=e.latlng.lng;
     destino= "origen";
     getReverseGeocodingData(destino,o_lat, o_long);
-    drawPolyline();
   }
 
   function onLocationError(e) {
@@ -101,32 +101,28 @@ function onMapClick(e) {
       d_long=position.lng;
       destino= "destino";
       getReverseGeocodingData(destino,d_lat, d_long);
-      drawPolyline();
     });
-    marker_destino.setIcon(myIcon);
+    marker_destino.setIcon(myIcon_red);
     marker_destino.addTo(map);
     d_lat=e.latlng.lat;
     d_long=e.latlng.lng;
     destino= "destino";
     getReverseGeocodingData(destino,d_lat, d_long);
-    drawPolyline();
 }
 
 map.on('click', onMapClick);
 
 function drawPolyline() {
+  console.log("Entre a dibujar Polyline");
   if(document.getElementById("origen").value!="" && document.getElementById("destino").value!=""){
-                      console.log(o_long);
-                      console.log(o_lat);
-                      console.log(d_long);
-                      console.log(d_lat);
+                      console.log("Dibujando polyline");
                      $.ajax({
                         url : "http://35.164.20.251:8000/api/lines/", 
                         type : "POST",
                         dataType: "json", 
                         data : {
-                            p_origen :  "(" + o_long + "," + o_lat + ")",
-                            p_destino : "(" + d_long + "," + d_lat + ")",
+                            p_origen :  "(" + d_long + "," + d_lat + ")", //Se voltearon parámetros porque el servicio calcula
+                            p_destino : "(" + o_long + "," + o_lat + ")", // el shortest path de Destino a Origen
                                },
                         success : function(json) {
                             console.log(json);
@@ -147,13 +143,14 @@ function drawPolyline() {
                                opacity: 0.6
                             };
 
-                            var polyline = new L.Polyline(linePoints, polylineOptions);
-
+                            polyline = new L.Polyline(linePoints, polylineOptions);
+                            
                             map.addLayer(polyline);  
+                            
 
                             // zoom the map to the polyline
                             map.fitBounds(polyline.getBounds());
-
+                            clen_pol=true;
 
                         },
                     });
@@ -174,16 +171,28 @@ function getReverseGeocodingData(des, lat, lng) {
         if (status == google.maps.GeocoderStatus.OK) {
             console.log(results);
             var address = (results[0].formatted_address);
-            console.log(address);
             if (des == "origen")
             {
               document.getElementById("origen").value = address.toString();
+              console.log("Origen");
+              console.log(address);
             }
             else
             {
               document.getElementById("destino").value = address.toString();
+              console.log("Destino");
+              console.log(address);
             }
+            if (clen_pol==true) {
+              clearPolylines();
+            };
+            drawPolyline();
         }
     });
     return this;
+}
+
+// clear polylines   
+function clearPolylines() {
+    map.removeLayer(polyline);
 }
