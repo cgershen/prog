@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.unam.alex.pumaride.fragments.MatchFragment;
+import com.unam.alex.pumaride.fragments.MyMapFragment;
 import com.unam.alex.pumaride.fragments.RouteFragment;
 import com.unam.alex.pumaride.fragments.listeners.OnFragmentInteractionListener;
 
@@ -152,7 +153,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
             // Return a PlaceholderFragment (defined as a static inner class below).
             Fragment newFragment = null;
             if(position == 0){
-                newFragment = new RouteFragment();
+                newFragment = new MyMapFragment();
             }else{
                 newFragment = new MatchFragment();
             }

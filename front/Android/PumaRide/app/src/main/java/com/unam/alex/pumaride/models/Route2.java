@@ -11,24 +11,16 @@ import io.realm.RealmObject;
 /**
  * Created by alex on 5/11/16.
  */
-public class Route2  {
+public class Route2 {
     private int id;
     private ArrayList<float[]> shortest_path;
-    private float[] start;
-    private float[] end;
-    private int mode;
+    private float[] origin_point;
+    private float[] destination_point;
+    private String tipo_transporte;
     private String image;
 
     public int getId() {
         return id;
-    }
-
-    public int getMode() {
-        return mode;
-    }
-
-    public void setMode(int mode) {
-        this.mode = mode;
     }
 
     public void setId(int id) {
@@ -51,19 +43,27 @@ public class Route2  {
         this.shortest_path = shortest_path;
     }
 
-    public float[] getStart() {
-        return start;
+    public float[] getOrigin_point() {
+        return origin_point;
     }
 
-    public void setStart(float[] start) {
-        this.start = start;
+    public void setOrigin_point(float[] origin_point) {
+        this.origin_point = origin_point;
     }
 
-    public float[] getEnd() {
-        return end;
+    public float[] getDestination_point() {
+        return destination_point;
     }
 
-    public void setEnd(float[] end) {
-        this.end = end;
+    public void setDestination_point(float[] destination_point) {
+        this.destination_point = destination_point;
+    }
+
+    public String getTipo_transporte() {
+        return tipo_transporte;
+    }
+
+    public void setTipo_transporte(String tipo_transporte) {
+        this.tipo_transporte = tipo_transporte;
     }
 }

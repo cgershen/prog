@@ -34,10 +34,8 @@ public interface WebServices {
     @FormUrlEncoded
     @POST("pumaride/password/reset/")
     Call<User> resetPassword(@Field("email") String email);
-    /*@FormUrlEncoded
-    @POST("static/dummy.json")
+    @FormUrlEncoded
+    @POST("api/lines/")
     Call<Route2> getShortestPath(@Field("p_origen") String source, @Field("p_destino") String target);
-    */
-    @GET("static/dummy.json")
-    Call<Route2> getShortestPath();
+
 }

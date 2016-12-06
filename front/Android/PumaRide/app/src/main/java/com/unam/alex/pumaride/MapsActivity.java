@@ -269,8 +269,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         source = "\"("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")\"";
         target = "\"("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")\"";
 
-        //Call<Route2> call = webServices.getShortestPath(source,target);
-        Call<Route2> call = webServices.getShortestPath();
+        Call<Route2> call = webServices.getShortestPath(source,target);
+        //Call<Route2> call = webServices.getShortestPath();
         call.enqueue(new Callback<Route2>() {
             @Override
             public void onResponse(Call<Route2> call, Response<Route2> response) {
