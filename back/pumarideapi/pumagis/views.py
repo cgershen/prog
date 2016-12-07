@@ -1,3 +1,4 @@
+from django.db import connection
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -7,8 +8,8 @@ from .models import Point
 from .serializers import PointSerializer
 from .models import Line
 from .serializers import LineSerializer
-import postgis_connect
 import match
+
 """
 class PointViewSet(viewsets.ModelViewSet):
     queryset = Point.objects.all()
@@ -50,8 +51,9 @@ def matches(request):
 	if "ruta_id" in request.data:
 		ruta_id = request.data["ruta_id"]
 
-		(conn, c) = postgis_connect.connect()
-		data = match.get_matches(c, ruta_id)
+		data = []
+		with connection.cursor() as cursor:
+			data = match.get_matches(cursor, ruta_id)
 
 	 	return Response(data, status=status.HTTP_201_CREATED)
 	else:
@@ -67,17 +69,22 @@ def matches(request):
 @api_view(['GET','POST'])
 def line(request):
 	if request.method=='GET':
-		(conn, c) = postgis_connect.connect()
-		data = postgis_connect.consultar_rutas(c)
+
+		with connection.cursor() as cursor:
+			cursor.execute("SELECT id_ruta,ST_AsText(puntos),modo FROM ruta")
+			data = cursor.fetchall()
 
 		return Response(data)
+
 	elif request.method=='POST':
 
 		if "ruta_id" in request.data and "borrar" in request.data:
-			ruta_id = request.data["ruta_id"]
-			(conn, c) = postgis_connect.connect()
-			postgis_connect.borrar(c, ruta_id)
-			conn.commit()
+
+			id = request.data['ruta_id']
+
+			with connection.cursor() as cursor:
+				cursor.execute("DELETE FROM horario_ruta WHERE id_ruta=%s", [id])
+				cursor.execute("DELETE FROM ruta WHERE id_ruta=%s", [id])
 
 			return Response({"success":1})
 		else:
