@@ -166,6 +166,16 @@
       <ul class="sidebar-menu">
         <li class="header">Options</li>
         <li class="active treeview">
+          <a href="#" onclick="findMatch(2)">
+            <i class="fa fa-ils"></i> <span>Find Match</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          </ul>
+        </li>  
+        <li class="active treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>Current Route</span>
             <span class="pull-right-container">
@@ -481,6 +491,62 @@ function geolocateD() {
   }
 }
 // [END region_geolocation]
+function findMatch(id_ruta){
+  console.log("findMatch");
+                    $.ajax({
+                      url : "http://35.164.20.251:8000/api/matches/", 
+                      type : "POST",
+                      dataType: "json", 
+                      data : { ruta_id : 1078, },
+                      success : function(json) {
+                     
+                      if(id_ruta==0){ 
+                           drawRoute(json[0].ruta,'#071019');
+                      }
+                      if(id_ruta==1){
+                           drawRoute(json[1].ruta,'#0000FF');
+                      }
+                      if(id_ruta==2){
+                           drawRoute(json[2].ruta,'#F7FE2E');
+                      }
+                      if(id_ruta==3){
+                           drawRoute(json[3].ruta,'#FF8000');
+                      }
+                      if(id_ruta==4){
+                           drawRoute(json[4].ruta,'#00FF00');
+                      }
+                      
+                      }
+                    });
+}
+
+function drawRoute(ruta,color){
+                      route = ruta;
+                      c=color;
+                      console.log(route);
+
+                      var linePoints_route = [];
+
+                      for(var i=0;i<route.length;i++){
+                        var point_route = route[i];
+                        //console.log(point_route);
+                        linePoints_route.push(new L.LatLng(Number(point_route[1]),Number(point_route[0])));
+                      }
+                      
+                      var polylineOptions = {
+                               color: c,
+                               weight: 6,
+                               opacity: 0.6
+                      };
+
+                      var polyline_route = new L.Polyline(linePoints_route, polylineOptions);
+                            
+                      map.addLayer(polyline_route);  
+                            
+
+                      // zoom the map to the polyline
+                      map.fitBounds(polyline_route.getBounds());
+}
 
 function obtenerValorToken(){
 
