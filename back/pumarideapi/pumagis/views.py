@@ -39,6 +39,8 @@ def lines_list(request,p_ori,p_des,tipo_transporte):
 		serializer=LineSerializer(lines,many=True)
 		return Response(serializer.data)
 	elif request.method=='POST':
+		if request.user.is_authenticated():
+			request.data.user_id = request.user.id
 		serializer=LineSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()

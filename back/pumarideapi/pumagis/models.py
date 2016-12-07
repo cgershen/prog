@@ -43,11 +43,6 @@ class Line(models.Model):
 	        verbose_name_plural = "Lines"
 
 	@property
-	def user_id(self):
-		#@TODO set this by inspecting the token
-		return 0
-	
-	@property
 	def shortest_path(self):
 
 		a_lat=float(self.p_origen.split(",")[0].split("(")[1])
