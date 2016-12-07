@@ -36,10 +36,16 @@ class Line(models.Model):
 	p_destino=models.CharField(max_length=50,default="(0.0,0.0)")
 	camino_mas_corto=models.CharField(max_length=250,default="")
 	tipo_transporte=models.CharField(max_length=50,default=1)
+	user_id=models.CharField(max_length=50,default=0)
 
 	class Meta:
 		verbose_name = "Line"
 	        verbose_name_plural = "Lines"
+
+	@property
+	def user_id(self):
+		#@TODO set this by inspecting the token
+		return 0
 	
 	@property
 	def shortest_path(self):
@@ -52,7 +58,7 @@ class Line(models.Model):
 		poly_line=sendRequest(a_lat,a_lon,b_lat,b_lon)
 
 		self.camino_mas_corto=poly_line
-		print(self.camino_mas_corto)
+		#print(self.camino_mas_corto)
 
 		poly_linef=[]
 		poly_line=poly_line.split(";")
@@ -93,7 +99,7 @@ class Line(models.Model):
 				#postgis_connect.agregar_ruta(c, self.id, , poly_linet, self.tipo_transporte)
 				#con.commit()
 
-				query = "insert into ruta values(DEFAULT, ST_GeomFromText('LINESTRING(%s)',4326), %s)" % (poly_linet, self.tipo_transporte)
+				query = "insert into ruta values(DEFAULT, ST_GeomFromText('LINESTRING(%s)',4326), %s, %s)" % (poly_linet, self.tipo_transporte, self.user_id)
 				cursor.execute(query)
 
 				query = "insert into horario_ruta values (DEFAULT, ST_GeomFromText('POINT(%s)'), ST_GeomFromText('POINT(%s)'), ('2000-01-01 00:00:00'), ('2000-01-01 00:00:00'))" % ("%s %s" % (a_lat, a_lon), "%s %s" % (b_lat, b_lon))

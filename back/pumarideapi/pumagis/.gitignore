@@ -3,4 +3,4 @@
 *.dbf
 *.prj
 *.geojson
-migrations
+migrations-off

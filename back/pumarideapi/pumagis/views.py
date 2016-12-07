@@ -72,7 +72,16 @@ def line(request):
 
 		with connection.cursor() as cursor:
 			cursor.execute("SELECT id_ruta,ST_AsText(puntos),modo FROM ruta")
-			data = cursor.fetchall()
+			rows = cursor.fetchall()
+
+			data = []
+			for row in rows:
+
+				ruta_raw = row[1][10:-1]
+				data.append({
+					'ruta_id': row[0],
+					'ruta': match.line_transform(ruta_raw)
+				})
 
 		return Response(data)
 
