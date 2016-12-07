@@ -49,7 +49,7 @@ var myIcon_red = L.icon({
 
   function onLocationFound(e) {
     var radius = e.accuracy / 2;
-    console.log("Cargué origen");
+    
     //Módulo para obtener la posición del usuario como Origen.
     marker_origen = new L.marker(e.latlng,{draggable:'true'})
     //document.getElementById("origen").value = e.latlng.toString();
@@ -74,6 +74,19 @@ var myIcon_red = L.icon({
 
   function onLocationError(e) {
     alert(e.message);
+    //Latitud y Longitud de la CDMX
+    Lat_Mex= 19.39085896142664;
+    Lng_Mex= -99.14361265000002;
+
+    //Módulo para localizar al usuario en la ciudad de México, cuando no haya servicio
+    marker_origen = new L.marker(e.latlng,{draggable:'true'})
+    marker_origen.setIcon(myIcon_green);
+    marker_origen.addTo(map);
+    o_lat = Lat_Mex;
+    o_long = Lng_Mex; 
+    destino = "origen";
+    getReverseGeocodingData(destino,o_lat, o_long);
+
   }
 
   map.on('locationfound', onLocationFound);
@@ -151,11 +164,48 @@ function drawPolyline() {
                             // zoom the map to the polyline
                             map.fitBounds(polyline.getBounds());
                             clen_pol=true;
-
+                            //findMatch();
                         },
                     });
   }
-    return this;
+}
+function findMatch(){
+  console.log("findMatch");
+                    $.ajax({
+                      url : "http://35.164.20.251:8000/api/matches/", 
+                      type : "POST",
+                      dataType: "json", 
+                      data : { ruta_id : 1024, },
+                      success : function(json) {
+                      
+                      console.log(json);
+                      
+                      route = json[0].ruta;
+                      console.log(route);
+
+                      var linePoints_route = [];
+
+                      for(var i=0;i<route.length;i++){
+                        var point_route = route[i];
+                        //console.log(point_route);
+                        linePoints_route.push(new L.LatLng(Number(point_route[1]),Number(point_route[0])));
+                      }
+                      
+                      var polylineOptions = {
+                               color: '#f50099',
+                               weight: 6,
+                               opacity: 0.6
+                      };
+
+                      var polyline_route = new L.Polyline(linePoints_route, polylineOptions);
+                            
+                      map.addLayer(polyline_route);  
+                            
+
+                      // zoom the map to the polyline
+                      map.fitBounds(polyline_route.getBounds());
+                      },
+                    });
 }
 
 function getReverseGeocodingData(des, lat, lng) {
