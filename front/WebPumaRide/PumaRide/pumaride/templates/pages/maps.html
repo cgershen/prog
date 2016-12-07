@@ -172,7 +172,12 @@
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="treeview-menu">
+          <ul class="nav-list tree">
+            <li><a href="pages/charts/chartjs.html"><i class="zmdi zmdi-walk">&nbsp;&nbsp;&nbsp;&nbsp;</i>Ruta 1</a></li>
+            <li><a href="pages/charts/morris.html"><i class="zmdi zmdi-bike">&nbsp;&nbsp;</i>Ruta 2</a></li>
+            <li><a href="pages/charts/morris.html"><i class="zmdi zmdi-bus">&nbsp;&nbsp;&nbsp;</i>Ruta 3</a></li>
+            <li><a href="pages/charts/morris.html"><i class="zmdi zmdi-car">&nbsp;&nbsp;&nbsp;</i>Ruta 4</a></li>
+            <li><a href="pages/charts/morris.html"><i class="zmdi zmdi-car">&nbsp;&nbsp;&nbsp;</i>Ruta 5</a></li>
           </ul>
         </li>      
         <li class="treeview">
@@ -483,7 +488,6 @@ cadVariables = location.search.substring(1,location.search.length);
            x = cadVariables.split('=');
            return x[1];
 }
-
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjRBSmn8erbF3Bd4a-ZN27s3a5_MEPioE&libraries=places&callback=initAutocomplete"
         async defer></script>
