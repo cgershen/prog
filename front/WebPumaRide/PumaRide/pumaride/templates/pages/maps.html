@@ -205,7 +205,7 @@
         </li>
         
         <li class="treeview">
-          <a href="#">
+          <a href="#" onclick="obtenerValorToken()">
              <i class="fa fa-question"></i><span class="">Help</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -375,6 +375,11 @@
 <script>
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
+
+if(obtenerValorToken()===undefined){
+  window.location="../index.html";
+}
+
 function geocodeLatLng() {
   var geocoder = new google.maps.Geocoder;
   var input = '40.714224,-73.961452';
@@ -471,6 +476,13 @@ function geolocateD() {
   }
 }
 // [END region_geolocation]
+
+function obtenerValorToken(){
+
+cadVariables = location.search.substring(1,location.search.length);
+           x = cadVariables.split('=');
+           return x[1];
+}
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjRBSmn8erbF3Bd4a-ZN27s3a5_MEPioE&libraries=places&callback=initAutocomplete"
