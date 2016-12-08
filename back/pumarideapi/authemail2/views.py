@@ -114,6 +114,8 @@ class Login(APIView):
             if user and user.is_verified:
                 if user.is_active:
                     token, created = Token.objects.get_or_create(user=user)
+		    request.session['token'] = token.key
+		    request.session['user_id'] = user.id
                     return Response({'token': token.key},
                         status=status.HTTP_200_OK)
                 else:

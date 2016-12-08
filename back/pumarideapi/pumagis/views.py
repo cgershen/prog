@@ -17,15 +17,10 @@ class PointViewSet(viewsets.ModelViewSet):
 """
 @api_view(['GET'])
 def test(request):
-	if request.user.is_authenticated():
-		return Response({
-			'id': request.user.id,
-			'email': request.user.email,
-			'first_name': request.user.first_name,
-			'last_name': request.user.first_name,
-		})
-	else:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+	return Response({
+		'id': request.session['user_id'],
+		'token': request.session['token'],
+	})
 
 
 @api_view(['GET','POST'])
@@ -45,15 +40,17 @@ def points_list(request):
 @api_view(['GET','POST','DELETE'])
 def lines_list(request,p_ori,p_des,tipo_transporte):
 	if request.method=='GET':
-		p_ori=request.query_params.get('p_origen')
-		p_des=request.query_params.get('p_destino')
-		lines=Line.objects.filter(p_origen=p_ori,p_destino=p_des)
-		lines=Line.objects.filter(p_origen=p_ori,p_destino=p_des)
-		serializer=LineSerializer(lines,many=True)
-		return Response(serializer.data)
+		#p_ori=request.query_params.get('p_origen')
+		#p_des=request.query_params.get('p_destino')
+		#lines=Line.objects.filter(p_origen=p_ori,p_destino=p_des)
+		#serializer=LineSerializer(lines,many=True)
+		#return Response(serializer.data)
+		return Response({})
 	elif request.method=='POST':
-		if request.user.is_authenticated():
+
+		if request.session['user_id']:
 			request.data.user_id = request.user.id
+
 		serializer=LineSerializer(data=request.data)
 		if serializer.is_valid():
 			serializer.save()
@@ -83,10 +80,10 @@ def matches(request):
 
 @api_view(['GET','POST'])
 def line(request):
-	if request.method=='GET':
+	if request.method=='GET' and request.session['user_id']:
 
 		with connection.cursor() as cursor:
-			cursor.execute("SELECT id_ruta,ST_AsText(puntos),modo FROM ruta")
+			cursor.execute("SELECT id_ruta,ST_AsText(puntos),modo FROM ruta WHERE user_id = %s", [request.session['user_id']])
 			rows = cursor.fetchall()
 
 			data = []
@@ -101,6 +98,11 @@ def line(request):
 		return Response(data)
 
 	elif request.method=='POST':
+
+		if request.session['user_id']:
+			request.data['user_id'] = request.session['user_id']
+		#else:
+		#	request.data['user_id'] = 0 # don't let params set this
 
 		if "ruta_id" in request.data and "borrar" in request.data:
 
