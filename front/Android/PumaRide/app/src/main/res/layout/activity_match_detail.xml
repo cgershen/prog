@@ -23,7 +23,7 @@
             android:fitsSystemWindows="true">
 
             <com.unam.alex.pumaride.widgets.SquareImageView
-                android:id="@+id/image"
+                android:id="@+id/activity_match_detail_square_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"

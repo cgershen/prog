@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         String first_name = sp.getString("first_name","");
         String last_name = sp.getString("last_name","");
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Statics.SERVER_BASE_URL)
+                .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

@@ -1,8 +1,10 @@
 package com.unam.alex.pumaride;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,11 +23,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.unam.alex.pumaride.fragments.MatchFragment;
 import com.unam.alex.pumaride.fragments.MyMapFragment;
 import com.unam.alex.pumaride.fragments.RouteFragment;
 import com.unam.alex.pumaride.fragments.listeners.OnFragmentInteractionListener;
+import com.unam.alex.pumaride.models.User;
+import com.unam.alex.pumaride.retrofit.WebServices;
+import com.unam.alex.pumaride.services.MessageService;
+import com.unam.alex.pumaride.utils.Statics;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainTabActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
@@ -43,6 +57,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    RouteFragment rFragment = null;
     //array for fragments
     int fragments[] = {R.layout.fragment_route,R.layout.fragment_match};
     @Override
@@ -52,6 +67,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        rFragment = new RouteFragment();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -63,6 +79,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         setTitle("PumaRide");
+        init();
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +92,43 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         */
 
     }
+    public void init() {
+        SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
+        String token = sp.getString("token", "");
+        String email = sp.getString("email","");
+        String first_name = sp.getString("first_name","");
+        String last_name = sp.getString("last_name","");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Statics.SERVER_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
+        WebServices webServices = retrofit.create(WebServices.class);
+
+        Call<User> call = webServices.getUserMe("token "+token);
+        Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User u = response.body();
+                Toast.makeText(getApplicationContext(),new Gson().toJson(u),Toast.LENGTH_SHORT).show();
+                SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putInt("userid",u.getId());
+                editor.putString("first_name", u.getFirst_name());
+                editor.putString("last_name", u.getLast_name());
+                editor.commit();
+                if(!isMyServiceRunning( MessageService.class)){
+                    startService(new Intent(getApplicationContext(), MessageService.class));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"ando fallando",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -86,7 +139,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         //noinspection SimplifiableIfStatement
         if (id == R.id.add_route) {
             Intent i = new Intent(getApplicationContext(),MapsActivity.class);
-            startActivity(i);
+            startActivityForResult(i,100);
         }else if (id == R.id.profile){
             Intent i = new Intent(getApplicationContext(),ProfileActivity.class);
             startActivity(i);
@@ -98,6 +151,12 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        rFragment.refres();
     }
 
     /**
@@ -153,7 +212,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
             // Return a PlaceholderFragment (defined as a static inner class below).
             Fragment newFragment = null;
             if(position == 0){
-                newFragment = new MyMapFragment();
+                newFragment = rFragment;
             }else{
                 newFragment = new MatchFragment();
             }

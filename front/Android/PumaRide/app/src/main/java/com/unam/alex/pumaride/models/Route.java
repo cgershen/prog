@@ -1,5 +1,7 @@
 package com.unam.alex.pumaride.models;
 
+import android.text.TextUtils;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -39,6 +41,13 @@ public class Route extends RealmObject{
     }
 
     public String getImage() {
+
+        ArrayList<String> points = new ArrayList<String>();
+        for(MyLatLng latlng:shortest_path){
+            points.add(latlng.getLatitude()+","+latlng.getLongitude());
+        }
+        String joined = TextUtils.join("|",points);
+        String image = "https://maps.googleapis.com/maps/api/staticmap?size=800x800&path=color:0x0000ff|weight:8|"+joined+"&key=AIzaSyDdxYk4MlX8JIUuJBgD26rwBUkA8tuUno4";
         return image;
     }
 

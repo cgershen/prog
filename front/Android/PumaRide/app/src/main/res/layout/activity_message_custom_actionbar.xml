@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="50dp" >
 
     <TextView
@@ -17,10 +18,12 @@
         android:layout_toRightOf="@+id/activity_message_custom_actionbar_image"
         android:layout_toEndOf="@+id/activity_message_custom_actionbar_image" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        app:civ_border_width="0dp"
+        app:civ_border_color="#FF000000"
         android:id="@+id/activity_message_custom_actionbar_image"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:src="@drawable/profile_picture" />

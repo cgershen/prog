@@ -246,3 +246,62 @@ function getReverseGeocodingData(des, lat, lng) {
 function clearPolylines() {
     map.removeLayer(polyline);
 }
+
+function findMatch(num_ruta){
+  console.log("findMatch");
+  console.log("fdgfdgd"+origenLocation);
+                    $.ajax({
+                      url : "http://35.164.20.251:8000/api/matches/", 
+                      type : "POST",
+                      dataType: "json", 
+                      data : { ruta_id : 1078, },
+                      success : function(json) {
+                     
+                      //Dibuja la polilinea de la ruta 1
+                      if(num_ruta==0  && num_ruta<=json.length){ 
+                           drawRoute(json[0].ruta,'#071019');
+                      }
+
+                      //Dibuja la polilinea de la ruta 2
+                      if(num_ruta==1 && num_ruta<=json.length){
+                           drawRoute(json[1].ruta,'#0000FF');
+                      }
+
+                      //Dibuja la polilinea de la ruta 3
+                      if(num_ruta==2 && num_ruta<=json.length){
+                           drawRoute(json[2].ruta,'#F7FE2E');
+                      }
+
+                      //Dibuja la polilinea de la ruta 4
+                      if(num_ruta==3 && num_ruta<=json.length){
+                           drawRoute(json[3].ruta,'#FF8000');
+                      }
+                      //Dibuja la polilinea de la ruta 5
+                      if(num_ruta==4 && num_ruta<=json.length){
+                           drawRoute(json[4].ruta,'#00FF00');
+                      }
+
+                      //Dibuja todas la polilineas de todas las rutas 5
+                      if (num_ruta==5) {
+                        for(var i=0;i<json.length;i++)
+                        {
+                          if(id_ruta==0){ 
+                              drawRoute(json[0].ruta,'#071019');
+                          }
+                          if(id_ruta==1){
+                              drawRoute(json[1].ruta,'#0000FF');
+                          }
+                          if(id_ruta==2){
+                              drawRoute(json[2].ruta,'#F7FE2E');
+                          }
+                          if(id_ruta==3){
+                              drawRoute(json[3].ruta,'#FF8000');
+                          }
+                          if(id_ruta==4){
+                              drawRoute(json[4].ruta,'#00FF00');
+                          }
+                        }
+                      }
+                      }
+                    });
+}

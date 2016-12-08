@@ -1,5 +1,6 @@
 package com.unam.alex.pumaride.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 public class RouteFragment extends ComunicationFragmentManager {
@@ -32,7 +34,8 @@ public class RouteFragment extends ComunicationFragmentManager {
     RecyclerView rvRoute;
     RouteListViewAdapter mAdapter;
     Realm realm = null;
-
+    public static Route route;
+    public static int route_position=-1;
     ArrayList<Route> routes = new ArrayList<Route>();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters,| e.g. ARG_ITEM_NUMBER
@@ -93,8 +96,10 @@ public class RouteFragment extends ComunicationFragmentManager {
         mAdapter.SetRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position, boolean isLongClick, int id) {
+                route = routes.get(position);
+                route_position = position;
                 Intent i = new Intent(getContext(), RouteDetailActivity.class);
-                startActivity(i);
+                startActivityForResult(i,100);
             }
         });
         rvRoute.setAdapter(mAdapter);
@@ -110,5 +115,27 @@ public class RouteFragment extends ComunicationFragmentManager {
         inflater.inflate(R.menu.menu_main_tab, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+    public void refres(){
+        RealmResults<Route> routes_ = realm.where(Route.class).findAll();
+        routes.clear();
+        routes.addAll(routes_);
+        mAdapter.notifyDataSetChanged();
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100) {
+            if(resultCode == 1400){
+                delete();
+            }
+        }
+    }
+    public void delete(){
+        RealmObject r = routes.get(route_position);
+        realm.beginTransaction();
+        r.deleteFromRealm();
+        realm.commitTransaction();
+        refres();
+    }
 }

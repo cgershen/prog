@@ -16,9 +16,10 @@
         >
         <ImageView
             android:id="@+id/activity_match_detail_list_item_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:layout_marginLeft="5dp"
+            android:padding="5dp"
             android:layout_gravity="center"
             android:src="@drawable/example"/>
         <RelativeLayout
@@ -34,18 +35,21 @@
                 android:orientation="vertical"
                 android:padding="10dp">
                 <TextView
-                    android:id="@+id/activity_match_detail_list_item_start_end"
+                    android:id="@+id/activity_match_detail_list_item_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="start - end"
+                    android:text=""
                     />
-                    <TextView
-                        android:paddingTop="3dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="13:40 L M M J"/>
+                <TextView
+                    android:id="@+id/activity_match_detail_list_item_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text=""
+                    />
             </LinearLayout>
 
             <LinearLayout

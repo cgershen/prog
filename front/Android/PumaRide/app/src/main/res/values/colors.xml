@@ -7,4 +7,23 @@
     <color name="colorCar">#ff9800</color>
     <color name="colorBike">#8bc34a</color>
 
+
+    <color name="pressed">#f7f7f7</color>
+    <color name="defaultColor">#ffffff</color>
+
+    <color name="backgroundConfig">#616161</color>
+    <color name="blue_primary_color">#2196F3</color>
+    <color name="green_primary_color">#4CAF50</color>
+    <color name="blue_light_primary_color">#BBDEFB</color>
+    <color name="gray_light_primary_color">#F5F5F5</color>
+    <color name="gray_primary_color">#9E9E9E</color>
+
+    <color name="blue_gray_divider_color">#B6B6B6</color>
+
+    <color name="blue_gray_light_primary_color">#BDBDBD</color>
+
+    <color name="teal_primary_color">#009688</color>
+    <color name="indigo_primary_color">#3F51B5</color>
+    <color name="cyan_primary_color">#00BCD4</color>
+    <color name="purple_primary_color">#7C4DFF</color>
 </resources>

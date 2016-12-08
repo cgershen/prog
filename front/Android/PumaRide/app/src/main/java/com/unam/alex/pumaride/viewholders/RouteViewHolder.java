@@ -41,8 +41,10 @@ public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnC
         this.iImage = iImage;
     }
 
-    @BindView(R.id.activity_match_detail_list_item_start_end)
-    TextView tvStart_End;
+    @BindView(R.id.activity_match_detail_list_item_start)
+    TextView tvStart;
+    @BindView(R.id.activity_match_detail_list_item_end)
+    TextView tvEnd;
     @BindView(R.id.activity_match_detail_list_item_image)
     ImageView iImage;
     @BindView(R.id.activity_match_detail_list_item_ll_type)
@@ -82,11 +84,19 @@ public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnC
         this.id = id;
     }
 
-    public TextView getTvStart_End() {
-        return tvStart_End;
+    public TextView getTvStart() {
+        return tvStart;
     }
 
-    public void setTvStart_End(TextView tvStart_End) {
-        this.tvStart_End = tvStart_End;
+    public void setTvStart(TextView tvStart) {
+        this.tvStart = tvStart;
+    }
+
+    public TextView getTvEnd() {
+        return tvEnd;
+    }
+
+    public void setTvEnd(TextView tvEnd) {
+        this.tvEnd = tvEnd;
     }
 }
