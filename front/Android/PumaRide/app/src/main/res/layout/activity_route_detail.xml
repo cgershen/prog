@@ -18,7 +18,7 @@
         android:layout_height="300dp"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/staticmap"
-        android:id="@+id/imageView2" />
+        android:id="@+id/activity_route_detail_image" />
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -38,18 +38,21 @@
                 android:orientation="vertical"
                 android:padding="10dp">
                 <TextView
-                    android:id="@+id/activity_route_detail_start_end"
+                    android:paddingRight="30dp"
+                    android:id="@+id/activity_route_detail_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="1"
                     android:text="start - end"
                     />
                 <TextView
-                    android:paddingTop="3dp"
+                    android:paddingRight="30dp"
+                    android:id="@+id/activity_route_detail_end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="13:40 L M M J"/>
+                    android:ellipsize="end"
+                    android:text="start - end"
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -59,14 +62,13 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:background="#009688"
                 android:id="@+id/activity_route_detail_ll_type" >
                 <ImageButton
                     android:id="@+id/activity_route_detail_ib_type"
                     android:layout_margin="8dp"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/ic_directions_walk_white_24dp"
+                    android:background="@android:color/transparent"
                     >
 
                 </ImageButton>

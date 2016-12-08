@@ -39,6 +39,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -64,7 +65,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
     int max_id_ac = 0;
     int min_id_ac = MESSAGES_IN_LIST;
     public static int id2 = 1; //default id for server conection
-    Match match;
+    public static Match match;
     private Socket mSocket;
     {
         try {
@@ -148,7 +149,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
         View mCustomView = mInflater.inflate(R.layout.activity_message_custom_actionbar, null);
         TextView tvUserName = (TextView) mCustomView.findViewById(R.id.activity_message_custom_actionbar_title);
         tvUserName.setText(match.getFirst_name());
-        ImageView ivProfile = (ImageView) mCustomView.findViewById(R.id.activity_message_custom_actionbar_image);
+        CircleImageView ivProfile = (CircleImageView) mCustomView.findViewById(R.id.activity_message_custom_actionbar_image);
         if(match.getImage()!=null) {
             Glide.with(this).load(match.getImage()).into(ivProfile);
         }

@@ -110,7 +110,9 @@ public class MatchFragment extends ComunicationFragmentManager {
                     public void onResponse(Call<List<Match>> call, Response<List<Match>> response) {
                         realm.beginTransaction();
                         realm.delete(Match.class);
-                        for(Match match:response.body()) {
+                        for(int i = 0; i< response.body().size(); i++) {
+                            Match match = response.body().get(i);
+                            match.setImage(Statics.SERVER_BASE_URL+"static/images/"+i+".jpg");
                             RealmObject realmMatch= realm.copyToRealmOrUpdate(match);
                         }
                         realm.commitTransaction();

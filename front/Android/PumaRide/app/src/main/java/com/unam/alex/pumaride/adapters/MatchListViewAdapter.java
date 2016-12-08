@@ -13,6 +13,7 @@ import com.unam.alex.pumaride.R;
 import com.unam.alex.pumaride.listeners.RecyclerViewClickListener;
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.Message;
+import com.unam.alex.pumaride.utils.Statics;
 import com.unam.alex.pumaride.viewholders.MatchViewHolder;
 
 import java.text.SimpleDateFormat;
@@ -56,8 +57,10 @@ public class MatchListViewAdapter extends RecyclerView.Adapter<MatchViewHolder> 
         tvName.setText(Match_list.get(i).getFirst_name());
         ImageView ivImage = Match_ViewHolder.getiImage();
         if(Match_list.get(i).getImage()!=null) {
-            Glide.with(context).load(Match_list.get(i).getImage()).into(ivImage);
+          Glide.with(context).load(Match_list.get(i).getImage()).into(ivImage);
         }
+        //String image =Statics.SERVER_BASE_URL+"static/images/"+i+".jpg";
+        //Glide.with(context).load(image).into(ivImage);
         Match_ViewHolder.settName(tvName);
         try {
             Message message = realm.where(Message.class).equalTo("user_id", Match_list.get(i).getId()).or().equalTo("user_id2", Match_list.get(i).getId()).

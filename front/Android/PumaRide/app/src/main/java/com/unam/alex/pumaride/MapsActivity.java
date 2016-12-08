@@ -1,19 +1,17 @@
 package com.unam.alex.pumaride;
-
-import android.*;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,8 +19,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
@@ -43,11 +47,12 @@ import com.rey.material.app.Dialog;
 import com.rey.material.app.DialogFragment;
 import com.rey.material.app.TimePickerDialog;
 import com.unam.alex.pumaride.adapters.DayListViewAdapter;
-import com.unam.alex.pumaride.adapters.RouteListViewAdapter;
 import com.unam.alex.pumaride.listeners.RecyclerViewClickListener;
 import com.unam.alex.pumaride.models.Day;
+import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.Message;
 import com.unam.alex.pumaride.models.MyLatLng;
+import com.unam.alex.pumaride.models.ReverseGeoCodeResult;
 import com.unam.alex.pumaride.models.Route;
 import com.unam.alex.pumaride.models.Route2;
 import com.unam.alex.pumaride.retrofit.WebServices;
@@ -57,12 +62,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
-import io.realm.Sort;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,7 +88,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int clickCounter = 0;
     private Route route ;
     Realm realm = null;
-
+    SweetAlertDialog loadingDialog;
     private final int REQUEST_LOCATION = 1;
     @BindView(R.id.fab)
     FloatingActionMenu fab;
@@ -96,7 +104,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DayListViewAdapter mAdapter;
     Dialog.Builder builder = null;
     List<Day> days = new ArrayList<Day>();
-
+    android.app.Dialog dialogLookingFor = null;
+    android.app.Dialog dialogNewMatch= null;
+    public LatLng latlng;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,8 +240,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mGoogleApiClient.connect();
         mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Statics.GOOGLE_API_REVERSE_GEOCODE)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
             @Override
             public void onMapClick(LatLng latLng) {
+                latlng = latLng;
+                WebServices webServices = retrofit.create(WebServices.class);
+                String key,latlng_;
+                latlng_ = latlng.latitude+","+latlng.longitude;
+                key = "AIzaSyAp6kuJ8vLmenz8QZJQszwSvyug_AE0LpY";
+                loadingDialog = new SweetAlertDialog(MapsActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+                loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                loadingDialog.setTitleText("Loading");
+                loadingDialog.setCancelable(false);
+                loadingDialog.show();
                 switch (clickCounter){
                     case 2:
                         clickCounter = 0;
@@ -240,12 +264,50 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         line.remove();
                     case 0:
                         //mMarker1 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Source").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_green_a_24px)));
-                        mMarker1 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Source").icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_person_pin_circle_green_a_24px))));
+                        Call<ReverseGeoCodeResult> call = webServices.getAddressFromLoc(latlng_,key);
+                        call.enqueue(new Callback<ReverseGeoCodeResult>() {
+                                         @Override
+                                         public void onResponse(Call<ReverseGeoCodeResult> call, Response<ReverseGeoCodeResult> response) {
+                                             loadingDialog.dismissWithAnimation();
+                                             ReverseGeoCodeResult result = response.body();
+                                             mMarker1 = mGoogleMap.addMarker(new MarkerOptions().position(latlng).title(result.getResult().get(0).getFormatted_address()).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_person_pin_circle_green_a_24px))));
+                                             mMarker1.showInfoWindow();
+                                             route.setStart(result.getResult().get(0).getFormatted_address());
+                                         }
+
+                                         @Override
+                                         public void onFailure(Call<ReverseGeoCodeResult> call, Throwable t) {
+
+                                         }
+                                     }
+                        );
+
                         break;
                     case 1:
                         //mMarker2 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Target").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_orange_b_24px)));
-                        mMarker2 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Target").icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_person_pin_circle_orange_b_24px))));
-                        drawPoliLineFromServer();
+                        latlng_ = latlng.latitude+","+latlng.longitude;
+                        key = "AIzaSyAp6kuJ8vLmenz8QZJQszwSvyug_AE0LpY";
+
+                        Call<ReverseGeoCodeResult> call2 = webServices.getAddressFromLoc(latlng_,key);
+                        call2.enqueue(new Callback<ReverseGeoCodeResult>() {
+                                         @Override
+                                         public void onResponse(Call<ReverseGeoCodeResult> call, Response<ReverseGeoCodeResult> response) {
+                                             ReverseGeoCodeResult result = response.body();
+                                             loadingDialog.dismissWithAnimation();
+                                             mMarker2 = mGoogleMap.addMarker(new MarkerOptions().position(latlng).title(result.getResult().get(0).getFormatted_address()).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_person_pin_circle_orange_b_24px))));
+                                             mMarker1.hideInfoWindow();
+                                             mMarker2.showInfoWindow();
+                                             route.setEnd(result.getResult().get(0).getFormatted_address());
+                                             drawPoliLineFromServer();
+                                         }
+
+                                         @Override
+                                         public void onFailure(Call<ReverseGeoCodeResult> call, Throwable t) {
+
+                                         }
+                                     }
+                        );
+
                         break;
                 }
                 clickCounter+=1;
@@ -260,7 +322,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void drawPoliLineFromServer(){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Statics.SERVER_BASE_URL)
+                .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -270,7 +332,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         target = "\"("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")\"";
 
         Call<Route2> call = webServices.getShortestPath(source,target);
-        //Call<Route2> call = webServices.getShortestPath();
         call.enqueue(new Callback<Route2>() {
             @Override
             public void onResponse(Call<Route2> call, Response<Route2> response) {
@@ -280,13 +341,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 route2 = response.body();
                 route.getShortest_path().clear();
                 for(float[] r:route2.getShortest_path()){
-                    LatLng latlng = new LatLng(r[0],r[1]);
+                    LatLng latlng = new LatLng(r[1],r[0]);
                     MyLatLng myLL = new MyLatLng();
-                    myLL.setLatitude(r[0]);
-                    myLL.setLongitude(r[1]);
+                    myLL.setLatitude(r[1]);
+                    myLL.setLongitude(r[0]);
                     route.getShortest_path().add(myLL);
                     positions.add(latlng);
                 }
+                route.setId(route2.getId());
                 line = mGoogleMap.addPolyline(new PolylineOptions()
                         .addAll(positions)
                         .width(5)
@@ -390,7 +452,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (item.getItemId()) {
             case R.id.save_route:
                 Toast.makeText(getApplicationContext(),"Guardar",Toast.LENGTH_SHORT).show();
-                save();
+               // save();
+                createLookingForDialog();
                 return true;
             case android.R.id.home:
                 finish();
@@ -398,5 +461,89 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    public void createNewMatchDialog(){
+        dialogNewMatch = new android.app.Dialog(this);
+        dialogNewMatch.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogNewMatch.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogNewMatch.getWindow().setWindowAnimations(R.style.DialogNoAnimation);
+        dialogNewMatch.setContentView(R.layout.activity_maps_custom_dialog_new_match);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialogNewMatch.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        dialogNewMatch.getWindow().setAttributes(lp);
+        dialogNewMatch.show();
+
+        //YoYo.with(Techniques.FadeIn).duration(500).playOn(dialog.findViewById(R.id.custom_dialog_content));
+
+        Button message = (Button)dialogNewMatch.findViewById(R.id.custom_dialog_new_match_button_message);
+        Button acept = (Button)dialogNewMatch.findViewById(R.id.custom_dialog_new_match_button_acept);
+        CircleImageView image = (CircleImageView)dialogNewMatch.findViewById(R.id.activity_maps_custom_dialog_new_match_image);
+        TextView name = (TextView)dialogNewMatch.findViewById(R.id.activity_maps_custom_dialog_new_match_name);
+        //ImageView icon = (ImageView)dialog.findViewById(R.id.custom_dialog_image);
+        //int green = ContextCompat.getColor(getApplicationContext(),R.color.green_primary_color);
+        //icon.setColorFilter(green);
+
+        RealmResults<Match> matches = realm.where(Match.class).findAll();
+        int id = new Random().nextInt(matches.size()-1);
+        if(matches.get(id).getImage()!=null)
+            Glide.with(getApplicationContext()).load(matches.get(id).getImage()).into(image);
+        name.setText("¡"+matches.get(id).getFirst_name()+" "+matches.get(id).getLast_name()+" es tu nuevo acompañante!");
+
+        int acept_color = ContextCompat.getColor(getApplicationContext(),R.color.blue_primary_color);
+        int message_color = ContextCompat.getColor(getApplicationContext(), R.color.teal_primary_color);
+        dialogNewMatch.setCanceledOnTouchOutside(false);
+        acept.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, acept_color));
+        message.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, message_color));
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogNewMatch.dismiss();
+            }
+        });
+        ////
+        acept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //validator.validate();
+                save();
+                dialogNewMatch.dismiss();
+                finish();
+            }
+        });
+    }
+    public void createLookingForDialog(){
+        dialogLookingFor = new android.app.Dialog(this);
+        dialogLookingFor.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogLookingFor.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogLookingFor.getWindow().setWindowAnimations(R.style.DialogNoAnimation);
+        dialogLookingFor.setContentView(R.layout.activity_maps_custom_dialog_looking_for);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialogLookingFor.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        dialogLookingFor.getWindow().setAttributes(lp);
+        dialogLookingFor.show();
+
+        //YoYo.with(Techniques.FadeIn).duration(500).playOn(dialog.findViewById(R.id.custom_dialog_content));
+
+        Button cancel = (Button)dialogLookingFor.findViewById(R.id.custom_dialog_button_cancel);
+        //ImageView icon = (ImageView)dialog.findViewById(R.id.custom_dialog_image);
+        //int green = ContextCompat.getColor(getApplicationContext(),R.color.green_primary_color);
+        //icon.setColorFilter(green);
+        int acept_color = ContextCompat.getColor(getApplicationContext(),R.color.blue_primary_color);
+        int cancel_color = ContextCompat.getColor(getApplicationContext(), R.color.gray_primary_color);
+        dialogLookingFor.setCanceledOnTouchOutside(false);
+        cancel.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, cancel_color));
+
+        ////
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //validator.validate();
+                dialogLookingFor.dismiss();
+                createNewMatchDialog();
+            }
+        });
+
     }
 }

@@ -7,9 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.unam.alex.pumaride.adapters.MessageListViewAdapter;
 import com.unam.alex.pumaride.adapters.RouteListViewAdapter;
 import com.unam.alex.pumaride.models.Route;
+import com.unam.alex.pumaride.widgets.SquareImageView;
 
 import java.util.ArrayList;
 
@@ -20,6 +22,8 @@ public class MatchDetailActivity extends AppCompatActivity {
     @BindView(R.id.activity_match_detail_rv) RecyclerView rvRoutes;
     private RouteListViewAdapter mAdapter;
     private ArrayList<Route> routes = new ArrayList<Route>();
+    @BindView(R.id.activity_match_detail_square_image)
+    SquareImageView squareImageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,8 @@ public class MatchDetailActivity extends AppCompatActivity {
         routes.add(r2);
         routes.add(r3);
         init();
+        Glide.with(this).load(MessageActivity.match.getImage()).into(squareImageView);
+        setTitle(MessageActivity.match.getFirst_name()+" "+MessageActivity.match.getLast_name());
     }
     public void init(){
         mAdapter = new RouteListViewAdapter(routes,getApplicationContext());

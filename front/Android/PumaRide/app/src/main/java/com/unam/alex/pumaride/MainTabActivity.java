@@ -43,6 +43,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    RouteFragment rFragment = null;
     //array for fragments
     int fragments[] = {R.layout.fragment_route,R.layout.fragment_match};
     @Override
@@ -52,6 +53,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        rFragment = new RouteFragment();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -86,7 +88,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         //noinspection SimplifiableIfStatement
         if (id == R.id.add_route) {
             Intent i = new Intent(getApplicationContext(),MapsActivity.class);
-            startActivity(i);
+            startActivityForResult(i,100);
         }else if (id == R.id.profile){
             Intent i = new Intent(getApplicationContext(),ProfileActivity.class);
             startActivity(i);
@@ -98,6 +100,12 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        rFragment.refres();
     }
 
     /**
@@ -153,7 +161,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
             // Return a PlaceholderFragment (defined as a static inner class below).
             Fragment newFragment = null;
             if(position == 0){
-                newFragment = new MyMapFragment();
+                newFragment = rFragment;
             }else{
                 newFragment = new MatchFragment();
             }
