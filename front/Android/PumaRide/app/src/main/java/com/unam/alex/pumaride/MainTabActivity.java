@@ -1,8 +1,10 @@
 package com.unam.alex.pumaride;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,11 +23,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.unam.alex.pumaride.fragments.MatchFragment;
 import com.unam.alex.pumaride.fragments.MyMapFragment;
 import com.unam.alex.pumaride.fragments.RouteFragment;
 import com.unam.alex.pumaride.fragments.listeners.OnFragmentInteractionListener;
+import com.unam.alex.pumaride.models.User;
+import com.unam.alex.pumaride.retrofit.WebServices;
+import com.unam.alex.pumaride.services.MessageService;
+import com.unam.alex.pumaride.utils.Statics;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainTabActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
@@ -65,6 +79,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         setTitle("PumaRide");
+        init();
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +92,43 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         */
 
     }
+    public void init() {
+        SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
+        String token = sp.getString("token", "");
+        String email = sp.getString("email","");
+        String first_name = sp.getString("first_name","");
+        String last_name = sp.getString("last_name","");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Statics.SERVER_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
+        WebServices webServices = retrofit.create(WebServices.class);
+
+        Call<User> call = webServices.getUserMe("token "+token);
+        Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User u = response.body();
+                Toast.makeText(getApplicationContext(),new Gson().toJson(u),Toast.LENGTH_SHORT).show();
+                SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putInt("userid",u.getId());
+                editor.putString("first_name", u.getFirst_name());
+                editor.putString("last_name", u.getLast_name());
+                editor.commit();
+                if(!isMyServiceRunning( MessageService.class)){
+                    startService(new Intent(getApplicationContext(), MessageService.class));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"ando fallando",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
