@@ -54,6 +54,72 @@
     cwjs.src = "//chatwing.com/code/a8226d90-bd0a-11e6-bcd3-f92e6144405f/embedded";
     d.getElementsByTagName('head')[0].appendChild(cwjs);
   })(document);
+
+  $(function () {
+    $('.button-checkbox').each(function () {
+
+        // Settings
+        var $widget = $(this),
+            $button = $widget.find('button'),
+            $checkbox = $widget.find('input:checkbox'),
+            color = $button.data('color'),
+            settings = {
+                on: {
+                    icon: 'glyphicon glyphicon-check'
+                },
+                off: {
+                    icon: 'fa fa-square-o'
+                }
+            };
+
+        // Event Handlers
+        $button.on('click', function () {
+            $checkbox.prop('checked', !$checkbox.is(':checked'));
+            $checkbox.triggerHandler('change');
+            updateDisplay();
+        });
+        $checkbox.on('change', function () {
+            updateDisplay();
+        });
+
+        // Actions
+        function updateDisplay() {
+            var isChecked = $checkbox.is(':checked');
+
+            // Set the button's state
+            $button.data('state', (isChecked) ? "on" : "off");
+
+            // Set the button's icon
+            $button.find('.state-icon')
+                .removeClass()
+                .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+            // Update the button's color
+            if (isChecked) {
+                $button
+                    .removeClass('btn-default')
+                    .addClass('btn-' + color + ' active');
+            }
+            else {
+                $button
+                    .removeClass('btn-' + color + ' active')
+                    .addClass('btn-default');
+            }
+        }
+
+        // Initialization
+        function init() {
+
+            updateDisplay();
+
+            // Inject the icon if applicable
+            if ($button.find('.state-icon').length == 0) {
+                $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i> ');
+            }
+        }
+        init();
+    });
+});
 </script>
 
 
@@ -149,12 +215,34 @@
                                      &nbsp;&nbsp;&nbsp;&nbsp;<i style="font-size:24px; color:white" class="fa fa-bus"></i>-->
     
     <!--http://zavoloklom.github.io/material-design-iconic-font/examples.html-->                        
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:30px; color:white" class="zmdi zmdi-walk"></i>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:30px; color:white" class="zmdi zmdi-bike"></i>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:30px; color:white" class="zmdi zmdi-bus"></i>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i style="font-size:30px; color:white" class="zmdi zmdi-car"></i>
-                              
+   <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type ="checkbox" style="font-size:30px; color:white" class="zmdi zmdi-walk"/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type ="checkbox" style="font-size:30px; color:white" class="zmdi zmdi-bike"/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type ="checkbox" style="font-size:30px; color:white" class="zmdi zmdi-bus"/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type ="checkbox" style="font-size:30px; color:white" class="zmdi zmdi-car"/>
+      --> 
+  
+       <div class="container"> 
+        <span class="button-checkbox">
+        <button type="button" class="btn" data-color="primary"><i class="zmdi zmdi-walk"></i></button>
+        <input id="walk" type="checkbox" class="hidden" autocomplete="off"/>
+        </span> 
+
+        <span class="button-checkbox">
+        <button type="button" class="btn" data-color="primary"><i class="zmdi zmdi-bike"></i></button>
+        <input id="bike" type="checkbox" class="hidden" autocomplete="off"/>
+        </span> 
+
+        <span class="button-checkbox">
+        <button type="button" class="btn" data-color="primary"><i class="zmdi zmdi-bus"></i></button>
+        <input id="bus" type="checkbox" class="hidden" autocomplete="off"/>
+        </span>    
+
+        <span class="button-checkbox">
+        <button type="button" class="btn" data-color="primary"><i class="zmdi zmdi-car"></i></button>
+        <input id="car" type="checkbox" class="hidden" autocomplete="off"/>
+        </span> 
+       </div>
       <!-- search form -->
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
@@ -220,7 +308,7 @@
           </ul>
         </li>
         <li class="treeview">
-          <a href="#">
+          <a href="#" onclick="medioTransporte()">
             <i class="fa fa-users"></i>
             <span>Friends</span>
             <span class="pull-right-container">
@@ -274,8 +362,10 @@
             <div class="box-header">
               <!-- tools box -->
               <div class="pull-right box-tools">
-                <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="Date range">
-                  <i class="fa fa-calendar"></i></button>
+                  <span class="button-checkbox">
+                     <button type="button" class="btn" data-color="primary"><i class="fa fa-crosshairs"></i></button>
+                    <input id="gps" type="checkbox" class="hidden" autocomplete="off"/>
+                 </span> 
               </div>
               <!-- /. tools -->
 
@@ -459,13 +549,10 @@ function initAutocomplete() {
 function fillInAddressO() {
   // Get the place details from the autocomplete object.
   var place = autocompleteO.getPlace();
-<<<<<<< HEAD
-  origenLocation=place.geometry.location;
-    alert("Origen "+origenLocation);
-=======
+
   alert("Origen "+place.geometry.location);
   origenLocation=place.geometry.location;// Origen coordenadas
->>>>>>> origin/master
+
 }
 function fillInAddressD() {
   // Get the place details from the autocomplete object.
@@ -546,6 +633,29 @@ cadVariables = location.search.substring(1,location.search.length);
            x = cadVariables.split('=');
            return x[1];
 }
+
+
+function medioTransporte(){
+  var car = document.getElementById("car").checked;
+  var bus = document.getElementById("bus").checked;
+  var bike = document.getElementById("bike").checked;
+  var walk = document.getElementById("walk").checked;
+   if(car){
+    return 1;
+  }if (bike){
+    return 2;
+  }if(walk){
+    return 3;
+  }if(bus){
+    return 4;
+  }if(car && walk){
+    return 5;
+  }
+}
+
+
+
+
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjRBSmn8erbF3Bd4a-ZN27s3a5_MEPioE&libraries=places&callback=initAutocomplete"
         async defer></script>
