@@ -37,6 +37,7 @@ class Line(models.Model):
 	camino_mas_corto=models.CharField(max_length=250,default="")
 	tipo_transporte=models.CharField(max_length=50,default=1)
 	user_id=models.CharField(max_length=50,default=0)
+	guardar=models.CharField(max_length=50,default=False)
 
 	class Meta:
 		verbose_name = "Line"
@@ -93,12 +94,15 @@ class Line(models.Model):
 				#(con, c) = postgis_connect.connect()
 				#postgis_connect.agregar_ruta(c, self.id, , poly_linet, self.tipo_transporte)
 				#con.commit()
+				if self.guardar != False:
 
-				query = "insert into ruta values(DEFAULT, ST_GeomFromText('LINESTRING(%s)',4326), %s, %s)" % (poly_linet, self.tipo_transporte, self.user_id)
-				cursor.execute(query)
+					query = "insert into ruta values(DEFAULT, ST_GeomFromText('LINESTRING(%s)',4326), %s, %s) RETURNING id_ruta" % (poly_linet, self.tipo_transporte, self.user_id)
+					cursor.execute(query)
 
-				query = "insert into horario_ruta values (DEFAULT, ST_GeomFromText('POINT(%s)'), ST_GeomFromText('POINT(%s)'), ('2000-01-01 00:00:00'), ('2000-01-01 00:00:00'))" % ("%s %s" % (a_lat, a_lon), "%s %s" % (b_lat, b_lon))
-				cursor.execute(query)
+					(self.id, ) = cursor.fetchone()
+
+					query = "insert into horario_ruta values (DEFAULT, ST_GeomFromText('POINT(%s)'), ST_GeomFromText('POINT(%s)'), ('2000-01-01 00:00:00'), ('2000-01-01 00:00:00'))" % ("%s %s" % (a_lat, a_lon), "%s %s" % (b_lat, b_lon))
+					cursor.execute(query)
 
 				#connection.commit()
 

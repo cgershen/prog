@@ -15,6 +15,19 @@ class PointViewSet(viewsets.ModelViewSet):
     queryset = Point.objects.all()
     serializer_class = PointSerializer
 """
+@api_view(['GET'])
+def test(request):
+	if request.user.is_authenticated():
+		return Response({
+			'id': request.user.id,
+			'email': request.user.email,
+			'first_name': request.user.first_name,
+			'last_name': request.user.first_name,
+		})
+	else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
 @api_view(['GET','POST'])
 def points_list(request):
 	if request.method=='GET':
@@ -101,6 +114,14 @@ def line(request):
 		else:
 			serializer=LineSerializer(data=request.data)
 			if serializer.is_valid():
+
 				serializer.save()
-				return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+				if "guardar" in request.data:
+					return Response(serializer.data, status=status.HTTP_201_CREATED)
+				else:
+					serializer.save()
+					return Response(serializer.data)
+
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
