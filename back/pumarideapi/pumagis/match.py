@@ -3,14 +3,7 @@ import psycopg2
 
 def line_transform(ruta_raw, strip=False):
 	points = re.findall("(-?[0-9\.]+) (-?[0-9\.]+)", ruta_raw)
-
-	if strip:
-		end = points[-1]
-		ruta = points[0::2]
-		ruta = ruta + [end]
-		return ruta
-	else:
-		return points
+	return points
 
 def get_matches(cur, r_id):
 
@@ -21,9 +14,7 @@ def get_matches(cur, r_id):
 	if modo == 1 or modo == 2:
 
 		try:
-		    cur.execute(""" select tabla.id_match, tabla.path_match from (select tabla_rutas.id_original as id_original, tabla_rutas.id_match as id_match, tabla_rutas.path_match as path_match,
-				horario_ruta.origen_hora as horario_inicio_original from (select a.id_ruta as id_original, b.id_ruta as id_match, ST_AsText(ST_Intersection(a.puntos,b.puntos)) as path_match, ((ST_Length(ST_Intersection(a.puntos,b.puntos)))*100)/(LEAST(ST_Length(a.puntos),ST_Length(b.puntos))) as porcentaje from ruta a, ruta b where 
-				(((ST_Length(ST_Intersection(a.puntos,b.puntos)))*100)/(LEAST(ST_Length(a.puntos),ST_Length(b.puntos))) > 40) and a.id_ruta != b.id_ruta and a.id_ruta = %s and a.modo = %s and a.modo = b.modo order by porcentaje desc) as tabla_rutas inner join horario_ruta on tabla_rutas.id_original = horario_ruta.id_ruta) as tabla inner join horario_ruta on tabla.id_match = horario_ruta.id_ruta where abs(extract(epoch from horario_ruta.origen_hora)-extract(epoch from tabla.horario_inicio_original)) < 20 limit 5;""", (r_id, modo))
+		    cur.execute(""" select matches.user_id, matches.id_match, matches.ruta_match, matches.origen_match, matches.destino_match, sesiones_pumausuario.first_name, sesiones_pumausuario.last_name from (select tabla.user_id as user_id, tabla.id_match as id_match, tabla.ruta_match as ruta_match, ST_AsText(origen) as origen_match, ST_AsText(destino) as destino_match from (select user_id, tabla_rutas.id_match as id_match, tabla_rutas.ruta_match as ruta_match, horario_ruta.origen_hora as origen_hora from (select b.user_id, a.id_ruta as id_original, b.id_ruta as id_match, ST_AsText(b.puntos) as ruta_match, ((ST_Length(ST_Intersection(a.puntos,b.puntos)))*100)/(LEAST(ST_Length(a.puntos),ST_Length(b.puntos))) as porcentaje from ruta a, ruta b where (((ST_Length(ST_Intersection(a.puntos,b.puntos)))*100)/(LEAST(ST_Length(a.puntos),ST_Length(b.puntos))) > 40) and a.id_ruta != b.id_ruta and a.id_ruta = %s and a.modo = %s and a.modo = b.modo order by porcentaje desc) as tabla_rutas inner join horario_ruta on tabla_rutas.id_original = horario_ruta.id_ruta) as tabla inner join horario_ruta on tabla.id_match = horario_ruta.id_ruta where abs(extract(epoch from horario_ruta.origen_hora)-extract(epoch from tabla.origen_hora)) <  extract(epoch from (20 * interval '1 minute')) limit 5) as matches inner join sesiones_pumausuario on matches.user_id = sesiones_pumausuario.id;  """, (r_id, modo))
 		except:
 			print("Couldn't execute second query.")
 
@@ -32,10 +23,13 @@ def get_matches(cur, r_id):
 	data = []
 	for row in rows:
 
-		ruta_raw = row[1][16:-1]
+		ruta_raw = row[2][16:-1]
 		data.append({
-			'ruta_id': row[0],
-			'ruta': line_transform(ruta_raw, True)
+			'ruta': line_transform(ruta_raw, True),
+			'user_id': row[0],
+			'ruta_id': row[1],
+			'first_name': row[5],
+			'last_name': row[6],
 		})
 
 	return data
@@ -48,4 +42,4 @@ if __name__ == '__main__':
 
 	data = get_matches(cur, r_id)
 	for d in data:
-		print(d[0], d[1])
+		print(d)

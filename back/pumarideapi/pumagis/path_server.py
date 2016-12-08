@@ -37,7 +37,7 @@ DF_Calles = "Capas/CallesDF.shp"
 DF_Metro_Vialidad = "Capas/DF_a metro_Vialidad_polyline.shp"
 DF_Bicis = "Capas/Rutas Bicis_polyline.shp"
 
-MAX_BUFFER = 2056 # Maximum message length
+MAX_BUFFER = 8192 # Maximum message length
 
 """
 Functions
@@ -99,6 +99,8 @@ def getShortestPath(layer, start, end):
             point = graph.vertex(arc.inVertex()).point()
             path.append("%s,%s" % (point.x(), point.y()))
             cursor = arc.outVertex()
+
+    print(path)
 
     return ';'.join(path)
 
@@ -173,7 +175,7 @@ if __name__ == '__main__':
     layer_metro_vialidad = loadLayerSafely(DF_Metro_Vialidad, "DF_Metro_Vialidad")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(('127.0.0.1', 8011))
+    sock.bind(('127.0.0.1', 8111))
     sock.listen(10)
 
     # Query

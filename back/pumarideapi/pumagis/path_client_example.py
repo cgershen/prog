@@ -6,7 +6,7 @@ import shortest_path
 def sendRequest(a_x, a_y, b_x, b_y):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect(('127.0.0.1', 8011))
+    sock.connect(('127.0.0.1', 8111))
 
     message = "%s %s %s %s" % (a_x, a_y, b_x, b_y)
 
@@ -15,4 +15,4 @@ def sendRequest(a_x, a_y, b_x, b_y):
 
     print(reply)
 
-sendRequest(-99.116625,19.33599, -99.201833,19.309861)
+sendRequest(-99.087066,19.469667, -99.2128944,19.453724)
