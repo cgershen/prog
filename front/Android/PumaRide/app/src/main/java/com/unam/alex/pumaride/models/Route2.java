@@ -17,7 +17,42 @@ public class Route2 {
     private float[] origin_point;
     private float[] destination_point;
     private String tipo_transporte;
-    private String image;
+    private String guardar;
+    private String p_origen;
+    private String p_destino;
+    private String user_id;
+
+    public String getGuardar() {
+        return guardar;
+    }
+
+    public void setGuardar(String guardar) {
+        this.guardar = guardar;
+    }
+
+    public String getP_origen() {
+        return p_origen;
+    }
+
+    public void setP_origen(String p_origen) {
+        this.p_origen = p_origen;
+    }
+
+    public String getP_destino() {
+        return p_destino;
+    }
+
+    public void setP_destino(String p_destino) {
+        this.p_destino = p_destino;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
 
     public int getId() {
         return id;
@@ -25,14 +60,6 @@ public class Route2 {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public ArrayList<float[]> getShortest_path() {

@@ -39,7 +39,7 @@ public interface WebServices {
     Call<User> resetPassword(@Field("email") String email);
     @FormUrlEncoded
     @POST("api/lines/")
-    Call<Route2> getShortestPath(@Field("p_origen") String source, @Field("p_destino") String target);
+    Call<Route2> getShortestPath(@Field("p_origen") String source, @Field("p_destino") String target,@Field("guardar") String guardar,@Field("user_id") int User_id);
     @GET("json")
     Call<ReverseGeoCodeResult> getAddressFromLoc(@Query("latlng") String latlng,@Query("key") String key);
 }

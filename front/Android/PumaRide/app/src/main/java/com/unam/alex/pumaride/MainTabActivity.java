@@ -106,12 +106,12 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         WebServices webServices = retrofit.create(WebServices.class);
 
         Call<User> call = webServices.getUserMe("token "+token);
-        Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User u = response.body();
-                Toast.makeText(getApplicationContext(),new Gson().toJson(u),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),new Gson().toJson(u),Toast.LENGTH_SHORT).show();
                 SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putInt("userid",u.getId());

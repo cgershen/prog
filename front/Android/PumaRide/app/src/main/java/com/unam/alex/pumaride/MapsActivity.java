@@ -1,4 +1,6 @@
 package com.unam.alex.pumaride;
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -107,6 +109,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     android.app.Dialog dialogLookingFor = null;
     android.app.Dialog dialogNewMatch= null;
     public LatLng latlng;
+    public int user_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +117,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ButterKnife.bind(this);
         route = new Route();
         route.setMode(Route.WALK);
-
+        SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
+        user_id = sp.getInt("userid",1);
+        Toast.makeText(getApplicationContext(),user_id+"", Toast.LENGTH_SHORT).show();
         Realm.init(getApplicationContext());
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
@@ -165,12 +170,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mAdapter.SetRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position, boolean isLongClick, final int id) {
-                Toast.makeText(MapsActivity.this, "asdas"+id, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MapsActivity.this, "asdas"+id, Toast.LENGTH_SHORT).show();
                 builder = new TimePickerDialog.Builder( R.style.Material_App_Dialog_TimePicker, 24, 00){
                     @Override
                     public void onPositiveActionClicked(DialogFragment fragment) {
                         TimePickerDialog dialog = (TimePickerDialog)fragment.getDialog();
-
                         Calendar c = Calendar.getInstance();
                         c.set(Calendar.YEAR,2016);
                         c.set(Calendar.MONTH,1);
@@ -201,7 +205,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         rvDays.setLayoutManager(layoutManager);
         rvDays.setHasFixedSize(true);
 
-        Toast.makeText(getApplicationContext(), realm.where(Route.class).count()+"", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), realm.where(Route.class).count()+"", Toast.LENGTH_SHORT).show();
 
     }
     @OnClick(R.id.app_bar_main_menu_item_0) void item0(){
@@ -293,7 +297,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                          @Override
                                          public void onResponse(Call<ReverseGeoCodeResult> call, Response<ReverseGeoCodeResult> response) {
                                              ReverseGeoCodeResult result = response.body();
-                                             loadingDialog.dismissWithAnimation();
+
                                              mMarker2 = mGoogleMap.addMarker(new MarkerOptions().position(latlng).title(result.getResult().get(0).getFormatted_address()).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_person_pin_circle_orange_b_24px))));
                                              mMarker1.hideInfoWindow();
                                              mMarker2.showInfoWindow();
@@ -328,14 +332,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         WebServices webServices = retrofit.create(WebServices.class);
         String source,target;
-        source = "\"("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")\"";
-        target = "\"("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")\"";
+        source = "("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")";
+        target = "("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")";
 
-        Call<Route2> call = webServices.getShortestPath(source,target);
+        Call<Route2> call = webServices.getShortestPath(source,target,"guardar",user_id);
         call.enqueue(new Callback<Route2>() {
             @Override
             public void onResponse(Call<Route2> call, Response<Route2> response) {
-                Toast.makeText(getApplicationContext(),new Gson().toJson(response.body()),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),new Gson().toJson(response.body()),Toast.LENGTH_SHORT).show();
                 ArrayList<LatLng> positions = new ArrayList<LatLng>();
                 Route2 route2  = new Route2();
                 route2 = response.body();
@@ -353,10 +357,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .addAll(positions)
                         .width(5)
                         .color(Color.RED));
+                loadingDialog.dismissWithAnimation();
             }
             @Override
             public void onFailure(Call<Route2> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),new Gson().toJson(call),Toast.LENGTH_SHORT).show();
+                loadingDialog.dismissWithAnimation();
             }
         });
     }
@@ -451,7 +457,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save_route:
-                Toast.makeText(getApplicationContext(),"Guardar",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Guardar",Toast.LENGTH_SHORT).show();
                // save();
                 createLookingForDialog();
                 return true;

@@ -13,7 +13,7 @@ public class Statics {
     private Statics() {
     }
     public static String SERVER_BASE_URL = "http://pumaride.codingo.mx/";
-    public static String AUXILIAR_SERVER_BASE_URL = "http://35.164.20.251:8000/";
+    public static String AUXILIAR_SERVER_BASE_URL = "http://35.162.215.204:8000/";
     public static String CHAT_SERVER_BASE_URL = "http://184.173.94.0:12439/";
     public static String GOOGLE_API_REVERSE_GEOCODE = "https://maps.googleapis.com/maps/api/geocode/";
 }

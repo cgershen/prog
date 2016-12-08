@@ -133,7 +133,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra(MessageService.MESSAGE);
                 Message m = new Gson().fromJson(s,Message.class);
-                Toast.makeText(getApplicationContext(),"hola " + s,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"hola " + s,Toast.LENGTH_SHORT).show();
                 addMessage(m);
             }
         };
@@ -249,7 +249,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.new_game:
-                        Toast.makeText(getApplicationContext(),"new_game",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"new_game",Toast.LENGTH_SHORT).show();
                         return true;
 
                     case R.id.help:
@@ -279,7 +279,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
 
     @Override
     public void onLoadEarlierMessages() {
-        Toast.makeText(getApplicationContext(),"cargar mensajes",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"cargar mensajes",Toast.LENGTH_SHORT).show();
         loadMore();
     }
     public void loadMore(){

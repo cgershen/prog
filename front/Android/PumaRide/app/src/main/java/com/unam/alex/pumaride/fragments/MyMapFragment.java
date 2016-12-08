@@ -176,7 +176,7 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         source = "\"("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")\"";
         target = "\"("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")\"";
 
-        Call<Route2> call = webServices.getShortestPath(source,target);
+        Call<Route2> call = webServices.getShortestPath(source,target,"sasd+",2);
         call.enqueue(new Callback<Route2>() {
             @Override
             public void onResponse(Call<Route2> call, Response<Route2> response) {

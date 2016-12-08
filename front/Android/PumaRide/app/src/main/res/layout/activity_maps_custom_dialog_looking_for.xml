@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:indicatorColor="@color/teal_primary_color"
+        app:indicatorColor="@color/colorPrimary"
         app:indicatorName="BallPulseIndicator"
         />
     <LinearLayout
@@ -34,7 +34,7 @@
             android:layout_height="35dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/custom_cancel_button"
-            android:backgroundTint="@color/gray_light_primary_color"
+            android:backgroundTint="@color/colorCar"
             android:textSize="13dp"
             android:layout_marginRight="4dp"
             android:text="X"
