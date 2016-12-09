@@ -175,7 +175,7 @@ if __name__ == '__main__':
     layer_metro_vialidad = loadLayerSafely(DF_Metro_Vialidad, "DF_Metro_Vialidad")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(('127.0.0.1', 8111))
+    sock.bind(('127.0.0.1', 8011))
     sock.listen(10)
 
     # Query

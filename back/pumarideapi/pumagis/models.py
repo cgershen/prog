@@ -101,7 +101,7 @@ class Line(models.Model):
 
 					(self.id, ) = cursor.fetchone()
 
-					query = "insert into horario_ruta values (DEFAULT, ST_GeomFromText('POINT(%s)'), ST_GeomFromText('POINT(%s)'), ('2000-01-01 00:00:00'), ('2000-01-01 00:00:00'))" % ("%s %s" % (a_lat, a_lon), "%s %s" % (b_lat, b_lon))
+					query = "insert into horario_ruta values (%s, ST_GeomFromText('POINT(%s)'), ST_GeomFromText('POINT(%s)'), ('2000-01-01 00:00:00'), ('2000-01-01 00:00:00'))" % (self.id, "%s %s" % (a_lat, a_lon), "%s %s" % (b_lat, b_lon))
 					cursor.execute(query)
 
 				#connection.commit()
@@ -118,3 +118,10 @@ class Match(models.Model):
 	def matches(self):
 		return ["abcde"] #dict({"test":"a"})
 
+class informacion_usuario(models.Model):
+	nombre = models.CharField(max_length=250)
+	apellido = models.CharField(max_length=250)
+	foto = models.ImageField(upload_to='photos/')
+
+class status_usuario(models.Model):
+	status= models.BooleanField(default=True)

@@ -48,7 +48,7 @@ def lines_list(request,p_ori,p_des,tipo_transporte):
 		return Response({})
 	elif request.method=='POST':
 
-		if request.session['user_id']:
+		if 'user_id' in request.session:
 			request.data.user_id = request.user.id
 
 		serializer=LineSerializer(data=request.data)
@@ -80,26 +80,28 @@ def matches(request):
 
 @api_view(['GET','POST'])
 def line(request):
-	if request.method=='GET' and request.session['user_id']:
+	if request.method=='GET': # and 'user_id' in request.session:
 
 		with connection.cursor() as cursor:
-			cursor.execute("SELECT id_ruta,ST_AsText(puntos),modo FROM ruta WHERE user_id = %s", [request.session['user_id']])
+			#cursor.execute("SELECT id_ruta,ST_AsText(puntos),modo FROM ruta WHERE user_id = %s", [request.session['user_id']])
+			cursor.execute("SELECT id_ruta,user_id,ST_AsText(puntos),modo FROM ruta ORDER BY id_ruta")
 			rows = cursor.fetchall()
 
 			data = []
 			for row in rows:
 
-				ruta_raw = row[1][10:-1]
+				ruta_raw = row[2][10:-1]
 				data.append({
 					'ruta_id': row[0],
-					'ruta': match.line_transform(ruta_raw)
+					'user_id': row[1],
+					'ruta': "...", #match.line_transform(ruta_raw)
 				})
 
 		return Response(data)
 
 	elif request.method=='POST':
 
-		if request.session['user_id']:
+		if 'user_id' in request.session:
 			request.data['user_id'] = request.session['user_id']
 		#else:
 		#	request.data['user_id'] = 0 # don't let params set this
