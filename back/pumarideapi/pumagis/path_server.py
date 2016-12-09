@@ -100,7 +100,7 @@ def getShortestPath(layer, start, end):
             path.append("%s,%s" % (point.x(), point.y()))
             cursor = arc.outVertex()
 
-    print(path)
+    #print(path)
 
     return ';'.join(path)
 
