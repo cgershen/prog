@@ -269,18 +269,18 @@
       <ul class="sidebar-menu">
         <li class="header">Options</li>
         <li class="active treeview">
-          <a href="#" onclick="findMatch(0)">
+          <a href="#" onclick="findMatch(5)">
             <i class="fa fa-ils"></i> <span>Find Match</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
            <ul class="nav-list tree">
-            <li><a href="pages/charts/chartjs.html"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 1</a></li>
-            <li><a href="pages/charts/morris.html"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 2</a></li>
-            <li><a href="pages/charts/morris.html"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 3</a></li>
-            <li><a href="pages/charts/morris.html"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 4</a></li>
-            <li><a href="pages/charts/morris.html"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 5</a></li>
+            <li><a href="#" onclick="findMatch(0)"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 1</a></li>
+            <li><a href="#" onclick="findMatch(1)"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 2</a></li>
+            <li><a href="#" onclick="findMatch(2)"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 3</a></li>
+            <li><a href="#" onclick="findMatch(3)"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 4</a></li>
+            <li><a href="#" onclick="findMatch(4)"><i class="glyphicon glyphicon-resize-small">&nbsp;</i>Ruta 5</a></li>
           </ul>
         </li>  
         <li class="active treeview">
@@ -364,7 +364,7 @@
               <div class="pull-right box-tools">
                   <span class="button-checkbox">
                      <button type="button" class="btn" data-color="primary"><i class="fa fa-crosshairs"></i></button>
-                    <input id="gps" type="checkbox" class="hidden" autocomplete="off"/>
+                    <input id="gps" type="checkbox" class="hidden" autocomplete="off" checked/>
                  </span> 
               </div>
               <!-- /. tools -->
@@ -550,15 +550,22 @@ function fillInAddressO() {
   // Get the place details from the autocomplete object.
   var place = autocompleteO.getPlace();
 
-  alert("Origen "+place.geometry.location);
+  alert("Origen " + place.geometry.location);
   origenLocation=place.geometry.location;// Origen coordenadas
-
+  var o_lat_box = place.geometry.location.lat();
+  var o_lng_box = place.geometry.location.lng();
+  //origenMarcador(o_lat_box,o_lng_box);
 }
+
 function fillInAddressD() {
   // Get the place details from the autocomplete object.
   var place = autocompleteD.getPlace();
   alert("Destino "+place.geometry.location);
   destinoLocation = place.geometry.location;//Destino coordenadas
+  var d_lat_box = place.geometry.location.lat();
+  var d_lng_box = place.geometry.location.lng();
+  //destinoMarcador(d_lat_box,d_lng_box);
+
 }
 // [END region_fillform]
 
@@ -598,62 +605,12 @@ function geolocateD() {
 }
 // [END region_geolocation]
 
-
-function drawRoute(ruta,color){
-                      route = ruta;
-                      c=color;
-                      console.log(route);
-
-                      var linePoints_route = [];
-
-                      for(var i=0;i<route.length;i++){
-                        var point_route = route[i];
-                        //console.log(point_route);
-                        linePoints_route.push(new L.LatLng(Number(point_route[1]),Number(point_route[0])));
-                      }
-                      
-                      var polylineOptions = {
-                               color: c,
-                               weight: 6,
-                               opacity: 0.6
-                      };
-
-                      var polyline_route = new L.Polyline(linePoints_route, polylineOptions);
-                            
-                      map.addLayer(polyline_route);  
-                            
-
-                      // zoom the map to the polyline
-                      map.fitBounds(polyline_route.getBounds());
-}
-
 function obtenerValorToken(){
 
 cadVariables = location.search.substring(1,location.search.length);
            x = cadVariables.split('=');
            return x[1];
 }
-
-
-function medioTransporte(){
-  var car = document.getElementById("car").checked;
-  var bus = document.getElementById("bus").checked;
-  var bike = document.getElementById("bike").checked;
-  var walk = document.getElementById("walk").checked;
-   if(car){
-    return 1;
-  }if (bike){
-    return 2;
-  }if(walk){
-    return 3;
-  }if(bus){
-    return 4;
-  }if(car && walk){
-    return 5;
-  }
-}
-
-
 
 
     </script>
