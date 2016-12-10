@@ -49,4 +49,12 @@ class Line(models.Model):
 		#print "HERE"
 		poly_line=sendRequest(a_lat,a_lon,b_lat,b_lon)
 		print poly_line
-		return poly_line		
+		return poly_line
+	
+class informacion_usuario(models.Model):
+	nombre = models.CharField(max_length=250)
+	apellido = models.CharField(max_length=250)
+	foto = models.ImageField(upload_to='photos/')
+
+class status_usuario(models.Model):
+	status= models.BooleanField(default=True)
