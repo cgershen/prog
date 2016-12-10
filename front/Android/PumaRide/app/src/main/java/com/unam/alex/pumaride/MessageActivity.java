@@ -16,6 +16,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -61,7 +63,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
     int min_id_message = 0;
 
     private int id = 10;
-    private int MESSAGES_IN_LIST = 5;
+    private int MESSAGES_IN_LIST = 15;
     int max_id_ac = 0;
     int min_id_ac = MESSAGES_IN_LIST;
     public static int id2 = 1; //default id for server conection
@@ -137,7 +139,8 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
                 addMessage(m);
             }
         };
-
+        rvMessage.scrollToPosition(this.messages.size()-1);
+        
     }
     TextView tvUserName;
     public void initActionBar(){
@@ -191,17 +194,18 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
     }
     @OnClick(R.id.activity_message_btn_send)
     public void send(View v){
-        String message = etMessage.getText().toString();
-        etMessage.setText("");
-        Message m = new Message();
-        m.setType_(0);
-        m.setDatetime(getTimeInMillis());
-        m.setUser_id(id);
-        m.setUser_id2(id2);
-
-        m.setMessage(message);
-        addMessage(m);
-        sendServer(m);
+        String message = etMessage.getText().toString().trim();
+        if(!message.equals("")){
+            etMessage.setText("");
+            Message m = new Message();
+            m.setType_(0);
+            m.setDatetime(getTimeInMillis());
+            m.setUser_id(id);
+            m.setUser_id2(id2);
+            m.setMessage(message);
+            addMessage(m);
+            sendServer(m);
+        }
     }
     private void addMessage(Message m){
         messages.add(m);
@@ -316,4 +320,5 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
         setResult(Activity.RESULT_OK);
         super.onDestroy();
     }
+
 }

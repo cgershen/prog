@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -257,7 +259,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 key = "AIzaSyAp6kuJ8vLmenz8QZJQszwSvyug_AE0LpY";
                 loadingDialog = new SweetAlertDialog(MapsActivity.this, SweetAlertDialog.PROGRESS_TYPE);
                 loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                loadingDialog.setTitleText("Loading");
+                loadingDialog.setTitleText("Cargando...");
                 loadingDialog.setCancelable(false);
                 loadingDialog.show();
                 switch (clickCounter){
@@ -325,12 +327,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     public void drawPoliLineFromServer(){
 
+           traceRouteDummy();
+    }
+    public void traceRouteReal(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         WebServices webServices = retrofit.create(WebServices.class);
+
         String source,target;
         source = "("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")";
         target = "("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")";
@@ -344,6 +350,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Route2 route2  = new Route2();
                 route2 = response.body();
                 route.getShortest_path().clear();
+                if (route2.getShortest_path()!=null)
                 for(float[] r:route2.getShortest_path()){
                     LatLng latlng = new LatLng(r[1],r[0]);
                     MyLatLng myLL = new MyLatLng();
@@ -366,7 +373,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
+    public void traceRouteDummy(){
+        ArrayList<LatLng> positions = new ArrayList<LatLng>();
+        positions.add(mMarker1.getPosition());
+        positions.add(mMarker2.getPosition());
+        route.setId(0);
+        line = mGoogleMap.addPolyline(new PolylineOptions()
+                .addAll(positions)
+                .width(5)
+                .color(Color.RED));
+        loadingDialog.dismissWithAnimation();
+    }
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         realizarPeticionUbicacion();
@@ -471,12 +488,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void createNewMatchDialog(){
         dialogNewMatch = new android.app.Dialog(this);
         dialogNewMatch.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogNewMatch.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        ColorDrawable d = new ColorDrawable(Color.BLACK);
+        d.setAlpha(200);
+        dialogNewMatch.getWindow().setBackgroundDrawable(new ColorDrawable(d.getColor()));
         dialogNewMatch.getWindow().setWindowAnimations(R.style.DialogNoAnimation);
         dialogNewMatch.setContentView(R.layout.activity_maps_custom_dialog_new_match);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialogNewMatch.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         dialogNewMatch.getWindow().setAttributes(lp);
         dialogNewMatch.show();
 
@@ -499,8 +519,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int acept_color = ContextCompat.getColor(getApplicationContext(),R.color.blue_primary_color);
         int message_color = ContextCompat.getColor(getApplicationContext(), R.color.teal_primary_color);
         dialogNewMatch.setCanceledOnTouchOutside(false);
-        acept.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, acept_color));
-        message.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, message_color));
+        //acept.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, acept_color));
+        //message.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, message_color));
+
+        GradientDrawable aceptGradient = (GradientDrawable) acept.getBackground();
+        aceptGradient.setStroke(2, acept_color);
+        GradientDrawable messageGradient = (GradientDrawable) message.getBackground();
+        messageGradient.setStroke(2, message_color);
+
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -521,7 +547,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void createLookingForDialog(){
         dialogLookingFor = new android.app.Dialog(this);
         dialogLookingFor.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogLookingFor.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        ColorDrawable d = new ColorDrawable(Color.BLACK);
+        d.setAlpha(200);
+        dialogLookingFor.getWindow().setBackgroundDrawable(new ColorDrawable(d.getColor()));
         dialogLookingFor.getWindow().setWindowAnimations(R.style.DialogNoAnimation);
         dialogLookingFor.setContentView(R.layout.activity_maps_custom_dialog_looking_for);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -532,12 +560,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //YoYo.with(Techniques.FadeIn).duration(500).playOn(dialog.findViewById(R.id.custom_dialog_content));
 
-        Button cancel = (Button)dialogLookingFor.findViewById(R.id.custom_dialog_button_cancel);
+        ImageButton cancel = (ImageButton)dialogLookingFor.findViewById(R.id.custom_dialog_button_cancel);
         //ImageView icon = (ImageView)dialog.findViewById(R.id.custom_dialog_image);
         //int green = ContextCompat.getColor(getApplicationContext(),R.color.green_primary_color);
         //icon.setColorFilter(green);
         int acept_color = ContextCompat.getColor(getApplicationContext(),R.color.blue_primary_color);
-        int cancel_color = ContextCompat.getColor(getApplicationContext(), R.color.gray_primary_color);
+        int cancel_color = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
         dialogLookingFor.setCanceledOnTouchOutside(false);
         cancel.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, cancel_color));
 

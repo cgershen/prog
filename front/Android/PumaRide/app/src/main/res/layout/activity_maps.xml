@@ -48,16 +48,16 @@
             fab:fab_size="mini"
             fab:fab_label="Bicicleta" />
         <com.github.clans.fab.FloatingActionButton
-            fab:fab_colorNormal="@color/colorCar"
-            fab:fab_colorPressed="@color/colorCar"
-            fab:fab_colorRipple="@color/colorCar"
             android:id="@+id/app_bar_main_menu_item_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_directions_car_white_24dp"
             android:tag="1"
             fab:fab_size="mini"
-            fab:fab_label="Automóvil" />
+            fab:fab_label="Automóvil"
+            map:fab_colorNormal="@color/orange_primary_color"
+            map:fab_colorPressed="@color/orange_primary_color"
+            map:fab_colorRipple="@color/orange_primary_color" />
 
     </com.github.clans.fab.FloatingActionMenu>
 </fragment>

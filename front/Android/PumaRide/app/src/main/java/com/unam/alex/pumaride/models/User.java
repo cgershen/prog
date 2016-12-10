@@ -10,6 +10,24 @@ public class User {
     private String password;
     private String token;
     private String email;
+    private String image;
+    private String aboutme;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getAboutme() {
+        return aboutme;
+    }
+
+    public void setAboutme(String aboutme) {
+        this.aboutme = aboutme;
+    }
 
     public int getId() {
         return id;

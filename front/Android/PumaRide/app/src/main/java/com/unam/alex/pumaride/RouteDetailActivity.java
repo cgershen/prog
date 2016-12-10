@@ -19,6 +19,7 @@ import com.unam.alex.pumaride.models.Route;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class RouteDetailActivity extends AppCompatActivity {
     @BindView(R.id.activity_route_detail_image)
@@ -68,8 +69,19 @@ public class RouteDetailActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.route_detail_delete:
-                Toast.makeText(getApplicationContext(),"Borrar",Toast.LENGTH_SHORT).show();
-                delete();
+                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("¿Estas seguro?")
+                        .setContentText("¡La ruta ya no se mostrará nunca más!")
+                        .setConfirmText("Aceptar")
+                        .setCancelText("Cancelar")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                                delete();
+                            }
+                        })
+                        .show();
                 return true;
             case android.R.id.home:
                 finish();

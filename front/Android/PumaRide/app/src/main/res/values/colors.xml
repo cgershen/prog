@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#00bcd4</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorWalk">#009688</color>
-    <color name="colorCar">#ff9800</color>
+    <color name="orange_primary_color">#ff9800</color>
     <color name="colorBike">#8bc34a</color>
 
 

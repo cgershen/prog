@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:paddingTop="16dp"
     android:background="@drawable/shattered"
+    android:id="@+id/activity_message_id"
     tools:context=".MessageActivity">
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"

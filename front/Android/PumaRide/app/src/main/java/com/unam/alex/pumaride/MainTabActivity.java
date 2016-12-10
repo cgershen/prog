@@ -117,6 +117,8 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
                 editor.putInt("userid",u.getId());
                 editor.putString("first_name", u.getFirst_name());
                 editor.putString("last_name", u.getLast_name());
+                editor.putString("image", u.getImage());
+                editor.putString("aboutme", u.getAboutme());
                 editor.commit();
                 if(!isMyServiceRunning( MessageService.class)){
                     startService(new Intent(getApplicationContext(), MessageService.class));
