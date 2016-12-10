@@ -8,12 +8,12 @@ import sys
 import socket
 import path_server
 
-def sendRequest(a_x, a_y, b_x, b_y):
+def sendRequest(capa, a_x, a_y, b_x, b_y):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect(('127.0.0.1', 8011))
 
-    message = "%s %s %s %s" % (a_x, a_y, b_x, b_y)
+    message = "%s %s %s %s %s" % (capa, a_x, a_y, b_x, b_y)
 
     path_server.replyWith(sock, message)
     reply = path_server.recieveMessage(sock)
@@ -51,7 +51,7 @@ class Line(models.Model):
 		b_lat=float(self.p_destino.split(",")[0].split("(")[1])
 		b_lon=float(self.p_destino.split(",")[1].split(")")[0])
 
-		poly_line=sendRequest(a_lat,a_lon,b_lat,b_lon)
+		poly_line=sendRequest(self.tipo_transporte, a_lat,a_lon,b_lat,b_lon)
 
 		self.camino_mas_corto=poly_line
 		#print(self.camino_mas_corto)

@@ -2,5 +2,6 @@
 *.shx
 *.dbf
 *.prj
+*.qpj
 *.geojson
 migrations-off

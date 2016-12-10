@@ -189,6 +189,8 @@ if __name__ == '__main__':
         message = recieveMessage(client)
         parts = message.split(" ")
 
+	layer_id=1
+
         if len(parts) == 5:
 
             try: 
@@ -218,7 +220,7 @@ if __name__ == '__main__':
         if len(parts) >= 4:
             path = getShortestPath(layer, pointB, pointA)
             replyWith(client, path)
-            print "Handled request for %s" % message
+            print "Handled request for %s on layer %s" % (message, layer_id)
 
         client.close()
 
