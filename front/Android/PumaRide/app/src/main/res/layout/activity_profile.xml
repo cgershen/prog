@@ -1,5 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_profile"
     android:layout_width="match_parent"
@@ -18,7 +20,7 @@
         android:padding="10dp"
         android:layout_marginBottom="5dp"
         android:src="@drawable/edit_profile"
-        android:id="@+id/logo" />
+        android:id="@+id/activity_profile_photo"/>
 
     <EditText
         android:background="@android:color/transparent"
@@ -52,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/fragment_profile_about_text"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="78dp"
             android:paddingLeft="10dp"
             android:textSize="16sp" />
 
@@ -68,3 +70,4 @@
 
     </LinearLayout>
 </LinearLayout>
+</ScrollView>
