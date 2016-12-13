@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -91,6 +92,7 @@ public class RouteFragment extends ComunicationFragmentManager {
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         RealmResults<Route> routes_ = realm.where(Route.class).findAll();
+        routes.clear();
         routes.addAll(routes_);
         mAdapter = new RouteListViewAdapter(routes,getContext());
         mAdapter.SetRecyclerViewClickListener(new RecyclerViewClickListener() {
@@ -115,13 +117,6 @@ public class RouteFragment extends ComunicationFragmentManager {
         inflater.inflate(R.menu.menu_main_tab, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-    public void refres(){
-        RealmResults<Route> routes_ = realm.where(Route.class).findAll();
-        routes.clear();
-        routes.addAll(routes_);
-        mAdapter.notifyDataSetChanged();
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -136,6 +131,7 @@ public class RouteFragment extends ComunicationFragmentManager {
         realm.beginTransaction();
         r.deleteFromRealm();
         realm.commitTransaction();
-        refres();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
     }
 }

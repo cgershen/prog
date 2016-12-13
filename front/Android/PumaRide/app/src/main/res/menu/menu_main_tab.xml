@@ -9,7 +9,7 @@
     <item
         android:id="@+id/profile"
         android:orderInCategory="100"
-        android:title="Ver perfil"
+        android:title="Perfil"
         app:showAsAction="never" />
     <item
         android:id="@+id/about"

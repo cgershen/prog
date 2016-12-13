@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -58,6 +59,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
      */
     private ViewPager mViewPager;
     RouteFragment rFragment = null;
+    MatchFragment mFragment = null;
     //array for fragments
     int fragments[] = {R.layout.fragment_route,R.layout.fragment_match};
     @Override
@@ -68,6 +70,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         rFragment = new RouteFragment();
+        mFragment = new MatchFragment();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -98,6 +101,8 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         String email = sp.getString("email","");
         String first_name = sp.getString("first_name","");
         String last_name = sp.getString("last_name","");
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -120,7 +125,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
                 editor.putString("image", u.getImage());
                 editor.putString("aboutme", u.getAboutme());
                 editor.commit();
-                if(!isMyServiceRunning( MessageService.class)){
+                if(!isMyServiceRunning(MessageService.class)){
                     startService(new Intent(getApplicationContext(), MessageService.class));
                 }
             }
@@ -158,9 +163,13 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        rFragment.refres();
+        reloadFragment(rFragment);
+        reloadFragment(mFragment);
     }
-
+    public void reloadFragment(Fragment fragment){
+        FragmentTransaction mf = fragment.getFragmentManager().beginTransaction();
+        mf.detach(fragment).attach(fragment).commit();
+    }
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -216,7 +225,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
             if(position == 0){
                 newFragment = rFragment;
             }else{
-                newFragment = new MatchFragment();
+                newFragment = mFragment;
             }
             return newFragment;
         }

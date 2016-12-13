@@ -44,7 +44,7 @@ public class RouteListViewAdapter
     @Override
     public void onBindViewHolder(RouteViewHolder Route_ViewHolder, int i) {
         Route_ViewHolder.setId(Route_list.get(i).getId());
-        Route_ViewHolder.getTvStart().setText(Route_list.get(i).getStart());
+        Route_ViewHolder.getTvStart().setText(Route_list.get(i).getId() +"-"+ Route_list.get(i).getStart());
         Route_ViewHolder.getTvEnd().setText(Route_list.get(i).getEnd());
         if(Route_list.get(i).getImage()!=null) {
             Glide.with(context).load(Route_list.get(i).getImage()).into(Route_ViewHolder.getiImage());

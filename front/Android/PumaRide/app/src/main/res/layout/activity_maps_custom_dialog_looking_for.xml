@@ -20,15 +20,23 @@
             android:layout_centerHorizontal="true" />
 
         <com.wang.avi.AVLoadingIndicatorView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:layout_gravity="center"
-            app:indicatorColor="@color/purple_primary_color"
-            app:indicatorName="BallClipRotatePulseIndicator"
+            app:indicatorColor="@android:color/white"
+            app:indicatorName="BallScaleMultipleIndicator"
             android:id="@+id/view"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
-
+        <TextView
+            android:id="@+id/activity_maps_custom_dialog_looking_for_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/textView2"
+            android:layout_alignRight="@+id/custom_dialog_button_cancel"
+            android:layout_alignEnd="@+id/custom_dialog_button_cancel" />
         <ImageButton
             android:id="@+id/custom_dialog_button_cancel"
             android:layout_width="33dp"

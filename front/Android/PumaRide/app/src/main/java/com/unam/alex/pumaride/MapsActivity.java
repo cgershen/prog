@@ -1,20 +1,26 @@
 package com.unam.alex.pumaride;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,17 +28,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -47,26 +52,26 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
-import com.rey.material.app.Dialog;
-import com.rey.material.app.DialogFragment;
-import com.rey.material.app.TimePickerDialog;
 import com.unam.alex.pumaride.adapters.DayListViewAdapter;
-import com.unam.alex.pumaride.listeners.RecyclerViewClickListener;
+import com.unam.alex.pumaride.dialog.CDialog;
 import com.unam.alex.pumaride.models.Day;
 import com.unam.alex.pumaride.models.Match;
+import com.unam.alex.pumaride.models.MatchServer;
 import com.unam.alex.pumaride.models.Message;
 import com.unam.alex.pumaride.models.MyLatLng;
 import com.unam.alex.pumaride.models.ReverseGeoCodeResult;
 import com.unam.alex.pumaride.models.Route;
 import com.unam.alex.pumaride.models.Route2;
+import com.unam.alex.pumaride.models.User;
 import com.unam.alex.pumaride.retrofit.WebServices;
+import com.unam.alex.pumaride.services.MessageService;
 import com.unam.alex.pumaride.utils.Statics;
 
-import java.text.SimpleDateFormat;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +87,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
+    public static boolean active = false;
+    BroadcastReceiver receiver;
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -92,7 +99,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private int clickCounter = 0;
     private Route route ;
     Realm realm = null;
-    SweetAlertDialog loadingDialog;
+    SweetAlertDialog sweetLoadingDialog;
+    Dialog loadingDialog;
     private final int REQUEST_LOCATION = 1;
     @BindView(R.id.fab)
     FloatingActionMenu fab;
@@ -106,12 +114,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @BindView(R.id.activity_maps_rv_days)
     RecyclerView rvDays;
     private DayListViewAdapter mAdapter;
-    Dialog.Builder builder = null;
+    //Dialog.Builder builder = null;
     List<Day> days = new ArrayList<Day>();
     android.app.Dialog dialogLookingFor = null;
     android.app.Dialog dialogNewMatch= null;
     public LatLng latlng;
-    public int user_id;
+    public User user_me;
+    private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket(Statics.CHAT_SERVER_BASE_URL);
+        } catch (URISyntaxException e) {}
+    }
+
+    Match match = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,9 +135,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ButterKnife.bind(this);
         route = new Route();
         route.setMode(Route.WALK);
+        user_me = new User();
         SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
-        user_id = sp.getInt("userid",1);
-        Toast.makeText(getApplicationContext(),user_id+"", Toast.LENGTH_SHORT).show();
+        user_me.setId(sp.getInt("userid",1));
+        user_me.setFirst_name(sp.getString("first_name",""));
+        user_me.setLast_name(sp.getString("last_name",""));
+
+        Toast.makeText(getApplicationContext(),user_me.getId()+"", Toast.LENGTH_SHORT).show();
         Realm.init(getApplicationContext());
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
@@ -169,6 +189,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         mAdapter = new DayListViewAdapter(days,getApplicationContext());
+        /*
         mAdapter.SetRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position, boolean isLongClick, final int id) {
@@ -201,12 +222,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 fragment.show(getSupportFragmentManager(), null);
             }
         });
+
+        */
         rvDays.setAdapter(mAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvDays.setLayoutManager(layoutManager);
         rvDays.setHasFixedSize(true);
-
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String s = intent.getStringExtra(MessageService.MESSAGE);
+                Message m = new Gson().fromJson(s,Message.class);
+                dialogLookingFor.dismiss();
+                match = new Match();
+                match.setId(m.getUser_id2());
+                String name[] = m.getMessage().split(",");
+                match.setFirst_name(name[1]);
+                match.setLast_name("");
+                createNewMatchDialog();
+            }
+        };
         //Toast.makeText(getApplicationContext(), realm.where(Route.class).count()+"", Toast.LENGTH_SHORT).show();
 
     }
@@ -257,11 +293,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String key,latlng_;
                 latlng_ = latlng.latitude+","+latlng.longitude;
                 key = "AIzaSyAp6kuJ8vLmenz8QZJQszwSvyug_AE0LpY";
-                loadingDialog = new SweetAlertDialog(MapsActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-                loadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                loadingDialog.setTitleText("Cargando...");
-                loadingDialog.setCancelable(false);
+                /*
+                sweetLoadingDialog = new SweetAlertDialog(MapsActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+                sweetLoadingDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                sweetLoadingDialog.setTitleText("Cargando...");
+                sweetLoadingDialog.setCancelable(false);
+                sweetLoadingDialog.show();*/
+                int id_layout = R.layout.loading_cdialog;
+                loadingDialog = new CDialog.Builder(MapsActivity.this,id_layout).
+                        setBgAlpha(200).
+                        build();
                 loadingDialog.show();
+
                 switch (clickCounter){
                     case 2:
                         clickCounter = 0;
@@ -274,7 +317,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         call.enqueue(new Callback<ReverseGeoCodeResult>() {
                                          @Override
                                          public void onResponse(Call<ReverseGeoCodeResult> call, Response<ReverseGeoCodeResult> response) {
-                                             loadingDialog.dismissWithAnimation();
+                                             //sweetLoadingDialog.dismissWithAnimation();
+                                             loadingDialog.dismiss();
                                              ReverseGeoCodeResult result = response.body();
                                              mMarker1 = mGoogleMap.addMarker(new MarkerOptions().position(latlng).title(result.getResult().get(0).getFormatted_address()).icon(BitmapDescriptorFactory.fromBitmap(getBitmap(R.drawable.ic_person_pin_circle_green_a_24px))));
                                              mMarker1.showInfoWindow();
@@ -287,7 +331,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                          }
                                      }
                         );
-
                         break;
                     case 1:
                         //mMarker2 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Target").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_orange_b_24px)));
@@ -326,10 +369,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         realm.commitTransaction();
     }
     public void drawPoliLineFromServer(){
-
-           traceRouteDummy();
+        traceRealRute();
     }
-    public void traceRouteReal(){
+    public void traceRealRute(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -341,7 +383,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         source = "("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")";
         target = "("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")";
 
-        Call<Route2> call = webServices.getShortestPath(source,target,"guardar",user_id);
+        Call<Route2> call = webServices.getShortestPath(source,target,"guardar",user_me.getId());
         call.enqueue(new Callback<Route2>() {
             @Override
             public void onResponse(Call<Route2> call, Response<Route2> response) {
@@ -364,16 +406,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .addAll(positions)
                         .width(5)
                         .color(Color.RED));
-                loadingDialog.dismissWithAnimation();
+                //sweetLoadingDialog.dismissWithAnimation();
+                loadingDialog.dismiss();
             }
             @Override
             public void onFailure(Call<Route2> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),new Gson().toJson(call),Toast.LENGTH_SHORT).show();
-                loadingDialog.dismissWithAnimation();
+                //sweetLoadingDialog.dismissWithAnimation();
+                loadingDialog.dismiss();
             }
         });
     }
-    public void traceRouteDummy(){
+    public void traceDummyRoute(){
         ArrayList<LatLng> positions = new ArrayList<LatLng>();
         positions.add(mMarker1.getPosition());
         positions.add(mMarker2.getPosition());
@@ -382,12 +426,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addAll(positions)
                 .width(5)
                 .color(Color.RED));
-        loadingDialog.dismissWithAnimation();
+        //sweetLoadingDialog.dismissWithAnimation();
+        loadingDialog.dismiss();
     }
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         realizarPeticionUbicacion();
-
     }
 
     @Override
@@ -486,18 +530,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
     public void createNewMatchDialog(){
-        dialogNewMatch = new android.app.Dialog(this);
-        dialogNewMatch.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        ColorDrawable d = new ColorDrawable(Color.BLACK);
-        d.setAlpha(200);
-        dialogNewMatch.getWindow().setBackgroundDrawable(new ColorDrawable(d.getColor()));
-        dialogNewMatch.getWindow().setWindowAnimations(R.style.DialogNoAnimation);
-        dialogNewMatch.setContentView(R.layout.activity_maps_custom_dialog_new_match);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialogNewMatch.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-        dialogNewMatch.getWindow().setAttributes(lp);
+        int id_layout = R.layout.activity_maps_custom_dialog_new_match;
+        dialogNewMatch = new CDialog.Builder(this,id_layout).
+                setBgAlpha(200).
+                build();
         dialogNewMatch.show();
 
         //YoYo.with(Techniques.FadeIn).duration(500).playOn(dialog.findViewById(R.id.custom_dialog_content));
@@ -509,12 +545,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //ImageView icon = (ImageView)dialog.findViewById(R.id.custom_dialog_image);
         //int green = ContextCompat.getColor(getApplicationContext(),R.color.green_primary_color);
         //icon.setColorFilter(green);
-
-        RealmResults<Match> matches = realm.where(Match.class).findAll();
-        int id = new Random().nextInt(matches.size()-1);
-        if(matches.get(id).getImage()!=null)
-            Glide.with(getApplicationContext()).load(matches.get(id).getImage()).into(image);
-        name.setText("¡"+matches.get(id).getFirst_name()+" "+matches.get(id).getLast_name()+" es tu nuevo acompañante!");
+        if(match.getImage()!=null)
+            Glide.with(getApplicationContext()).load(match.getImage()).into(image);
+        name.setText("¡"+match.getFirst_name()+" "+match.getLast_name()+" es tu nuevo acompañante!");
 
         int acept_color = ContextCompat.getColor(getApplicationContext(),R.color.blue_primary_color);
         int message_color = ContextCompat.getColor(getApplicationContext(), R.color.teal_primary_color);
@@ -530,7 +563,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                save();
                 dialogNewMatch.dismiss();
+                Intent i  = new Intent(getApplicationContext(),MessageActivity.class);
+                MessageActivity.id2 = match.getId();
+                startActivity(i);
+                finish();
             }
         });
         ////
@@ -544,22 +582,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+    TextView _tv;
     public void createLookingForDialog(){
-        dialogLookingFor = new android.app.Dialog(this);
-        dialogLookingFor.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        ColorDrawable d = new ColorDrawable(Color.BLACK);
-        d.setAlpha(200);
-        dialogLookingFor.getWindow().setBackgroundDrawable(new ColorDrawable(d.getColor()));
-        dialogLookingFor.getWindow().setWindowAnimations(R.style.DialogNoAnimation);
-        dialogLookingFor.setContentView(R.layout.activity_maps_custom_dialog_looking_for);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialogLookingFor.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        dialogLookingFor.getWindow().setAttributes(lp);
+
+        int id_layout = R.layout.activity_maps_custom_dialog_looking_for;
+        dialogLookingFor = new CDialog.Builder(this,id_layout).
+                setBgAlpha(200).
+                build();
         dialogLookingFor.show();
-
+        _tv = (TextView)dialogLookingFor.findViewById(R.id.activity_maps_custom_dialog_looking_for_timer);
+        initCounterDown();
+        checkMatchService();
         //YoYo.with(Techniques.FadeIn).duration(500).playOn(dialog.findViewById(R.id.custom_dialog_content));
-
         ImageButton cancel = (ImageButton)dialogLookingFor.findViewById(R.id.custom_dialog_button_cancel);
         //ImageView icon = (ImageView)dialog.findViewById(R.id.custom_dialog_image);
         //int green = ContextCompat.getColor(getApplicationContext(),R.color.green_primary_color);
@@ -567,8 +601,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int acept_color = ContextCompat.getColor(getApplicationContext(),R.color.blue_primary_color);
         int cancel_color = ContextCompat.getColor(getApplicationContext(), android.R.color.white);
         dialogLookingFor.setCanceledOnTouchOutside(false);
-        cancel.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, cancel_color));
 
+        cancel.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, cancel_color));
         ////
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -578,6 +612,74 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 createNewMatchDialog();
             }
         });
+    }
 
+    public void checkMatchService(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WebServices webServices = retrofit.create(WebServices.class);
+
+        Call<List<MatchServer>> call = webServices.getMatches(route.getId());
+        call.enqueue(new Callback<List<MatchServer>>() {
+            @Override
+            public void onResponse(Call<List<MatchServer>> call, Response<List<MatchServer>> response) {
+                //Toast.makeText(getApplicationContext(),new Gson().toJson(response.body()),Toast.LENGTH_SHORT).show();
+                List<MatchServer> matches = response.body();
+                if(matches.size()>0){
+                    MatchServer match_server = matches.get(0);
+                    Toast.makeText(getApplicationContext(),new Gson().toJson(match_server),Toast.LENGTH_SHORT).show();
+                    dialogLookingFor.dismiss();
+                    match = new Match();
+                    match.setFirst_name(match_server.getFirst_name());
+                    match.setLast_name(match_server.getLast_name());
+                    match.setId(match_server.getUser_id());
+                    createNewMatchDialog();
+                    notifyNewMatch();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<MatchServer>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),new Gson().toJson(call),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void notifyNewMatch(){
+        mSocket.connect();
+        Message m = new Message();
+        m.setUser_id2(match.getId());
+        m.setUser_id(user_me.getId());
+        m.setMessage("@code_13,"+user_me.getFirst_name()+" "+user_me.getLast_name());
+        String message = new Gson().toJson(m);
+        mSocket.emit("chat", message);
+    }
+    public void initCounterDown(){
+        new CountDownTimer(1000000, 1000) { // adjust the milli seconds here
+            public void onTick(long millisUntilFinished) {
+                _tv.setText(""+String.format("%d:%d",
+                        TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished),
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+            }
+
+            public void onFinish() {
+                dialogLookingFor.dismiss();
+            }
+        }.start();
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),new IntentFilter(MessageService.MESSAGE_RESULT));
+    }
+
+    @Override
+    public void onStop() {
+        active = false;
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
     }
 }

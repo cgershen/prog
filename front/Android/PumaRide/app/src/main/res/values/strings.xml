@@ -24,4 +24,7 @@
         <item>Sábado</item>
         <item>Domingo</item>
     </string-array>
+    <string name="about">
+        Esta aplicación fue desarrollada por alumnos del Posgrado en Ciencia e Ingeniería de la Computación, UNAM.
+    </string>
 </resources>

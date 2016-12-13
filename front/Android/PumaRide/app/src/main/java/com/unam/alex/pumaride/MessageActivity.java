@@ -135,12 +135,11 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra(MessageService.MESSAGE);
                 Message m = new Gson().fromJson(s,Message.class);
-                //Toast.makeText(getApplicationContext(),"hola " + s,Toast.LENGTH_SHORT).show();
                 addMessage(m);
             }
         };
         rvMessage.scrollToPosition(this.messages.size()-1);
-        
+
     }
     TextView tvUserName;
     public void initActionBar(){
@@ -318,6 +317,8 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
     @Override
     protected void onDestroy() {
         setResult(Activity.RESULT_OK);
+
+        active = false;
         super.onDestroy();
     }
 
