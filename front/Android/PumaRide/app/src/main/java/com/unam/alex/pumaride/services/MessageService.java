@@ -40,35 +40,14 @@ public class MessageService extends Service {
     int id = 10;
     Match match;
     private Socket mSocket;
-    {
-        try {
-            mSocket = IO.socket(Statics.CHAT_SERVER_BASE_URL);
-        } catch (URISyntaxException e) {}
-    }
+
     public MessageService() {
     }
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
-        @Override
-        public void call(final Object... objects) {
-            String result = (String) objects[0];
-            Message m  = new Gson().fromJson(result,Message.class);
-            if(m.getMessage().indexOf("@code_13")==1){
-                sendResult(result);
-            }else{
-                if(MapsActivity.active){
-                    Intent intent = new Intent(MESSAGE_RESULT);
-                    intent.putExtra(MESSAGE, result);
-                    broadcaster.sendBroadcast(intent);
-                }
-            }
-        }
-    };
+    private Emitter.Listener onNewMessage ;
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
-
-
     }
 
     @Override
@@ -77,9 +56,31 @@ public class MessageService extends Service {
         SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
         id = sp.getInt("userid",1);
         broadcaster = LocalBroadcastManager.getInstance(this);
+        {
+            try {
+                mSocket = IO.socket(Statics.CHAT_SERVER_BASE_URL);
+            } catch (URISyntaxException e) {}
+        }
+        onNewMessage = new Emitter.Listener() {
+            @Override
+            public void call(final Object... objects) {
+                String result = (String) objects[0];
+                Message m  = new Gson().fromJson(result,Message.class);
+                int value = m.getMessage().indexOf("@code");
+                if(value==-1){
+                    sendResult(result);
+                }else{
+                    if(MapsActivity.active){
+                        Intent intent = new Intent(MESSAGE_RESULT);
+                        intent.putExtra(MESSAGE, result);
+                        broadcaster.sendBroadcast(intent);
+                    }
+                }
+            }
+        };
         mSocket.on("chat"+id, onNewMessage);
         mSocket.connect();
-        return Service.START_STICKY;
+        return Service.START_REDELIVER_INTENT;
     }
     public void notifyMessage(ArrayList<Message> messages){
 

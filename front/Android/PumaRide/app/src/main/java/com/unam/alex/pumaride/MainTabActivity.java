@@ -2,9 +2,13 @@ package com.unam.alex.pumaride;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.IBinder;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +39,7 @@ import com.unam.alex.pumaride.fragments.listeners.OnFragmentInteractionListener;
 import com.unam.alex.pumaride.models.User;
 import com.unam.alex.pumaride.retrofit.WebServices;
 import com.unam.alex.pumaride.services.MessageService;
+import com.unam.alex.pumaride.services.SocketServiceProvider;
 import com.unam.alex.pumaride.utils.Statics;
 
 import retrofit2.Call;
@@ -62,11 +68,27 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
     MatchFragment mFragment = null;
     //array for fragments
     int fragments[] = {R.layout.fragment_route,R.layout.fragment_match};
+    private Application application;
+    public boolean mIsBound = false;
+    private void doBindService() {
+        if (mBoundService != null) {
+            bindService(new Intent(MainTabActivity.this, SocketServiceProvider.class), socketConnection, Context.BIND_AUTO_CREATE);
+            mIsBound = true;
+            mBoundService.IsBendable();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
-
+        application = (Application) getApplication();
+       /*
+        if (application.getSocket() != null) {
+            Log.e("Socket", " is null");
+            startService(new Intent(getBaseContext(), SocketServiceProvider.class));
+            doBindService();
+        }
+        */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         rFragment = new RouteFragment();
@@ -261,5 +283,16 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         }
         return false;
     }
+    SocketServiceProvider mBoundService;
+    protected ServiceConnection socketConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBoundService = ((SocketServiceProvider.LocalBinder) service).getService();
+        }
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mBoundService = null;
+        }
+    };
 }
