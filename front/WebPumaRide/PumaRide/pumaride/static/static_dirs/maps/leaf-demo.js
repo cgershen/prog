@@ -179,12 +179,17 @@ function destinoMarcador(lat,lng){
     getReverseGeocodingData(destino,d_lat, d_long);
 }*/
 
-
+var transporte = 0;
 function drawPolyline() {
   console.log("Entre a dibujar Polyline");
   if(document.getElementById("origen").value!="" && document.getElementById("destino").value!=""){
+                        if(array_pol.length!=0) // Borra polilineas en caso de haber cambiado la ruta
+                        {
+                          clearPolylinesMatch(array_pol.length);
+                        }
                       console.log("Dibujando polyline");
-                      var x = medioTransporte();
+                      transporte = medioTransporte();
+                      console.log("medioTransporte = " + transporte);
                      $.ajax({
                         url : "http://35.162.215.204:8000/api/lines/", 
                         type : "POST", 
@@ -192,21 +197,23 @@ function drawPolyline() {
                         data : {
                             p_origen :  "(" + d_long + "," + d_lat + ")", //Se voltearon parámetros porque el servicio calcula
                             p_destino : "(" + o_long + "," + o_lat + ")", // el shortest path de Destino a Origen
-                            user_id : 2,
-                            tipo_transporte: x,
+                            user_id : 4,
+                            tipo_transporte: transporte,
                                },
                         success : function(json) {
                             console.log(json);
-
+                            id_ruta_valid = false;
                             path = json.shortest_path;
                             console.log(path);
                                                       
                             var linePoints=[];
                             console.log(path.length);
-                            for(var i=0;i<path.length;i++) {
+                            linePoints.push(new L.LatLng(d_lat,d_long)); // Agrega el punto de Destino a la Polyline
+                            for(var i=1;i<path.length;i++) {
                               var point = path[i];
                               linePoints.push(new L.LatLng(point[1],point[0]));
                             }
+                            linePoints.push(new L.LatLng(o_lat,o_long)); // Agrega el punto de Origen a la Polyline
                                      
                             var polylineOptions = {
                                color: '#f50909',
@@ -267,13 +274,23 @@ function clearPolylines() {
     map.removeLayer(polyline);
 }
 
+
 function findMatch(opcion){
   console.log("findMatch");
-  //if(document.getElementById("origen").value!="" && document.getElementById("destino").value!=""){
-    //console.log("No deberia entrar");
+  console.log("ID_Ruta = " + id_ruta_aux);
+  if(document.getElementById("origen").value !="" && document.getElementById("destino").value !=""){
       almacenaRuta(opcion);
-  //}
+  }
+  else if(document.getElementById("origen").value == "")
+  {
+    alert("Indicar un Origen");
+  }
+  else{
+    alert("Indicar un Destino")
+  }
 }
+
+
 var array_pol =[];
 function match(num_ruta,id_ruta)
 {
@@ -286,8 +303,13 @@ function match(num_ruta,id_ruta)
                       success : function(json) {
                       
                       console.log(json);
+                      if(json.length == 0)
+                      {
+                        id_ruta_aux = "";
+                        alert("No hay rutas coincidentes 2");
+                      }
                       //Dibuja la polilinea de la ruta 1
-                      if(num_ruta==0  && num_ruta<=json.length){ 
+                      if(num_ruta==0  && 1 <= json.length){ 
                         if(array_pol.length!=0)
                         {
                           clearPolylinesMatch(array_pol.length);
@@ -296,7 +318,7 @@ function match(num_ruta,id_ruta)
                       }
                       
                       //Dibuja la polilinea de la ruta 2
-                      if(num_ruta==1 && num_ruta<=json.length){
+                      if(num_ruta==1 && 1 <= json.length){
                         if(array_pol.length!=0)
                         {
                           clearPolylinesMatch(array_pol.length);
@@ -305,7 +327,7 @@ function match(num_ruta,id_ruta)
                       }
 
                       //Dibuja la polilinea de la ruta 3
-                      if(num_ruta==2 && num_ruta<=json.length){
+                      if(num_ruta==2 && 1 <= json.length){
                         if(array_pol.length!=0)
                         {
                           clearPolylinesMatch(array_pol.length);
@@ -314,7 +336,7 @@ function match(num_ruta,id_ruta)
                       }
 
                       //Dibuja la polilinea de la ruta 4
-                      if(num_ruta==3 && num_ruta<=json.length){
+                      if(num_ruta==3 && 1 <= json.length){
                         if(array_pol.length!=0)
                         {
                           clearPolylinesMatch(array_pol.length);
@@ -322,7 +344,7 @@ function match(num_ruta,id_ruta)
                         array_pol[0]=drawRoute(json[3].ruta,'#FF8000');
                       }
                       //Dibuja la polilinea de la ruta 5
-                      if(num_ruta==4 && num_ruta<=json.length){
+                      if(num_ruta==4 && 1 <= json.length){
                         if(array_pol.length!=0)
                         {
                           clearPolylinesMatch(array_pol.length);
@@ -400,8 +422,12 @@ function drawRoute(ruta,color){
                       return polyline_route;
 }
 
+var id_ruta_aux = "";
+var id_ruta_valid=false;
 function almacenaRuta(num_ruta)
 {
+  if(num_ruta==5 && id_ruta_valid == false)
+  {
     console.log("almacenaRuta");
     $.ajax({
       url : "http://35.162.215.204:8000/api/lines/", 
@@ -411,16 +437,33 @@ function almacenaRuta(num_ruta)
         p_origen :  "(" + d_long + "," + d_lat + ")", //Se voltearon parámetros porque el servicio calcula
         p_destino : "(" + o_long + "," + o_lat + ")", // el shortest path de Destino a Origen
         guardar : 1, //Guarda la polilinea en la BD
-        user_id : 2,
+        user_id : 4,
+        tipo_transporte: transporte,
       },
       success : function(json) {
         console.log(json);
-         var id_ruta = json.id;
+         id_ruta = json.id;
+         id_ruta_valid=true;
+         id_ruta_aux = id_ruta;
          console.log("id_ruta = " + id_ruta);
-         match(num_ruta,id_ruta);
-
+         match(num_ruta,id_ruta_aux);
         },
   });
+  }
+  else if(num_ruta == 5 && id_ruta_valid == true && id_ruta_aux == ""){
+    alert("No hay rutas coincidentes 1");
+  }
+  else{
+    console.log("id_ruta = " + id_ruta_aux);
+    console.log("Valid = " + id_ruta_valid);
+    if(id_ruta_valid == true && id_ruta_aux != "")
+    {
+      match(num_ruta,id_ruta_aux);
+    }
+    else{
+      alert("Dar click en Find Match");
+    }
+  }
 }
 
 function medioTransporte(){
@@ -428,15 +471,18 @@ function medioTransporte(){
   var bus = document.getElementById("bus").checked;
   var bike = document.getElementById("bike").checked;
   var walk = document.getElementById("walk").checked;
-   if(car){
-    return 1;
-  }if (bike){
-    return 2;
-  }if(walk){
-    return 3;
-  }if(bus){
+   if(car && walk){
     return 4;
-  }if(car && walk){
-    return 5;
+  }else if (bike){
+    return 2;
+  }else if(walk){
+    return 3;
+  }else if(bus){
+    return 6;
+  }if(car ){
+    return 1;
+  }
+  else{
+    return 1;
   }
 }
