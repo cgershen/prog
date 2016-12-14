@@ -101,14 +101,16 @@ def line(request):
 
 	elif request.method=='POST':
 
+		data = request.data.copy()
+
 		if 'user_id' in request.session:
-			request.data['user_id'] = request.session['user_id']
+			data['user_id'] = request.session['user_id']
 		#else:
-		#	request.data['user_id'] = 0 # don't let params set this
+		#	data['user_id'] = 0 # don't let params set this
 
-		if "ruta_id" in request.data and "borrar" in request.data:
+		if "ruta_id" in data and "borrar" in data:
 
-			id = request.data['ruta_id']
+			id = data['ruta_id']
 
 			with connection.cursor() as cursor:
 				cursor.execute("DELETE FROM horario_ruta WHERE id_ruta=%s", [id])
@@ -116,7 +118,7 @@ def line(request):
 
 			return Response({"success":1})
 		else:
-			serializer=LineSerializer(data=request.data)
+			serializer=LineSerializer(data=data)
 			if serializer.is_valid():
 
 				serializer.save()
