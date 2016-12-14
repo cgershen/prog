@@ -101,7 +101,7 @@ class Line(models.Model):
 
 					(self.id, ) = cursor.fetchone()
 
-					query = "insert into horario_ruta values (%s, ST_GeomFromText('POINT(%s)'), ST_GeomFromText('POINT(%s)'), ('2000-01-01 00:00:00'), ('2000-01-01 00:00:00'))" % (self.id, "%s %s" % (a_lat, a_lon), "%s %s" % (b_lat, b_lon))
+					query = "insert into horario_ruta values (%s, ST_GeomFromText('POINT(%s)'), ST_GeomFromText('POINT(%s)'), current_timestamp, current_timestamp + interval '20 minutes')" % (self.id, "%s %s" % (a_lat, a_lon), "%s %s" % (b_lat, b_lon))
 					cursor.execute(query)
 
 				#connection.commit()
