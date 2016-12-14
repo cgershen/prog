@@ -239,7 +239,7 @@ function drawPolyline() {
                         data : {
                             p_origen :  "(" + d_long + "," + d_lat + ")", //Se voltearon parámetros porque el servicio calcula
                             p_destino : "(" + o_long + "," + o_lat + ")", // el shortest path de Destino a Origen
-                            user_id : 2,
+                            //user_id : 2,
                             tipo_transporte: transporte,
                                },
                         success : function(json) {
@@ -477,6 +477,8 @@ function drawRoute(ruta,color,num_ruta_aux){
                         }
                       marker1.addTo(map);
                       marker2.addTo(map);
+                      //marker1.bindPopup('Francisco Neri');
+                      //marker1.openPopup();
                       }
                       
                       var polylineOptions = {
@@ -512,7 +514,7 @@ function almacenaRuta(num_ruta)
         p_origen :  "(" + d_long + "," + d_lat + ")", //Se voltearon parámetros porque el servicio calcula
         p_destino : "(" + o_long + "," + o_lat + ")", // el shortest path de Destino a Origen
         guardar : 1, //Guarda la polilinea en la BD
-        user_id : 2,
+        //user_id : 2,
         tipo_transporte: transporte,
       },
       success : function(json) {
