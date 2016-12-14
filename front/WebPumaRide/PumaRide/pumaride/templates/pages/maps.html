@@ -248,7 +248,7 @@
         <div class="input-group">
           <input name="q" class="form-control" placeholder="Origin..." type="text" id="origen" style="position: absolute;top: 0px;left: 0px; width: 99%;"  onFocus="geolocateO()">
               <span class="input-group-btn">
-                <button type="submit" name="origin" id="search-btn" class="btn btn-flat"><i class="fa fa-search" onclick="geocodeLatLng()"></i>
+                <button type="submit" name="origin" id="search-btn" class="btn btn-flat" disabled="true">
                 </button>
               </span>
         </div>
@@ -256,7 +256,7 @@
         <div class="input-group">
           <input name="q" class="form-control" placeholder="Destine..." type="text" id="destino" style="position: absolute;top: 0px;left: 0px; width: 99%;" onfocus="geolocateD()">
               <span class="input-group-btn">
-                <button type="submit" name="origin" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                <button type="submit" name="origin" id="search-btn" class="btn btn-flat" disabled="true">
                 </button>
               </span>
         </div>
@@ -550,21 +550,21 @@ function fillInAddressO() {
   // Get the place details from the autocomplete object.
   var place = autocompleteO.getPlace();
 
-  alert("Origen " + place.geometry.location);
+  //alert("Origen " + place.geometry.location);
   origenLocation=place.geometry.location;// Origen coordenadas
   var o_lat_box = place.geometry.location.lat();
   var o_lng_box = place.geometry.location.lng();
-  //origenMarcador(o_lat_box,o_lng_box);
+  origenMarcador(o_lat_box,o_lng_box);
 }
 
 function fillInAddressD() {
   // Get the place details from the autocomplete object.
   var place = autocompleteD.getPlace();
-  alert("Destino "+place.geometry.location);
+  //alert("Destino "+place.geometry.location);
   destinoLocation = place.geometry.location;//Destino coordenadas
   var d_lat_box = place.geometry.location.lat();
   var d_lng_box = place.geometry.location.lng();
-  //destinoMarcador(d_lat_box,d_lng_box);
+  destinoMarcador(d_lat_box,d_lng_box);
 
 }
 // [END region_fillform]
