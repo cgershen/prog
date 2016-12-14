@@ -62,6 +62,7 @@ var myIcon_red = L.icon({
       o_lat=position.lat;
       o_long=position.lng;
       destino = "origen";
+      map.fitBounds([[o_lat,o_long]]);
       getReverseGeocodingData(destino,o_lat, o_long);
     });
     marker_origen.setIcon(myIcon_green);
@@ -69,14 +70,15 @@ var myIcon_red = L.icon({
     o_lat=e.latlng.lat;
     o_long=e.latlng.lng;
     destino= "origen";
+    map.fitBounds([[o_lat,o_long]]);
     getReverseGeocodingData(destino,o_lat, o_long);
   }
 
   function onLocationError(e) {
-    alert(e.message);
+    //alert(e.message);
     //startOrigen();
     //Latitud y Longitud de la CDMX
-    /*Lat_Mex= 19.39085896142664;
+    Lat_Mex= 19.39085896142664;
     Lng_Mex= -99.14361265000002;
 
     //Módulo para localizar al usuario en la ciudad de México, cuando no haya servicio
@@ -86,7 +88,7 @@ var myIcon_red = L.icon({
     o_lat = Lat_Mex;
     o_long = Lng_Mex; 
     destino = "origen";
-    getReverseGeocodingData(destino,o_lat, o_long);*/
+    //getReverseGeocodingData(destino,o_lat, o_long);
 
   }
 
@@ -112,6 +114,7 @@ function onMapClick(e) {
       d_lat=position.lat;
       d_long=position.lng;
       destino= "destino";
+      map.fitBounds([[d_lat,d_long]]);
       getReverseGeocodingData(destino,d_lat, d_long);
     });
     marker_destino.setIcon(myIcon_red);
@@ -119,65 +122,72 @@ function onMapClick(e) {
     d_lat=e.latlng.lat;
     d_long=e.latlng.lng;
     destino= "destino";
+    map.fitBounds([[d_lat,d_long]]);
     getReverseGeocodingData(destino,d_lat, d_long);
 }
 
 map.on('click', onMapClick);
 
-/*function origenMarcador(lat,lng){
+function origenMarcador(lat,lng){
   console.log(lat);
   console.log(lng);
     map.removeLayer(marker_origen);
     //Módulo para obtener la posición del usuario como Origen.
     marker_origen = new L.marker([lat,lng],{draggable:'true'})
-    //document.getElementById("origen").value = e.latlng.toString();
     marker_origen.on('dragend', function(event){
-      var marker_origen = event.target;
-      //var position = marker_origen.getLatLng();
+      marker_origen = event.target;
       marker_origen.setLatLng(new L.LatLng(lat,lng),{draggable:'true'});
       map.panTo(new L.LatLng(lat,lng))
-      //document.getElementById("origen").value = position.toString();
       o_lat=lat;
       o_long=lng;
-      destino = "origen";
-      getReverseGeocodingData(destino,o_lat, o_long);
+      //destino = "origen";
+      //getReverseGeocodingData(destino,o_lat, o_long);
     });
     marker_origen.setIcon(myIcon_green);
     marker_origen.addTo(map);
     o_lat=lat;
     o_long=lng;
-    destino= "origen";
-    getReverseGeocodingData(destino,o_lat, o_long);
+    map.fitBounds([[o_lat,o_long]]);
+    //destino= "origen";
+    //getReverseGeocodingData(destino,o_lat, o_long);
+    if (clen_pol==true) {
+        clearPolylines();
+    };
+    drawPolyline();
 }
+
 
 function destinoMarcador(lat,lng){
   console.log(lat);
   console.log(lng);
 
-  if(document.getElementById("destino").value!=""){
+  if(marker_destino){
+    console.log("entrando a error");
     map.removeLayer(marker_destino);
   }
 
     marker_destino = new L.marker([lat,lng],{draggable:'true'})
-    //document.getElementById("destino").value = e.latlng.toString();
     marker_destino.on('dragend', function(event){
       marker_destino = event.target;
-      //var position = marker_destino.getLatLng();
       marker_destino.setLatLng(new L.LatLng(lat,lng),{draggable:'true'});
       map.panTo(new L.LatLng(lat,lng))
-      //document.getElementById("destino").value = position.toString();
       d_lat=lat;
       d_long=lng;
-      destino= "destino";
-      getReverseGeocodingData(destino,d_lat, d_long);
+      //destino= "destino";
+      //getReverseGeocodingData(destino,d_lat, d_long);
     });
     marker_destino.setIcon(myIcon_red);
     marker_destino.addTo(map);
     d_lat=lat;
     d_long=lng;
-    destino= "destino";
-    getReverseGeocodingData(destino,d_lat, d_long);
-}*/
+    map.fitBounds([[d_lat,d_long]]);
+    //destino= "destino";
+    //getReverseGeocodingData(destino,d_lat, d_long);*/
+    if (clen_pol==true) {
+        clearPolylines();
+    };
+    drawPolyline();
+}
 
 var transporte = 0;
 function drawPolyline() {
@@ -197,7 +207,7 @@ function drawPolyline() {
                         data : {
                             p_origen :  "(" + d_long + "," + d_lat + ")", //Se voltearon parámetros porque el servicio calcula
                             p_destino : "(" + o_long + "," + o_lat + ")", // el shortest path de Destino a Origen
-                            user_id : 4,
+                            user_id : 2,
                             tipo_transporte: transporte,
                                },
                         success : function(json) {
@@ -278,6 +288,10 @@ function clearPolylines() {
 function findMatch(opcion){
   console.log("findMatch");
   console.log("ID_Ruta = " + id_ruta_aux);
+  if(!document.getElementById("car").checked && !document.getElementById("bus").checked && !document.getElementById("bike").checked && !document.getElementById("walk").checked){
+    alert("Selecciona un medio de transporte");
+  }
+  else{
   if(document.getElementById("origen").value !="" && document.getElementById("destino").value !=""){
       almacenaRuta(opcion);
   }
@@ -288,6 +302,7 @@ function findMatch(opcion){
   else{
     alert("Indicar un Destino")
   }
+}
 }
 
 
@@ -428,6 +443,7 @@ function almacenaRuta(num_ruta)
 {
   if(num_ruta==5 && id_ruta_valid == false)
   {
+    transporte = medioTransporte();
     console.log("almacenaRuta");
     $.ajax({
       url : "http://35.162.215.204:8000/api/lines/", 
@@ -437,7 +453,7 @@ function almacenaRuta(num_ruta)
         p_origen :  "(" + d_long + "," + d_lat + ")", //Se voltearon parámetros porque el servicio calcula
         p_destino : "(" + o_long + "," + o_lat + ")", // el shortest path de Destino a Origen
         guardar : 1, //Guarda la polilinea en la BD
-        user_id : 4,
+        user_id : 2,
         tipo_transporte: transporte,
       },
       success : function(json) {
@@ -471,16 +487,16 @@ function medioTransporte(){
   var bus = document.getElementById("bus").checked;
   var bike = document.getElementById("bike").checked;
   var walk = document.getElementById("walk").checked;
-   if(car && walk){
-    return 4;
-  }else if (bike){
-    return 2;
-  }else if(walk){
-    return 3;
-  }else if(bus){
-    return 6;
-  }if(car ){
+   
+   //Car = 1; Bike = 2; Bus = 3; Walk = 4
+  if (car){
     return 1;
+  }else if(bike){
+    return 2; 
+  }else if(bus){
+    return 3; 
+  }else if(walk){
+    return 4;
   }
   else{
     return 1;
