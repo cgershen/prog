@@ -1,2 +1,2 @@
 Verifica tu correo dando clic en el siguiente enlace:
-    http://162.243.135.137:8000/pumaride/registro/verificar/?code={{ code }}
+    http://35.162.215.204:8000/pumaride/registro/verificar/?code={{ code }}
