@@ -31,6 +31,9 @@ import com.google.gson.Gson;
 import com.unam.alex.pumaride.adapters.MessageListViewAdapter;
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.Message;
+import com.unam.alex.pumaride.models.MessageResult;
+import com.unam.alex.pumaride.models.User;
+import com.unam.alex.pumaride.retrofit.WebServices;
 import com.unam.alex.pumaride.services.MessageService;
 import com.unam.alex.pumaride.utils.Statics;
 
@@ -46,6 +49,11 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MessageActivity extends AppCompatActivity implements MessageListViewAdapter.LoadEarlierMessages {
     public static boolean active = false;
@@ -224,8 +232,29 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
 
     }
     private void sendServer(Message m) {
-        String s = new Gson().toJson(m);
-        mSocket.emit("chat", s);
+        Message me = m;
+        me.setType_(1);
+        String message = new Gson().toJson(me);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Statics.GCM_SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WebServices webServices = retrofit.create(WebServices.class);
+
+        Call<MessageResult> call = webServices.sendMessage(m.getUser_id2(),message);
+        //Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
+        call.enqueue(new Callback<MessageResult>() {
+            @Override
+            public void onResponse(Call<MessageResult> call, Response<MessageResult> response) {
+                Toast.makeText(getApplicationContext(),""+response.body(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<MessageResult> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"falle en enviar mensaje",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     public long getTimeInMillis(){
         Calendar c = Calendar.getInstance();

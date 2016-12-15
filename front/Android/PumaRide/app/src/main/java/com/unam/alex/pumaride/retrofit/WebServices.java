@@ -2,6 +2,7 @@ package com.unam.alex.pumaride.retrofit;
 
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.MatchServer;
+import com.unam.alex.pumaride.models.MessageResult;
 import com.unam.alex.pumaride.models.ReverseGeoCodeAddress;
 import com.unam.alex.pumaride.models.ReverseGeoCodeResult;
 import com.unam.alex.pumaride.models.Route;
@@ -43,6 +44,14 @@ public interface WebServices {
     Call<Route2> getShortestPath(@Field("p_origen") String source, @Field("p_destino") String target,@Field("guardar") String guardar,@Field("user_id") int User_id);
     @GET("json")
     Call<ReverseGeoCodeResult> getAddressFromLoc(@Query("latlng") String latlng,@Query("key") String key);
+
+    @GET("send_message_2.php")
+    Call<MessageResult> sendMessage(@Query("id") int id,@Query("message") String message);
+
+    @FormUrlEncoded
+    @POST("register.php")
+    Call<MessageResult> register(@Field("email") String email, @Field("name") String name, @Field("regId") String regId);
+
     @FormUrlEncoded
     @POST("api/matches/")
     Call<List<MatchServer>> getMatches(@Field("ruta_id") int id_route);
