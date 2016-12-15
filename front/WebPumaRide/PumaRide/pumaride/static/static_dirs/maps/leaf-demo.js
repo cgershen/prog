@@ -488,6 +488,7 @@ function drawRoute(ruta,color,num_ruta_aux,name){
                         }
                       marker1.addTo(map);
                       marker2.addTo(map);
+                      
                       marker1.bindPopup('<font color="black">' + name + '</font>');
                       marker1.openPopup();
                       }
