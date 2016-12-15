@@ -34,10 +34,10 @@ class Registro(APIView):
             must_validate_email = getattr(settings, "AUTH_EMAIL_VERIFICATION", True)
 
             try:
-                p = re.compile('@.*unam.mx$')
-                if (p.search(email) == None):
-                    content = {'detail':  _('Se debe proporcionar una cuenta de correo de un dominio de la UNAM.')}
-                    return Response(content, status=status.HTTP_400_BAD_REQUEST)
+                #p = re.compile('@.*unam.mx$')
+                #if (p.search(email) == None):
+                #    content = {'detail':  _('Se debe proporcionar una cuenta de correo de un dominio de la UNAM.')}
+                #    return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
                 user = get_user_model().objects.get(email=email)
                 if user.is_verified:
