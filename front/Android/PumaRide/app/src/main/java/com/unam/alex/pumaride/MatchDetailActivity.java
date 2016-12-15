@@ -29,6 +29,7 @@ public class MatchDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_detail);
         ButterKnife.bind(this);
+        /*
         Route r1 = new Route();
         r1.setId(1);
         r1.setStart("Xalapa");
@@ -48,7 +49,8 @@ public class MatchDetailActivity extends AppCompatActivity {
         routes.add(r2);
         routes.add(r3);
         init();
-        Glide.with(this).load(MessageActivity.match.getImage()).into(squareImageView);
+        */
+        //Glide.with(this).load(MessageActivity.match.getImage()).into(squareImageView);
         setTitle(MessageActivity.match.getFirst_name()+" "+MessageActivity.match.getLast_name());
     }
     public void init(){

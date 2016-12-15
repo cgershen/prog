@@ -97,6 +97,7 @@ public class MatchFragment extends ComunicationFragmentManager {
         // Set the adapter
         //check internet conection
         if (view instanceof RecyclerView) {
+            /*
             if(NetworkUtils.isNetworkAvailable(getContext())){
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(Statics.SERVER_BASE_URL)
@@ -125,9 +126,9 @@ public class MatchFragment extends ComunicationFragmentManager {
 
                     }
                 });
-            }else{
+            }else{*/
                 loadRealmMatches();
-            }
+            //}
         }
         return view;
     }
@@ -168,4 +169,5 @@ public class MatchFragment extends ComunicationFragmentManager {
         inflater.inflate(R.menu.menu_main_tab_friends, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+    
 }

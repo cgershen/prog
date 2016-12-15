@@ -53,6 +53,14 @@
                     android:ellipsize="end"
                     android:text="start - end"
                     />
+                <TextView
+                    android:paddingRight="30dp"
+                    android:id="@+id/activity_route_detail_match"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="start - end"
+                    />
             </LinearLayout>
 
             <LinearLayout

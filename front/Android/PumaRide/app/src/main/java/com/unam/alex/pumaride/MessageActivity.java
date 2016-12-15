@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import com.unam.alex.pumaride.adapters.MessageListViewAdapter;
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.Message;
 import com.unam.alex.pumaride.models.MessageResult;
+import com.unam.alex.pumaride.models.Route;
 import com.unam.alex.pumaride.models.User;
 import com.unam.alex.pumaride.retrofit.WebServices;
 import com.unam.alex.pumaride.services.MessageService;
@@ -44,9 +46,11 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import retrofit2.Call;
@@ -129,7 +133,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
         // Tell Realm to notify our listener when the customers results
         // have changed (items added, removed, updated, anything of the sort).
         messages.addChangeListener(changeListener);
-
+        Toast.makeText(MessageActivity.this, id2+"", Toast.LENGTH_SHORT).show();
         this.messages = new ArrayList<Message>(messages);
         realm.beginTransaction();
         for(Message m:this.messages){
@@ -232,9 +236,12 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
 
     }
     private void sendServer(Message m) {
-        Message me = m;
+
+        String message = new Gson().toJson(m);
+        Message me = new Gson().fromJson(message,Message.class);
         me.setType_(1);
-        String message = new Gson().toJson(me);
+        String message2 = new Gson().toJson(me);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.GCM_SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -242,7 +249,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
 
         WebServices webServices = retrofit.create(WebServices.class);
 
-        Call<MessageResult> call = webServices.sendMessage(m.getUser_id2(),message);
+        Call<MessageResult> call = webServices.sendMessage(me.getUser_id2(),message2);
         //Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
         call.enqueue(new Callback<MessageResult>() {
             @Override
@@ -284,8 +291,20 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
                         //Toast.makeText(getApplicationContext(),"new_game",Toast.LENGTH_SHORT).show();
                         return true;
 
-                    case R.id.help:
-
+                    case R.id.remove:
+                        new SweetAlertDialog(MessageActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("¿Estas seguro?")
+                                .setContentText("¡La ruta ya no se mostrará nunca más!")
+                                .setConfirmText("Aceptar")
+                                .setCancelText("Cancelar")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                        delete();
+                                    }
+                                })
+                                .show();
                         return true;
                     default:
                         return false;
@@ -295,6 +314,27 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
 
         popup.inflate(R.menu. messages);
         popup.show();
+    }
+    public void delete(){
+
+        RealmObject obj = realm.where(Match.class).equalTo("id",id2).findFirst();
+        RealmObject obj2 = realm.where(Route.class).equalTo("match.id",id2).findFirst();
+        realm.beginTransaction();
+        if (obj2!=null)
+            obj2.deleteFromRealm();
+        obj.deleteFromRealm();
+        realm.commitTransaction();
+        deleteOther();
+        finish();
+    }
+    public void deleteOther(){
+        Message m = new Message();
+        m.setType_(0);
+        m.setDatetime(getTimeInMillis());
+        m.setUser_id(id);
+        m.setUser_id2(id2);
+        m.setMessage("#code_12");
+        sendServer(m);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -58,6 +58,7 @@ import com.unam.alex.pumaride.models.Day;
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.MatchServer;
 import com.unam.alex.pumaride.models.Message;
+import com.unam.alex.pumaride.models.MessageResult;
 import com.unam.alex.pumaride.models.MyLatLng;
 import com.unam.alex.pumaride.models.ReverseGeoCodeResult;
 import com.unam.alex.pumaride.models.Route;
@@ -133,6 +134,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
+
         route = new Route();
         route.setMode(Route.WALK);
         user_me = new User();
@@ -236,11 +238,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Message m = new Gson().fromJson(s,Message.class);
                 dialogLookingFor.dismiss();
                 match = new Match();
-                match.setId(m.getUser_id2());
+                match.setId(m.getUser_id());
                 String name[] = m.getMessage().split(",");
                 match.setFirst_name(name[1]);
                 match.setLast_name("");
                 createNewMatchDialog();
+                addMatch(match);
             }
         };
         //Toast.makeText(getApplicationContext(), realm.where(Route.class).count()+"", Toast.LENGTH_SHORT).show();
@@ -310,6 +313,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         clickCounter = 0;
                         mMarker1.remove();
                         mMarker2.remove();
+                        mMarker1 = null;
+                        mMarker2 = null;
                         line.remove();
                     case 0:
                         //mMarker1 = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Source").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_green_a_24px)));
@@ -364,8 +369,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
     public void save(){
+        route.setMatch(match);
         realm.beginTransaction();
-        realm.copyToRealm(route);
+        realm.insertOrUpdate(route);
         realm.commitTransaction();
     }
     public void drawPoliLineFromServer(){
@@ -383,7 +389,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         source = "("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")";
         target = "("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")";
 
-        Call<Route2> call = webServices.getShortestPath(source,target,"guardar",user_me.getId());
+        Call<Route2> call = webServices.getShortestPath(source,target,user_me.getId());
         call.enqueue(new Callback<Route2>() {
             @Override
             public void onResponse(Call<Route2> call, Response<Route2> response) {
@@ -414,6 +420,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(),new Gson().toJson(call),Toast.LENGTH_SHORT).show();
                 //sweetLoadingDialog.dismissWithAnimation();
                 loadingDialog.dismiss();
+            }
+        });
+    }
+    public void saveShortestPath(){
+        createLookingForDialog();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WebServices webServices = retrofit.create(WebServices.class);
+
+        String source,target;
+        source = "("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")";
+        target = "("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")";
+
+        Call<Route2> call = webServices.saveShortestPath(source,target,"guardar",user_me.getId());
+        call.enqueue(new Callback<Route2>() {
+            @Override
+            public void onResponse(Call<Route2> call, Response<Route2> response) {
+                //Toast.makeText(getApplicationContext(),new Gson().toJson(response.body()),Toast.LENGTH_SHORT).show();
+                ArrayList<LatLng> positions = new ArrayList<LatLng>();
+                Route2 route2  = new Route2();
+                route2 = response.body();
+                route.setId(route2.getId());
+                checkMatchService();
+            }
+            @Override
+            public void onFailure(Call<Route2> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),new Gson().toJson(call),Toast.LENGTH_SHORT).show();
+                //sweetLoadingDialog.dismissWithAnimation();
+
             }
         });
     }
@@ -520,7 +558,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.save_route:
                 //Toast.makeText(getApplicationContext(),"Guardar",Toast.LENGTH_SHORT).show();
                // save();
-                createLookingForDialog();
+                if ((mMarker1!=null)&&(mMarker2!=null)) {
+                    saveShortestPath();
+
+                }
                 return true;
             case android.R.id.home:
                 finish();
@@ -592,7 +633,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         dialogLookingFor.show();
         _tv = (TextView)dialogLookingFor.findViewById(R.id.activity_maps_custom_dialog_looking_for_timer);
         initCounterDown();
-        checkMatchService();
+
         //YoYo.with(Techniques.FadeIn).duration(500).playOn(dialog.findViewById(R.id.custom_dialog_content));
         ImageButton cancel = (ImageButton)dialogLookingFor.findViewById(R.id.custom_dialog_button_cancel);
         //ImageView icon = (ImageView)dialog.findViewById(R.id.custom_dialog_image);
@@ -609,11 +650,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 //validator.validate();
                 dialogLookingFor.dismiss();
-                createNewMatchDialog();
+                //createNewMatchDialog();
             }
         });
     }
+    private void sendServer(Message m) {
 
+        String message = new Gson().toJson(m);
+        Message me = new Gson().fromJson(message,Message.class);
+        me.setType_(1);
+        String message2 = new Gson().toJson(me);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Statics.GCM_SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WebServices webServices = retrofit.create(WebServices.class);
+
+        Call<MessageResult> call = webServices.sendMessage(me.getUser_id2(),message2);
+        //Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
+        call.enqueue(new Callback<MessageResult>() {
+            @Override
+            public void onResponse(Call<MessageResult> call, Response<MessageResult> response) {
+                Toast.makeText(getApplicationContext(),""+response.body(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<MessageResult> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"falle en enviar mensaje",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     public void checkMatchService(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
@@ -628,6 +696,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onResponse(Call<List<MatchServer>> call, Response<List<MatchServer>> response) {
                 //Toast.makeText(getApplicationContext(),new Gson().toJson(response.body()),Toast.LENGTH_SHORT).show();
                 List<MatchServer> matches = response.body();
+                if(matches!=null)
                 if(matches.size()>0){
                     MatchServer match_server = matches.get(0);
                     Toast.makeText(getApplicationContext(),new Gson().toJson(match_server),Toast.LENGTH_SHORT).show();
@@ -652,8 +721,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         m.setUser_id2(match.getId());
         m.setUser_id(user_me.getId());
         m.setMessage("@code_13,"+user_me.getFirst_name()+" "+user_me.getLast_name());
-        String message = new Gson().toJson(m);
-        mSocket.emit("chat", message);
+        sendServer(m);
+        addMatch(match);
+    }
+    public void addMatch(Match match){
+        realm.beginTransaction();
+        realm.insertOrUpdate(match);
+        realm.commitTransaction();
     }
     public void initCounterDown(){
         new CountDownTimer(1000000, 1000) { // adjust the milli seconds here

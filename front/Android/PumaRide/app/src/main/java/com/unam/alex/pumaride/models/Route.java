@@ -20,9 +20,18 @@ public class Route extends RealmObject{
     private String end;
     private int mode;
     private String image;
+    private Match match;
     public static final int WALK = 0;
     public static final int CAR = 1;
     public static final int BIKE  =2;
+
+    public Match getMatch() {
+        return match;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
+    }
 
     public int getId() {
         return id;

@@ -3,9 +3,11 @@ package com.unam.alex.pumaride;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
@@ -13,6 +15,7 @@ import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -39,6 +42,8 @@ import com.unam.alex.pumaride.fragments.MatchFragment;
 import com.unam.alex.pumaride.fragments.MyMapFragment;
 import com.unam.alex.pumaride.fragments.RouteFragment;
 import com.unam.alex.pumaride.fragments.listeners.OnFragmentInteractionListener;
+import com.unam.alex.pumaride.models.Match;
+import com.unam.alex.pumaride.models.Message;
 import com.unam.alex.pumaride.models.MessageResult;
 import com.unam.alex.pumaride.models.User;
 import com.unam.alex.pumaride.retrofit.WebServices;
@@ -70,6 +75,8 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    public static boolean active = false;
+    BroadcastReceiver receiver;
     RouteFragment rFragment = null;
     MatchFragment mFragment = null;
     //array for fragments
@@ -109,6 +116,13 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
         tabLayout.setupWithViewPager(mViewPager);
         setTitle("PumaRide");
         init();
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                reloadFragment(mFragment);
+                reloadFragment(rFragment);
+            }
+        };
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +168,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
                         call.enqueue(new Callback<MessageResult>() {
                             @Override
                             public void onResponse(Call<MessageResult> call, Response<MessageResult> response) {
-                                Toast.makeText(getApplicationContext(),""+response.body(),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),"Usuario registrado o actualizado"+response.body(),Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -345,4 +359,17 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
             mBoundService = null;
         }
     };
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),new IntentFilter(MessageService.MESSAGE_RESULT));
+    }
+
+    @Override
+    public void onStop() {
+        active = false;
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
+    }
 }

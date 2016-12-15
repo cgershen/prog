@@ -28,6 +28,8 @@ public class RouteDetailActivity extends AppCompatActivity {
     TextView tvStart;
     @BindView(R.id.activity_route_detail_end)
     TextView tvEnd;
+    @BindView(R.id.activity_route_detail_match)
+    TextView tvMatch;
     @BindView(R.id.activity_route_detail_ll_type)
     LinearLayout llType;
     @BindView(R.id.activity_route_detail_ib_type)
@@ -41,6 +43,7 @@ public class RouteDetailActivity extends AppCompatActivity {
         if(RouteFragment.route.getImage()!=null) {
             Glide.with(getApplicationContext()).load(RouteFragment.route.getImage()).into(ivImage);
         }
+        tvMatch.setText(RouteFragment.route.getMatch().getFirst_name()+" "+RouteFragment.route.getMatch().getFirst_name());
         switch (RouteFragment.route.getMode()){
             case Route.WALK:
                 llType.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_background_walk));
@@ -55,8 +58,8 @@ public class RouteDetailActivity extends AppCompatActivity {
                 ibType.setBackgroundResource(R.drawable.ic_directions_car_white_24dp);
                 break;
         }
-        tvStart.setText(RouteFragment.route.getStart());
-        tvEnd.setText(RouteFragment.route.getEnd());
+        tvStart.setText("De: "+RouteFragment.route.getStart());
+        tvEnd.setText("A: "+RouteFragment.route.getEnd());
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

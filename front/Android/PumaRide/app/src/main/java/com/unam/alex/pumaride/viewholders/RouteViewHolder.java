@@ -45,6 +45,8 @@ public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnC
     TextView tvStart;
     @BindView(R.id.activity_match_detail_list_item_end)
     TextView tvEnd;
+    @BindView(R.id.activity_match_detail_list_item_match)
+    TextView tvMatch;
     @BindView(R.id.activity_match_detail_list_item_image)
     ImageView iImage;
     @BindView(R.id.activity_match_detail_list_item_ll_type)
@@ -58,6 +60,14 @@ public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnC
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
         ButterKnife.bind(this, itemView);
+    }
+
+    public TextView getTvMatch() {
+        return tvMatch;
+    }
+
+    public void setTvMatch(TextView tvMatch) {
+        this.tvMatch = tvMatch;
     }
 
     public LinearLayout getLlType() {

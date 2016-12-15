@@ -41,7 +41,13 @@ public interface WebServices {
     Call<User> resetPassword(@Field("email") String email);
     @FormUrlEncoded
     @POST("api/lines/")
-    Call<Route2> getShortestPath(@Field("p_origen") String source, @Field("p_destino") String target,@Field("guardar") String guardar,@Field("user_id") int User_id);
+    Call<Route2> getShortestPath(@Field("p_origen") String source, @Field("p_destino") String target,@Field("user_id") int User_id);
+
+    @FormUrlEncoded
+    @POST("api/lines/")
+    Call<Route2> saveShortestPath(@Field("p_origen") String source, @Field("p_destino") String target,@Field("guardar") String guardar,@Field("user_id") int User_id);
+
+
     @GET("json")
     Call<ReverseGeoCodeResult> getAddressFromLoc(@Query("latlng") String latlng,@Query("key") String key);
 
@@ -51,6 +57,7 @@ public interface WebServices {
     @FormUrlEncoded
     @POST("register.php")
     Call<MessageResult> register(@Field("email") String email, @Field("name") String name, @Field("regId") String regId);
+
 
     @FormUrlEncoded
     @POST("api/matches/")

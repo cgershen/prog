@@ -25,6 +25,7 @@
         android:layout_marginBottom="10dp"
         android:id="@+id/relativeLayout">
         <EditText
+            android:paddingBottom="2dp"
             style="@style/inputChat"
             android:padding="8dp"
             android:background="@android:color/white"

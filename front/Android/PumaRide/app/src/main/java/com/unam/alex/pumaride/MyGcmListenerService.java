@@ -15,10 +15,12 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.google.gson.Gson;
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.Message;
+import com.unam.alex.pumaride.models.Route;
 
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 public class MyGcmListenerService extends GcmListenerService {
@@ -44,10 +46,36 @@ public class MyGcmListenerService extends GcmListenerService {
         id = sp.getInt("userid",1);
         broadcaster = LocalBroadcastManager.getInstance(this);
         //NotificationHelper.generateNotification(getApplicationContext(), msg, "Mensaje", true);
-        Message m  = new Gson().fromJson(msg,Message.class);
+        final Message m  = new Gson().fromJson(msg,Message.class);
         int value = m.getMessage().indexOf("@code");
+        int value2 = m.getMessage().indexOf("#code");
         if(value==-1){
-            sendResult(msg);
+            if(value2==-1) {
+                sendResult(msg);
+            }else{
+
+                Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
+                Runnable myRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Realm.init(getBaseContext());
+                        // Get a Realm instance for this thread
+                        realm = Realm.getDefaultInstance();
+                        RealmObject obj = realm.where(Match.class).equalTo("id",m.getUser_id()).findFirst();
+                        RealmObject obj2 = realm.where(Route.class).equalTo("match.id",m.getUser_id()).findFirst();
+                        realm.beginTransaction();
+                        obj2.deleteFromRealm();
+                        obj.deleteFromRealm();
+                        realm.commitTransaction();
+                        if(MainTabActivity.active){
+                            Intent intent = new Intent(MESSAGE_RESULT);
+                            intent.putExtra(MESSAGE, "reload_fragments");
+                            broadcaster.sendBroadcast(intent);
+                        }
+                    } // This is your code
+                };
+                mainHandler.post(myRunnable);
+            }
         }else{
             if(MapsActivity.active){
                 Intent intent = new Intent(MESSAGE_RESULT);
