@@ -339,6 +339,7 @@ function findMatch(opcion){
 
 
 var array_pol =[];
+var nom_usuario = "";
 function match(num_ruta,id_ruta)
 {
                     $.ajax({
@@ -361,7 +362,8 @@ function match(num_ruta,id_ruta)
                         {
                           clearPolylinesMatch(array_pol.length);
                         }
-                        array_pol[0]=drawRoute(json[0].ruta,'#0000FF',num_ruta);
+                        nom_usuario = json[0].first_name + " " + json[0].last_name;
+                        array_pol[0]=drawRoute(json[0].ruta,'#0000FF',num_ruta, nom_usuario);
                       }
                       
                       //Dibuja la polilinea de la ruta 2
@@ -370,7 +372,8 @@ function match(num_ruta,id_ruta)
                         {
                           clearPolylinesMatch(array_pol.length);
                         }
-                        array_pol[0]=drawRoute(json[1].ruta,'#FFFF00',num_ruta);
+                        nom_usuario = json[1].first_name + " " + json[1].last_name;
+                        array_pol[0]=drawRoute(json[1].ruta,'#FFFF00',num_ruta, nom_usuario);
                       }
 
                       //Dibuja la polilinea de la ruta 3
@@ -379,7 +382,8 @@ function match(num_ruta,id_ruta)
                         {
                           clearPolylinesMatch(array_pol.length);
                         }
-                        array_pol[0]=drawRoute(json[2].ruta,'#000000',num_ruta);
+                        nom_usuario = json[2].first_name + " " + json[2].last_name;
+                        array_pol[0]=drawRoute(json[2].ruta,'#000000',num_ruta,nom_usuario);
                       }
 
                       //Dibuja la polilinea de la ruta 4
@@ -388,7 +392,8 @@ function match(num_ruta,id_ruta)
                         {
                           clearPolylinesMatch(array_pol.length);
                         }
-                        array_pol[0]=drawRoute(json[3].ruta,'#8000FF',num_ruta);
+                        nom_usuario = json[3].first_name + " " + json[3].last_name;
+                        array_pol[0]=drawRoute(json[3].ruta,'#8000FF',num_ruta,nom_usuario);
                       }
                       //Dibuja la polilinea de la ruta 5
                       if(num_ruta==4 && 1 <= json.length){
@@ -396,7 +401,8 @@ function match(num_ruta,id_ruta)
                         {
                           clearPolylinesMatch(array_pol.length);
                         }
-                           array_pol[0]=drawRoute(json[4].ruta,'#FF0080',num_ruta);
+                        nom_usuario = json[4].first_name + " " + json[4].last_name;
+                        array_pol[0]=drawRoute(json[4].ruta,'#FF0080',num_ruta,nom_usuario);
                       }
 
                       //Dibuja todas la polilineas de todas las rutas 5
@@ -412,19 +418,24 @@ function match(num_ruta,id_ruta)
                         for(var i=0;i<json.length;i++)
                         {
                           if(i==0){ 
-                              array_pol[i]=drawRoute(json[0].ruta,'#0000FF',num_ruta);
+                              nom_usuario = json[0].first_name + " " + json[0].last_name;
+                              array_pol[i]=drawRoute(json[0].ruta,'#0000FF',num_ruta,nom_usuario);
                           }
                           if(i==1){
-                              array_pol[i]=drawRoute(json[1].ruta,'#FFFF00',num_ruta);
+                              nom_usuario = json[1].first_name + " " + json[1].last_name;
+                              array_pol[i]=drawRoute(json[1].ruta,'#FFFF00',num_ruta,nom_usuario);
                           }
                           if(i==2){
-                              array_pol[i]=drawRoute(json[2].ruta,'#000000',num_ruta);
+                              nom_usuario = json[2].first_name + " " + json[2].last_name;
+                              array_pol[i]=drawRoute(json[2].ruta,'#000000',num_ruta,nom_usuario);
                           }
                           if(i==3){
-                              array_pol[i]=drawRoute(json[3].ruta,'#8000FF',num_ruta);
+                              nom_usuario = json[3].first_name + " " + json[3].last_name;
+                              array_pol[i]=drawRoute(json[3].ruta,'#8000FF',num_ruta,nom_usuario);
                           }
                           if(i==4){
-                              array_pol[i]=drawRoute(json[4].ruta,'#FF0080',num_ruta);
+                              nom_usuario = json[4].first_name + " " + json[4].last_name;
+                              array_pol[i]=drawRoute(json[4].ruta,'#FF0080',num_ruta,nom_usuario);
                           }
                         }
                         console.log("num de pols = " + array_pol.length);
@@ -443,7 +454,7 @@ function clearPolylinesMatch(num_pol){
 }
 
 var marker1, marker2;
-function drawRoute(ruta,color,num_ruta_aux){
+function drawRoute(ruta,color,num_ruta_aux,name){
                       route = ruta;
                       c=color;
                       console.log(route);
@@ -477,8 +488,8 @@ function drawRoute(ruta,color,num_ruta_aux){
                         }
                       marker1.addTo(map);
                       marker2.addTo(map);
-                      //marker1.bindPopup('Francisco Neri');
-                      //marker1.openPopup();
+                      marker1.bindPopup('<font color="black">' + name + '</font>');
+                      marker1.openPopup();
                       }
                       
                       var polylineOptions = {
