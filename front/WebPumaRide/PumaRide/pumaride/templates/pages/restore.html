@@ -32,10 +32,9 @@
   <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">Password Restore</p>
-
-    <form action="../maps.html" method="post">
+    <form action="#">
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email" required/>
+        <input id="email" type="email" class="form-control" placeholder="Email" required/>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="row">
@@ -44,11 +43,41 @@
         </div>
         <!-- /.col -->
         <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Restore</button>
+          <button type="submit" class="btn btn-primary btn-block btn-flat"  onclick="restore1();return false">Restore</button>
         </div>
         <!-- /.col -->
       </div>
     </form>
+
+     <script type="text/javascript">
+       function restore1()
+        {          
+
+                    $.ajax({
+                        //url : "http://162.243.135.137:8000/pumaride/password/reset/", 
+                        url : "http://35.162.215.204:8000/pumaride/password/reset/", 
+                        type : "POST",
+                        dataType: "json",
+                        //contentType: "application/json; charset=", 
+                        data : {
+                           email: document.getElementById("email").value,
+                               },
+                        success : function(json) {
+                            console.log(json);
+                            alert("Hola");
+                              },
+                        statusCode: { 403: function() {
+                        // Only if your server returns a 403 status code can it come in this block. :-)
+                        alert("Username already exist");
+                                                      }
+                                    },
+                        error: function(){
+                            alert("Yours data are incorrect");
+                              }
+                    });
+         }
+      </script>
+
 
     <div class="social-auth-links text-center">
     </div>
@@ -57,9 +86,5 @@
   <!-- /.login-box-body -->
 </div>
 <!-- /.login-box -->
-
-<!-- Bootstrap 3.3.6 -->
-<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-
 </body>
 </html>

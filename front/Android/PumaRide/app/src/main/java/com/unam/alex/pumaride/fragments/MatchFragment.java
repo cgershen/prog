@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -74,7 +76,7 @@ public class MatchFragment extends ComunicationFragmentManager {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -86,7 +88,7 @@ public class MatchFragment extends ComunicationFragmentManager {
         View view = inflater.inflate(R.layout.fragment_match_list, container, false);
         ButterKnife.bind(this, view);
         if (mListener != null) {
-            mListener.onFragmentInteraction("Matches");
+           // mListener.onFragmentInteraction("Matches");
         }
         // Initialize Realm
         Realm.init(getContext());
@@ -95,6 +97,7 @@ public class MatchFragment extends ComunicationFragmentManager {
         // Set the adapter
         //check internet conection
         if (view instanceof RecyclerView) {
+            /*
             if(NetworkUtils.isNetworkAvailable(getContext())){
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(Statics.SERVER_BASE_URL)
@@ -108,7 +111,9 @@ public class MatchFragment extends ComunicationFragmentManager {
                     public void onResponse(Call<List<Match>> call, Response<List<Match>> response) {
                         realm.beginTransaction();
                         realm.delete(Match.class);
-                        for(Match match:response.body()) {
+                        for(int i = 0; i< response.body().size(); i++) {
+                            Match match = response.body().get(i);
+                            match.setImage(Statics.SERVER_BASE_URL+"static/images/"+i+".jpg");
                             RealmObject realmMatch= realm.copyToRealmOrUpdate(match);
                         }
                         realm.commitTransaction();
@@ -121,9 +126,9 @@ public class MatchFragment extends ComunicationFragmentManager {
 
                     }
                 });
-            }else{
+            }else{*/
                 loadRealmMatches();
-            }
+            //}
         }
         return view;
     }
@@ -158,4 +163,11 @@ public class MatchFragment extends ComunicationFragmentManager {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(this).attach(this).commit();
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_main_tab_friends, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    
 }

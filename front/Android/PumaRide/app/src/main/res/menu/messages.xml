@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_more_vert_white_24px"
         android:title="Reportar"
         app:showAsAction="ifRoom"/>
-    <item android:id="@+id/help"
+    <item android:id="@+id/remove"
         android:icon="@drawable/ic_more_vert_white_24px"
         android:title="Cancelar compatibilidad"
         app:showAsAction="never" />

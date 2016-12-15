@@ -7,95 +7,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.unam.alex.pumaride.MapsActivity" >
-    <TableLayout
+    <android.support.v7.widget.RecyclerView
+        android:visibility="invisible"
+        android:layout_marginTop="7dp"
+        android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="7dp"
-        android:background="#ffffff">
-        <TableRow
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="L"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="M"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Mi"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="J"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="V"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="S"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="D"/>
-            </LinearLayout>
-        </TableRow>
-    </TableLayout>
+        android:id="@+id/activity_maps_rv_days"/>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab"
@@ -104,19 +22,25 @@
         android:layout_gravity="bottom|right"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
-        android:src="@drawable/ic_add_alert_black_24dp"
-        fab:fab_colorNormal="@color/colorAccent"
-        fab:fab_colorPressed="@color/colorPrimary"
-        fab:fab_colorRipple="@color/colorPrimaryDark">
+        fab:menu_icon="@drawable/ic_directions_walk_white_24dp"
+        fab:menu_colorNormal="@color/colorWalk"
+        fab:menu_colorPressed="@color/colorWalk"
+        fab:menu_colorRipple="@color/colorWalk">
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_item"
+            fab:fab_colorNormal="@color/colorWalk"
+            fab:fab_colorPressed="@color/colorWalk"
+            fab:fab_colorRipple="@color/colorWalk"
+            android:id="@+id/app_bar_main_menu_item_0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_directions_walk_white_24dp"
             fab:fab_size="mini"
             fab:fab_label="A Pie" />
         <com.github.clans.fab.FloatingActionButton
+            fab:fab_colorNormal="@color/colorBike"
+            fab:fab_colorPressed="@color/colorBike"
+            fab:fab_colorRipple="@color/colorBike"
             android:id="@+id/app_bar_main_menu_item_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -130,14 +54,10 @@
             android:src="@drawable/ic_directions_car_white_24dp"
             android:tag="1"
             fab:fab_size="mini"
-            fab:fab_label="Automóvil" />
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/app_bar_main_menu_item_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_directions_bus_white_24dp"
-            fab:fab_size="mini"
-            fab:fab_label="Transporte Publico" />
+            fab:fab_label="Automóvil"
+            map:fab_colorNormal="@color/orange_primary_color"
+            map:fab_colorPressed="@color/orange_primary_color"
+            map:fab_colorRipple="@color/orange_primary_color" />
 
     </com.github.clans.fab.FloatingActionMenu>
 </fragment>

@@ -18,6 +18,7 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
+import com.unam.alex.pumaride.MapsActivity;
 import com.unam.alex.pumaride.MessageActivity;
 import com.unam.alex.pumaride.R;
 import com.unam.alex.pumaride.models.Match;
@@ -39,27 +40,14 @@ public class MessageService extends Service {
     int id = 10;
     Match match;
     private Socket mSocket;
-    {
-        try {
-            mSocket = IO.socket(Statics.CHAT_SERVER_BASE_URL);
-        } catch (URISyntaxException e) {}
-    }
+
     public MessageService() {
     }
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
-        @Override
-        public void call(final Object... objects) {
-            String result = (String) objects[0];
-
-            sendResult(result);
-        }
-    };
+    private Emitter.Listener onNewMessage ;
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
-
-
     }
 
     @Override
@@ -68,9 +56,31 @@ public class MessageService extends Service {
         SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
         id = sp.getInt("userid",1);
         broadcaster = LocalBroadcastManager.getInstance(this);
+        {
+            try {
+                mSocket = IO.socket(Statics.CHAT_SERVER_BASE_URL);
+            } catch (URISyntaxException e) {}
+        }
+        onNewMessage = new Emitter.Listener() {
+            @Override
+            public void call(final Object... objects) {
+                String result = (String) objects[0];
+                Message m  = new Gson().fromJson(result,Message.class);
+                int value = m.getMessage().indexOf("@code");
+                if(value==-1){
+                    sendResult(result);
+                }else{
+                    if(MapsActivity.active){
+                        Intent intent = new Intent(MESSAGE_RESULT);
+                        intent.putExtra(MESSAGE, result);
+                        broadcaster.sendBroadcast(intent);
+                    }
+                }
+            }
+        };
         mSocket.on("chat"+id, onNewMessage);
         mSocket.connect();
-        return Service.START_STICKY;
+        return Service.START_REDELIVER_INTENT;
     }
     public void notifyMessage(ArrayList<Message> messages){
 
@@ -83,8 +93,8 @@ public class MessageService extends Service {
                 .setContentTitle("PumarRide")
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText("Prueba"))
-                .setContentText("Pruebas");
+                .setStyle(new NotificationCompat.BigTextStyle().bigText("Mensaje"))
+                .setContentText("Mensaje");
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
         inboxStyle.setBigContentTitle("PumaRide:");
@@ -112,7 +122,6 @@ public class MessageService extends Service {
 
         if(!MessageActivity.active) {
             Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
-
             Runnable myRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -154,6 +163,12 @@ public class MessageService extends Service {
     }
     public int getNextKey()
     {
-        return realm.where(Message.class).max("id").intValue() + 1;
+        int result = 1;
+        try{
+            result = realm.where(Message.class).max("id").intValue() + 1;
+        }catch(Exception e){
+
+        }
+        return result;
     }
 }

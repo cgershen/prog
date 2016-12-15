@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp"
+    android:height="320dp"
+    android:viewportWidth="2400"
+    android:viewportHeight="3200">
+
+    <path
+        android:fillColor="#cecece"
+        android:strokeWidth="1"
+        android:pathData="M65 3151 l-40 -6 -3 -1258 c-2 -1118 0 -1257 13 -1257 8 0 39 20 69 44 108 88 215
+122 361 113 153 -9 290 -67 637 -270 260 -152 352 -199 471 -238 108 -37 248 -49
+340 -29 140 29 291 137 411 293 l56 73 -2 1270 -3 1269 -1135 1 c-624 1 -1153 -2
+-1175 -5z" />
+</vector>

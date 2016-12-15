@@ -44,9 +44,25 @@ public class RouteListViewAdapter
     @Override
     public void onBindViewHolder(RouteViewHolder Route_ViewHolder, int i) {
         Route_ViewHolder.setId(Route_list.get(i).getId());
-        Route_ViewHolder.getTvStart_End().setText(Route_list.get(i).getStart()+" - "+Route_list.get(i).getEnd());
+        Route_ViewHolder.getTvStart().setText("De: "+ Route_list.get(i).getStart());
+        Route_ViewHolder.getTvEnd().setText("A: "+Route_list.get(i).getEnd());
+        Route_ViewHolder.getTvMatch().setText("Con: " + Route_list.get(i).getMatch().getFirst_name()+" "+Route_list.get(i).getMatch().getLast_name());
         if(Route_list.get(i).getImage()!=null) {
             Glide.with(context).load(Route_list.get(i).getImage()).into(Route_ViewHolder.getiImage());
+        }
+        switch (Route_list.get(i).getMode()){
+            case Route.WALK:
+                Route_ViewHolder.getLlType().setBackgroundDrawable(context.getResources().getDrawable(R.drawable.rounded_background_walk));
+                Route_ViewHolder.getIbType().setBackgroundResource(R.drawable.ic_directions_walk_white_24dp);
+                break;
+            case Route.BIKE:
+                Route_ViewHolder.getLlType().setBackgroundDrawable(context.getResources().getDrawable(R.drawable.rounded_background_bike));
+                Route_ViewHolder.getIbType().setBackgroundResource(R.drawable.ic_directions_bike_white_24dp);
+                break;
+            case Route.CAR:
+                Route_ViewHolder.getLlType().setBackgroundDrawable(context.getResources().getDrawable(R.drawable.rounded_background_car));
+                Route_ViewHolder.getIbType().setBackgroundResource(R.drawable.ic_directions_car_white_24dp);
+                break;
         }
     }
     @Override

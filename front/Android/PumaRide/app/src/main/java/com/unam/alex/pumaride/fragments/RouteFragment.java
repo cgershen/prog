@@ -1,13 +1,17 @@
 package com.unam.alex.pumaride.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,11 +26,17 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.RealmResults;
 
 public class RouteFragment extends ComunicationFragmentManager {
     @BindView(R.id.fragment_route_rv)
     RecyclerView rvRoute;
     RouteListViewAdapter mAdapter;
+    Realm realm = null;
+    public static Route route;
+    public static int route_position=-1;
     ArrayList<Route> routes = new ArrayList<Route>();
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters,| e.g. ARG_ITEM_NUMBER
@@ -62,6 +72,7 @@ public class RouteFragment extends ComunicationFragmentManager {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -75,33 +86,22 @@ public class RouteFragment extends ComunicationFragmentManager {
         ButterKnife.bind(this, view);
         // Inflate the layout for this fragment
         if (mListener != null) {
-            mListener.onFragmentInteraction("Routes");
+            //mListener.onFragmentInteraction("Routes");
         }
-        Route r1 = new Route();
-        r1.setId(1);
-        r1.setStart("Xalapa");
-        r1.setEnd("DF");
-
-        Route r2 = new Route();
-        r2.setId(1);
-        r2.setStart("Xalapa");
-        r2.setEnd("DF");
-
-        Route r3 = new Route();
-        r3.setId(1);
-        r3.setStart("Xalapa");
-        r3.setEnd("DF");
-
-        routes.add(r1);
-        routes.add(r2);
-        routes.add(r3);
-
+        Realm.init(getContext());
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        RealmResults<Route> routes_ = realm.where(Route.class).findAll();
+        routes.clear();
+        routes.addAll(routes_);
         mAdapter = new RouteListViewAdapter(routes,getContext());
         mAdapter.SetRecyclerViewClickListener(new RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position, boolean isLongClick, int id) {
+                route = routes.get(position);
+                route_position = position;
                 Intent i = new Intent(getContext(), RouteDetailActivity.class);
-                startActivity(i);
+                startActivityForResult(i,100);
             }
         });
         rvRoute.setAdapter(mAdapter);
@@ -111,6 +111,27 @@ public class RouteFragment extends ComunicationFragmentManager {
         rvRoute.setHasFixedSize(true);
         return view;
     }
-
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_main_tab, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100) {
+            if(resultCode == 1400){
+                delete();
+            }
+        }
+    }
+    public void delete(){
+        RealmObject r = routes.get(route_position);
+        realm.beginTransaction();
+        r.deleteFromRealm();
+        realm.commitTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
+    }
 }

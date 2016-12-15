@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.unam.alex.pumaride.MainTabActivity">
+    <item android:id="@+id/add_route"
+        android:icon="@drawable/ic_add_white_24px"
+        android:title="Borrar"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/profile"
+        android:orderInCategory="100"
+        android:title="Perfil"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/about"
+        android:orderInCategory="100"
+        android:title="Acerca de"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="100"
+        android:title="Salir"
+        app:showAsAction="never" />
+</menu>

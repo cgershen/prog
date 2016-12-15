@@ -2,7 +2,9 @@ package com.unam.alex.pumaride.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.unam.alex.pumaride.R;
@@ -39,10 +41,18 @@ public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnC
         this.iImage = iImage;
     }
 
-    @BindView(R.id.activity_match_detail_list_item_start_end)
-    TextView tvStart_End;
+    @BindView(R.id.activity_match_detail_list_item_start)
+    TextView tvStart;
+    @BindView(R.id.activity_match_detail_list_item_end)
+    TextView tvEnd;
+    @BindView(R.id.activity_match_detail_list_item_match)
+    TextView tvMatch;
     @BindView(R.id.activity_match_detail_list_item_image)
     ImageView iImage;
+    @BindView(R.id.activity_match_detail_list_item_ll_type)
+    LinearLayout llType;
+    @BindView(R.id.activity_match_detail_list_item_ib_type)
+    ImageButton ibType;
     private int id;
     public RouteViewHolder(View itemView, RecyclerViewClickListener clickListener) {
         super(itemView);
@@ -50,6 +60,30 @@ public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnC
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
         ButterKnife.bind(this, itemView);
+    }
+
+    public TextView getTvMatch() {
+        return tvMatch;
+    }
+
+    public void setTvMatch(TextView tvMatch) {
+        this.tvMatch = tvMatch;
+    }
+
+    public LinearLayout getLlType() {
+        return llType;
+    }
+
+    public void setLlType(LinearLayout llType) {
+        this.llType = llType;
+    }
+
+    public ImageButton getIbType() {
+        return ibType;
+    }
+
+    public void setIbType(ImageButton ibType) {
+        this.ibType = ibType;
     }
 
     public int getId() {
@@ -60,11 +94,19 @@ public class RouteViewHolder extends RecyclerView.ViewHolder implements View.OnC
         this.id = id;
     }
 
-    public TextView getTvStart_End() {
-        return tvStart_End;
+    public TextView getTvStart() {
+        return tvStart;
     }
 
-    public void setTvStart_End(TextView tvStart_End) {
-        this.tvStart_End = tvStart_End;
+    public void setTvStart(TextView tvStart) {
+        this.tvStart = tvStart;
+    }
+
+    public TextView getTvEnd() {
+        return tvEnd;
+    }
+
+    public void setTvEnd(TextView tvEnd) {
+        this.tvEnd = tvEnd;
     }
 }

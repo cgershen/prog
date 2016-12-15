@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/purple_primary_color</item>
     </style>
 
     <style name="input" parent="@android:style/TextAppearance.Medium">
@@ -17,6 +17,7 @@
         <item name="android:layout_marginRight">15dp</item>
         <item name="android:textColorHint">#000000</item>
     </style>
+
     <style name="inputChat" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>

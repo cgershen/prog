@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,6 +32,10 @@ import com.google.gson.Gson;
 import com.unam.alex.pumaride.adapters.MessageListViewAdapter;
 import com.unam.alex.pumaride.models.Match;
 import com.unam.alex.pumaride.models.Message;
+import com.unam.alex.pumaride.models.MessageResult;
+import com.unam.alex.pumaride.models.Route;
+import com.unam.alex.pumaride.models.User;
+import com.unam.alex.pumaride.retrofit.WebServices;
 import com.unam.alex.pumaride.services.MessageService;
 import com.unam.alex.pumaride.utils.Statics;
 
@@ -39,10 +46,18 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MessageActivity extends AppCompatActivity implements MessageListViewAdapter.LoadEarlierMessages {
     public static boolean active = false;
@@ -60,11 +75,11 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
     int min_id_message = 0;
 
     private int id = 10;
-    private int MESSAGES_IN_LIST = 5;
+    private int MESSAGES_IN_LIST = 15;
     int max_id_ac = 0;
     int min_id_ac = MESSAGES_IN_LIST;
     public static int id2 = 1; //default id for server conection
-    Match match;
+    public static Match match;
     private Socket mSocket;
     {
         try {
@@ -118,7 +133,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
         // Tell Realm to notify our listener when the customers results
         // have changed (items added, removed, updated, anything of the sort).
         messages.addChangeListener(changeListener);
-
+        Toast.makeText(MessageActivity.this, id2+"", Toast.LENGTH_SHORT).show();
         this.messages = new ArrayList<Message>(messages);
         realm.beginTransaction();
         for(Message m:this.messages){
@@ -132,10 +147,10 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra(MessageService.MESSAGE);
                 Message m = new Gson().fromJson(s,Message.class);
-                Toast.makeText(getApplicationContext(),"hola " + s,Toast.LENGTH_SHORT).show();
                 addMessage(m);
             }
         };
+        rvMessage.scrollToPosition(this.messages.size()-1);
 
     }
     TextView tvUserName;
@@ -148,7 +163,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
         View mCustomView = mInflater.inflate(R.layout.activity_message_custom_actionbar, null);
         TextView tvUserName = (TextView) mCustomView.findViewById(R.id.activity_message_custom_actionbar_title);
         tvUserName.setText(match.getFirst_name());
-        ImageView ivProfile = (ImageView) mCustomView.findViewById(R.id.activity_message_custom_actionbar_image);
+        CircleImageView ivProfile = (CircleImageView) mCustomView.findViewById(R.id.activity_message_custom_actionbar_image);
         if(match.getImage()!=null) {
             Glide.with(this).load(match.getImage()).into(ivProfile);
         }
@@ -190,17 +205,18 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
     }
     @OnClick(R.id.activity_message_btn_send)
     public void send(View v){
-        String message = etMessage.getText().toString();
-        etMessage.setText("");
-        Message m = new Message();
-        m.setType_(0);
-        m.setDatetime(getTimeInMillis());
-        m.setUser_id(id);
-        m.setUser_id2(id2);
-
-        m.setMessage(message);
-        addMessage(m);
-        sendServer(m);
+        String message = etMessage.getText().toString().trim();
+        if(!message.equals("")){
+            etMessage.setText("");
+            Message m = new Message();
+            m.setType_(0);
+            m.setDatetime(getTimeInMillis());
+            m.setUser_id(id);
+            m.setUser_id2(id2);
+            m.setMessage(message);
+            addMessage(m);
+            sendServer(m);
+        }
     }
     private void addMessage(Message m){
         messages.add(m);
@@ -220,8 +236,32 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
 
     }
     private void sendServer(Message m) {
-        String s = new Gson().toJson(m);
-        mSocket.emit("chat", s);
+
+        String message = new Gson().toJson(m);
+        Message me = new Gson().fromJson(message,Message.class);
+        me.setType_(1);
+        String message2 = new Gson().toJson(me);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Statics.GCM_SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WebServices webServices = retrofit.create(WebServices.class);
+
+        Call<MessageResult> call = webServices.sendMessage(me.getUser_id2(),message2);
+        //Toast.makeText(getApplicationContext(),token,Toast.LENGTH_SHORT).show();
+        call.enqueue(new Callback<MessageResult>() {
+            @Override
+            public void onResponse(Call<MessageResult> call, Response<MessageResult> response) {
+                Toast.makeText(getApplicationContext(),""+response.body(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<MessageResult> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"falle en enviar mensaje",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     public long getTimeInMillis(){
         Calendar c = Calendar.getInstance();
@@ -248,11 +288,23 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.new_game:
-                        Toast.makeText(getApplicationContext(),"new_game",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"new_game",Toast.LENGTH_SHORT).show();
                         return true;
 
-                    case R.id.help:
-
+                    case R.id.remove:
+                        new SweetAlertDialog(MessageActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("¿Estas seguro?")
+                                .setContentText("¡La ruta ya no se mostrará nunca más!")
+                                .setConfirmText("Aceptar")
+                                .setCancelText("Cancelar")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                        delete();
+                                    }
+                                })
+                                .show();
                         return true;
                     default:
                         return false;
@@ -262,6 +314,27 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
 
         popup.inflate(R.menu. messages);
         popup.show();
+    }
+    public void delete(){
+
+        RealmObject obj = realm.where(Match.class).equalTo("id",id2).findFirst();
+        RealmObject obj2 = realm.where(Route.class).equalTo("match.id",id2).findFirst();
+        realm.beginTransaction();
+        if (obj2!=null)
+            obj2.deleteFromRealm();
+        obj.deleteFromRealm();
+        realm.commitTransaction();
+        deleteOther();
+        finish();
+    }
+    public void deleteOther(){
+        Message m = new Message();
+        m.setType_(0);
+        m.setDatetime(getTimeInMillis());
+        m.setUser_id(id);
+        m.setUser_id2(id2);
+        m.setMessage("#code_12");
+        sendServer(m);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -278,7 +351,7 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
 
     @Override
     public void onLoadEarlierMessages() {
-        Toast.makeText(getApplicationContext(),"cargar mensajes",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"cargar mensajes",Toast.LENGTH_SHORT).show();
         loadMore();
     }
     public void loadMore(){
@@ -313,6 +386,9 @@ public class MessageActivity extends AppCompatActivity implements MessageListVie
     @Override
     protected void onDestroy() {
         setResult(Activity.RESULT_OK);
+
+        active = false;
         super.onDestroy();
     }
+
 }

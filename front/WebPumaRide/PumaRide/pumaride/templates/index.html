@@ -70,7 +70,8 @@
                 data.password="contraseña";*/
 
                     $.ajax({
-                        url : "http://162.243.135.137:8000/pumaride/login/", 
+                        //url : "http://162.243.135.137:8000/pumaride/login/", 
+                        url : "http://35.162.215.204:8000/pumaride/login/", 
                         type : "POST",
                         dataType: "json",
                         //contentType: "application/json; charset=", 
@@ -80,7 +81,8 @@
                                },
                         success : function(json) {
                             console.log(json);
-                            window.location="maps.html";
+                            var url = "maps.html?token="+json.token;
+                            window.location=url;
                               },
                         statusCode: { 403: function() {
                         // Only if your server returns a 403 status code can it come in this block. :-)
@@ -88,10 +90,20 @@
                                                       }
                                     },
                         error: function(){
-                            alert("Cannot get data");
+                            alert("Yours data are incorrect");
                               }
                     });
          }
+
+
+  function pasarVariables(pagina, nombres) {
+  pagina +="?";
+  nomVec = nombres.split(",");
+  for (i=0; i<nomVec.length; i++)
+    pagina += nomVec[i] + "=" + escape(eval(nomVec[i]))+"&";
+  pagina = pagina.substring(0,pagina.length-1);
+  return pagina;
+}
           </script>
 
     <div class="social-auth-links text-center">
@@ -103,7 +115,7 @@
     </div>
     <!-- /.social-auth-links -->
 
-    <a href="#">I forgot my password</a><br>
+    <a href="../restore.html" >I forgot my password</a><br>
     <a href="../register.html" class="text-center">Register a new membership</a>
 
   </div>

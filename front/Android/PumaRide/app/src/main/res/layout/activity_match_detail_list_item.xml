@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    card_view:cardCornerRadius="8dp">
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    card_view:cardCornerRadius="0dp">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
@@ -13,22 +16,69 @@
         >
         <ImageView
             android:id="@+id/activity_match_detail_list_item_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginLeft="5dp"
+            android:padding="5dp"
+            android:layout_gravity="center"
             android:src="@drawable/example"/>
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <TextView
+            <LinearLayout
+                android:id="@+id/activity_match_detail_list_item_ll_start_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:id="@+id/activity_match_detail_list_item_start_end"
-                android:text="start - end"/>
+                android:layout_toLeftOf="@+id/activity_match_detail_list_item_ll_type"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:orientation="vertical"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/activity_match_detail_list_item_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text=""
+                    />
+                <TextView
+                    android:id="@+id/activity_match_detail_list_item_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text=""
+                    />
+                <TextView
+                    android:id="@+id/activity_match_detail_list_item_match"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text=""
+                    />
+            </LinearLayout>
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/activity_match_detail_list_item_ll_type" >
+                <ImageButton
+                    android:id="@+id/activity_match_detail_list_item_ib_type"
+                    android:layout_margin="8dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@android:color/transparent"
+                    >
+
+                </ImageButton>
+            </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

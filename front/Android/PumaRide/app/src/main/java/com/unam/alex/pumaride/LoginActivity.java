@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity  implements Validator.Valid
         if(isLogged()){
             finish();
 
-            Intent i  = new Intent(this,MainActivity.class);
+            Intent i  = new Intent(this,MainTabActivity.class);
             startActivity(i);
         }
         validator = new Validator(this);
@@ -111,14 +111,10 @@ public class LoginActivity extends AppCompatActivity  implements Validator.Valid
                     SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("token", u.getToken());
-                    editor.putString("email", tvEmail.getText().toString());
-                    editor.putString("password", tvPassword.getText().toString());
-                    editor.putString("first_name", u.getFirst_name());
-                    editor.putString("last_name", u.getLast_name());
                     editor.commit();
                     pDialog.dismissWithAnimation();
                     finish();
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent i = new Intent(getApplicationContext(), MainTabActivity.class);
                     startActivity(i);
                 }else{
                     pDialog.dismissWithAnimation();

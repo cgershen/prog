@@ -8,8 +8,23 @@
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="fragment_profile_title">Perfil</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_chat">Chat</string>
     <string name="activity_register_politicas_texto"><u>Políticas de Privacidad</u></string>
+    <string name="title_activity_main_tab">MainTabActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string-array name="days">
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miércoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+        <item>Sábado</item>
+        <item>Domingo</item>
+    </string-array>
+    <string name="about">
+        Esta aplicación fue desarrollada por alumnos del Posgrado en Ciencia e Ingeniería de la Computación, UNAM.
+    </string>
 </resources>

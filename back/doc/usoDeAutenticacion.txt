@@ -1,4 +1,4 @@
-Uso de la API de sesiones de Pumaride
+﻿Uso de la API de sesiones de Pumaride
 
 * Registro
  - URL: 162.243.135.137:8000/pumaride/registro/

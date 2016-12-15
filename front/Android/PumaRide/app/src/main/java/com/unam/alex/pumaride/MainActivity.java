@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         String first_name = sp.getString("first_name","");
         String last_name = sp.getString("last_name","");
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Statics.SERVER_BASE_URL)
+                .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -117,6 +117,9 @@ public class MainActivity extends AppCompatActivity
         tvEmail.setText(email);
         TextView tvName = (TextView) headerView.findViewById(R.id.nav_header_main_name);
         tvName.setText(first_name +" "+ last_name);
+
+        Intent in =  new Intent(getApplicationContext(),MainTabActivity.class);
+        startActivity(in);
     }
     public void init(){
         MyMapFragment firstFragment = new MyMapFragment();

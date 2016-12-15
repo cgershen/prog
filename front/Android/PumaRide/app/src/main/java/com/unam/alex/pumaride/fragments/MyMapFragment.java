@@ -36,6 +36,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.unam.alex.pumaride.R;
 import com.unam.alex.pumaride.models.Match;
+import com.unam.alex.pumaride.models.MyLatLng;
+import com.unam.alex.pumaride.models.Route;
 import com.unam.alex.pumaride.models.Route2;
 import com.unam.alex.pumaride.models.Route3;
 import com.unam.alex.pumaride.retrofit.WebServices;
@@ -64,8 +66,7 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         private Marker mMarker2 = null;
         private Polyline line = null;
         private int clickCounter = 0;
-
-
+        private Route route ;
         public MyMapFragment() {
         }
 
@@ -163,7 +164,8 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         });
     }
     public void drawPoliLineFromServer(){
-
+        route = new Route();
+        route.setMode(Route.WALK);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Statics.AUXILIAR_SERVER_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -174,15 +176,21 @@ public class MyMapFragment extends ComunicationFragmentManager implements OnMapR
         source = "\"("+mMarker1.getPosition().longitude+","+mMarker1.getPosition().latitude+")\"";
         target = "\"("+mMarker2.getPosition().longitude+","+mMarker2.getPosition().latitude+")\"";
 
-        Call<Route2> call = webServices.getShortestPath(source,target);
+        Call<Route2> call = webServices.getShortestPath(source,target,2);
         call.enqueue(new Callback<Route2>() {
             @Override
             public void onResponse(Call<Route2> call, Response<Route2> response) {
                 Toast.makeText(getContext(),new Gson().toJson(response.body()),Toast.LENGTH_SHORT).show();
                 ArrayList<LatLng> positions = new ArrayList<LatLng>();
-                Route2 res  = response.body();
-                for(float[] r:res.getShortest_path()){
+                Route2 route2  = new Route2();
+                route2 = response.body();
+                route.getShortest_path().clear();
+                for(float[] r:route2.getShortest_path()){
                     LatLng latlng = new LatLng(r[1],r[0]);
+                    MyLatLng myLL = new MyLatLng();
+                    myLL.setLatitude(r[1]);
+                    myLL.setLongitude(r[0]);
+                    route.getShortest_path().add(myLL);
                     positions.add(latlng);
                 }
                 line = mGoogleMap.addPolyline(new PolylineOptions()
