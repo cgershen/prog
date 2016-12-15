@@ -31,16 +31,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
+import com.unam.alex.pumaride.Tasks.GetGcmTokenTask;
 import com.unam.alex.pumaride.fragments.MatchFragment;
 import com.unam.alex.pumaride.fragments.MyMapFragment;
 import com.unam.alex.pumaride.fragments.RouteFragment;
 import com.unam.alex.pumaride.fragments.listeners.OnFragmentInteractionListener;
+import com.unam.alex.pumaride.models.MessageResult;
 import com.unam.alex.pumaride.models.User;
 import com.unam.alex.pumaride.retrofit.WebServices;
 import com.unam.alex.pumaride.services.MessageService;
 import com.unam.alex.pumaride.services.SocketServiceProvider;
 import com.unam.alex.pumaride.utils.Statics;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,8 +74,11 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
     MatchFragment mFragment = null;
     //array for fragments
     int fragments[] = {R.layout.fragment_route,R.layout.fragment_match};
-    private Application application;
     public boolean mIsBound = false;
+    String TAG = getClass().getName();
+    private GoogleCloudMessaging gcm;
+    public Activity activity;
+    String tokedId = null;
     private void doBindService() {
         if (mBoundService != null) {
             bindService(new Intent(MainTabActivity.this, SocketServiceProvider.class), socketConnection, Context.BIND_AUTO_CREATE);
@@ -81,18 +90,13 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
-        application = (Application) getApplication();
-       /*
-        if (application.getSocket() != null) {
-            Log.e("Socket", " is null");
-            startService(new Intent(getBaseContext(), SocketServiceProvider.class));
-            doBindService();
-        }
-        */
+        activity = this;
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         rFragment = new RouteFragment();
         mFragment = new MatchFragment();
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -115,6 +119,54 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
             }
         });
         */
+
+    }
+    public void createToken(){
+        new Thread(new Runnable() {
+            public void run() {
+                SharedPreferences sp = getSharedPreferences("pumaride", Activity.MODE_PRIVATE);
+                final int id = sp.getInt("userid", 1);
+                tokedId = sp.getString("gcmtoken", "");
+
+                if(tokedId.equals("")) {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(activity);
+                    }
+                    InstanceID instanceID = InstanceID.getInstance(activity);
+                    try {
+                        tokedId = instanceID.getToken(Statics.GCM_SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("gcmtoken", tokedId);
+                        editor.commit();
+                        Log.d(TAG, "GCM token is " + tokedId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.d(TAG, "Error in fetching GCM token due to " + e);
+                    }
+                    if (tokedId != null) {
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(Statics.GCM_SERVER_URL)
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+                        WebServices webServices = retrofit.create(WebServices.class);
+
+                        Call<MessageResult> call = webServices.register(Statics.getDeviceGmail(getApplicationContext()),String.valueOf(id),tokedId);
+                        call.enqueue(new Callback<MessageResult>() {
+                            @Override
+                            public void onResponse(Call<MessageResult> call, Response<MessageResult> response) {
+                                Toast.makeText(getApplicationContext(),""+response.body(),Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<MessageResult> call, Throwable t) {
+                                Toast.makeText(getApplicationContext(),"ando fallando",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+        }).start();
+
 
     }
     public void init() {
@@ -147,9 +199,7 @@ public class MainTabActivity extends AppCompatActivity implements OnFragmentInte
                 editor.putString("image", u.getImage());
                 editor.putString("aboutme", u.getAboutme());
                 editor.commit();
-                if(!isMyServiceRunning(MessageService.class)){
-                    startService(new Intent(getApplicationContext(), MessageService.class));
-                }
+                createToken();
             }
 
             @Override
