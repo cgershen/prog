@@ -33,8 +33,10 @@ Configuration
 
 # Use ogr2ogr to convert geojson to shp as needed
 
-DF_Calles = "Capas/CallesDF.shp"
-DF_Metro_Vialidad = "Capas/DF_a metro_Vialidad_polyline.shp"
+#DF_Calles = "Capas/CallesDF.shp"
+
+DF_Calles = "Capas/DF_a metro_Vialidad_polyline.shp"
+DF_Metro_Vialidad = "Capas/Lineas del Metro.shp"
 DF_Bicis = "Capas/Rutas Bicis_polyline.shp"
 
 MAX_BUFFER = 8192 # Maximum message length
@@ -52,15 +54,16 @@ end         (tuple)     Coordinates
 
 @return Array of points
 """
-def getShortestPath(layer, start, end):
+def getShortestPath(layer, start, end, use_directions):
 
     # layer, field_idx, one way, one way reverse, bidirectional, default
     # layer, field_idx, 'yes', '1', 'no', 3
     # where 'yes' is expected for one way, '1' for one way reverse, etc
-    director = QgsLineVectorLayerDirector(layer, 2, '1', '', '2', 3)
-
-    # si no importa el sentido
-    # director = QgsLineVectorLayerDirector(layer, -1, '', '', '', 3)
+    if use_directions:
+    	director = QgsLineVectorLayerDirector(layer, 2, '1', '', '2', 3)
+    else:
+        # si no importa el sentido
+        director = QgsLineVectorLayerDirector(layer, -1, '', '', '', 3)
 
     properter = QgsDistanceArcProperter()
     director.addProperter(properter)
@@ -190,6 +193,7 @@ if __name__ == '__main__':
         parts = message.split(" ")
 
 	layer_id=1
+	use_directions = True
 
         if len(parts) == 5:
 
@@ -200,7 +204,10 @@ if __name__ == '__main__':
                 client.close()
                 continue
 
-            if layer_id == 3:
+            if layer_id == 4:
+                layer = layer_calles
+	   	use_directions = False
+            elif layer_id == 3:
                 layer = layer_metro_vialidad
             elif layer_id == 2:
                 layer = layer_bicis
@@ -218,9 +225,9 @@ if __name__ == '__main__':
             pointB = (float(parts[2]), float(parts[3]))
 
         if len(parts) >= 4:
-            path = getShortestPath(layer, pointB, pointA)
+            path = getShortestPath(layer, pointB, pointA, use_directions)
             replyWith(client, path)
-            print "Handled request for %s on layer %s" % (message, layer_id)
+            print "Handled request for %s" % layer_id
 
         client.close()
 
