@@ -233,7 +233,7 @@ function drawPolyline() {
                       transporte = medioTransporte();
                       console.log("medioTransporte = " + transporte);
                      $.ajax({
-                        url : "http://35.162.215.204:8000/api/lines/", 
+                        url : "http://35.166.195.107:8000/api/lines/", 
                         type : "POST", 
                         dataType: "json", 
                         data : {
@@ -343,7 +343,7 @@ var nom_usuario = "";
 function match(num_ruta,id_ruta)
 {
                     $.ajax({
-                      url : "http://35.162.215.204:8000/api/matches/", 
+                      url : "http://35.166.195.107:8000/api/matches/", 
                       type : "POST",
                       dataType: "json", 
                       data : { ruta_id : id_ruta, },
@@ -519,7 +519,7 @@ function almacenaRuta(num_ruta)
     transporte = medioTransporte();
     console.log("almacenaRuta");
     $.ajax({
-      url : "http://35.162.215.204:8000/api/lines/", 
+      url : "http://35.166.195.107:8000/api/lines/", 
       type : "POST", 
       dataType: "json", 
       data : {
