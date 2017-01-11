@@ -34,9 +34,8 @@ Configuration
 # Use ogr2ogr to convert geojson to shp as needed
 
 #DF_Calles = "Capas/CallesDF.shp"
-
 DF_Calles = "Capas/DF_a metro_Vialidad_polyline.shp"
-DF_Metro_Vialidad = "Capas/Lineas del Metro.shp"
+DF_Metro_Vialidad = "Capas/Metro_coor.shp"
 DF_Bicis = "Capas/Rutas Bicis_polyline.shp"
 
 MAX_BUFFER = 8192 # Maximum message length
@@ -59,8 +58,9 @@ def getShortestPath(layer, start, end, use_directions):
     # layer, field_idx, one way, one way reverse, bidirectional, default
     # layer, field_idx, 'yes', '1', 'no', 3
     # where 'yes' is expected for one way, '1' for one way reverse, etc
+
     if use_directions:
-    	director = QgsLineVectorLayerDirector(layer, 2, '1', '', '2', 3)
+    	director = QgsLineVectorLayerDirector(layer, 4, '', '1', '2', 3)
     else:
         # si no importa el sentido
         director = QgsLineVectorLayerDirector(layer, -1, '', '', '', 3)
@@ -225,9 +225,9 @@ if __name__ == '__main__':
             pointB = (float(parts[2]), float(parts[3]))
 
         if len(parts) >= 4:
+            print "Handling request for %s" % layer_id # from %s,%s to %s,%s" % (layer_id, pointA[0], pointA[1], pointB[0], pointB[1])
             path = getShortestPath(layer, pointB, pointA, use_directions)
             replyWith(client, path)
-            print "Handled request for %s" % layer_id
 
         client.close()
 
