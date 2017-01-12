@@ -79,6 +79,33 @@ var myIcon_red_bus = L.icon({
   var polyline;
   var clen_pol=false;
 
+  //Obtiene el token
+  var ruta_token=location.search;
+  var valores=ruta_token.split('=');
+  var token = valores[1];
+  var cad1="Token ";
+  var dato=cad1.concat(token);
+  console.log(dato);
+  var complete_name
+  //Se optiene información del usuario
+  $.ajax({
+                        url : "http://35.166.195.107:8000/pumaride/users/me/",
+                        type : "GET",
+                        dataType: "json",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader ("Authorization", dato);
+                        },
+                        success : function(json) {
+                            console.log(json);
+                            document.getElementById("nombre_user").innerHTML = json.first_name + " " + json.last_name;
+                            document.getElementById("nombre_user1").innerHTML = json.first_name + " " + json.last_name;
+                              },
+                        error: function(){
+                            alert("User doesn't exist");
+                              }
+  });
+  
+
   function onLocationFound(e) {
     var radius = e.accuracy / 2;
     
@@ -237,8 +264,8 @@ function drawPolyline() {
                         type : "POST", 
                         dataType: "json", 
                         data : {
-                            p_origen :  "(" + d_long + "," + d_lat + ")", //Se voltearon parámetros porque el servicio calcula
-                            p_destino : "(" + o_long + "," + o_lat + ")", // el shortest path de Destino a Origen
+                            p_origen :  "(" + o_long + "," + o_lat + ")", //Se voltearon parámetros porque el servicio calcula
+                            p_destino : "(" + d_long + "," + d_lat + ")", // el shortest path de Destino a Origen
                             //user_id : 2,
                             tipo_transporte: transporte,
                                },
@@ -250,12 +277,12 @@ function drawPolyline() {
                                                       
                             var linePoints=[];
                             console.log(path.length);
-                            linePoints.push(new L.LatLng(d_lat,d_long)); // Agrega el punto de Destino a la Polyline
+                            linePoints.push(new L.LatLng(o_lat,o_long)); // Agrega el punto de Destino a la Polyline
                             for(var i=1;i<path.length;i++) {
                               var point = path[i];
                               linePoints.push(new L.LatLng(point[1],point[0]));
                             }
-                            linePoints.push(new L.LatLng(o_lat,o_long)); // Agrega el punto de Origen a la Polyline
+                            linePoints.push(new L.LatLng(d_lat,d_long)); // Agrega el punto de Origen a la Polyline
                                      
                             var polylineOptions = {
                                color: '#f50909',
@@ -523,8 +550,8 @@ function almacenaRuta(num_ruta)
       type : "POST", 
       dataType: "json", 
       data : {
-        p_origen :  "(" + d_long + "," + d_lat + ")", //Se voltearon parámetros porque el servicio calcula
-        p_destino : "(" + o_long + "," + o_lat + ")", // el shortest path de Destino a Origen
+        p_origen :  "(" + o_long + "," + o_lat + ")", //Se voltearon parámetros porque el servicio calcula
+        p_destino : "(" + d_long + "," + d_lat + ")", // el shortest path de Destino a Origen
         guardar : 1, //Guarda la polilinea en la BD
         //user_id : 2,
         tipo_transporte: transporte,
