@@ -34,8 +34,10 @@ Configuration
 # Use ogr2ogr to convert geojson to shp as needed
 
 #DF_Calles = "Capas/CallesDF.shp"
-DF_Calles = "Capas/DF_a metro_Vialidad_polyline.shp"
-DF_Metro_Vialidad = "Capas/Metro_coor.shp"
+#DF_Calles = "Capas/DF_a metro_Vialidad_polyline.shp"
+DF_Calles = "Capas/DF_a_metro_Vialidad_OSM.shp"
+#DF_Metro_Vialidad = "Capas/Metro_coor.shp"
+DF_Metro_Vialidad = "Capas/Lineas del Metro.shp"
 DF_Bicis = "Capas/Rutas Bicis_polyline.shp"
 
 MAX_BUFFER = 8192 # Maximum message length
@@ -209,6 +211,7 @@ if __name__ == '__main__':
 	   	use_directions = False
             elif layer_id == 3:
                 layer = layer_metro_vialidad
+	   	use_directions = False
             elif layer_id == 2:
                 layer = layer_bicis
             else:
