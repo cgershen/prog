@@ -19,11 +19,10 @@ lenguaje de modelado unificado UML.
 ---
 
 ## Semestre
-2017-I.
+2019-I.
 
 ---
 
 ## Horario
-Martes y jueves 16:00-17:30, Salón 302, 
+Martes y jueves 10:00-11:30, Salón 302, 
 Anexo IIMAS, Ciudad Universitaria.
-
