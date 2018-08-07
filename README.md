@@ -18,6 +18,8 @@ lenguaje de modelado unificado UML.
 ## Contenido del curso
 [Temario](https://github.com/cgershen/prog/blob/master/temario.pdf) 
 
+[Wiki](https://github.com/cgershen/prog/wiki)
+
 ---
 
 ## Semestre
