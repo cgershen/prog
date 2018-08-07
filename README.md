@@ -1,8 +1,10 @@
 # Programación Avanzada
 ---
 
-## Profesor
-[Dr. Carlos Gershenson-García](http://turing.iimas.unam.mx/~cgg/) 
+## Facilitadores
+[Carlos Gershenson-García](http://turing.iimas.unam.mx/~cgg/) cgg@unam.mx
+
+Dante Pérez Méndez dante.perez.m@gmail.com
 
 ---
 
@@ -24,5 +26,5 @@ lenguaje de modelado unificado UML.
 ---
 
 ## Horario
-Martes y jueves 10:00-11:30, Salón 302, 
+Martes y jueves 10:00-11:30, Salón 301, 
 Anexo IIMAS, Ciudad Universitaria.
