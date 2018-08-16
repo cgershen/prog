@@ -1,0 +1,4 @@
+Implementación del juego de la vida. El programa permite configurar la matriz desde 20 x 20 hasta 100 x 100.
+Se puede elegir la velocidad del redibujado y la forma de interacción es con clics sobre la matriz o dejar presionado
+el botón de raton y arrastrar por toda la matriz.
+Se pueden guardar las figurar en un txt y importarlas de la misma manera.
