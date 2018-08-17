@@ -1,0 +1,8 @@
+c:\users\w7\documents\visual studio 2010\Projects\JuegoVida\JuegoVida\obj\x86\Debug\JuegoVida.Properties.Resources.resources
+c:\users\w7\documents\visual studio 2010\Projects\JuegoVida\JuegoVida\obj\x86\Debug\JuegoVida.csproj.GenerateResource.Cache
+c:\users\w7\documents\visual studio 2010\Projects\JuegoVida\JuegoVida\bin\Debug\JuegoVida.exe
+c:\users\w7\documents\visual studio 2010\Projects\JuegoVida\JuegoVida\bin\Debug\JuegoVida.pdb
+c:\users\w7\documents\visual studio 2010\Projects\JuegoVida\JuegoVida\obj\x86\Debug\JuegoVida.exe
+c:\users\w7\documents\visual studio 2010\Projects\JuegoVida\JuegoVida\obj\x86\Debug\JuegoVida.pdb
+c:\users\w7\documents\visual studio 2010\Projects\JuegoVida\JuegoVida\obj\x86\Debug\JuegoVida.Form1.resources
+C:\Users\W7\Documents\Visual Studio 2010\Projects\JuegoVida\JuegoVida\obj\x86\Debug\JuegoVida.csprojResolveAssemblyReference.cache
