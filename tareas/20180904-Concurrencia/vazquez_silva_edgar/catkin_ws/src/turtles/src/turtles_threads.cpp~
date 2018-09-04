@@ -1,0 +1,70 @@
+#include <ros/ros.h>
+#include <turtlesim/Pose.h>
+#include <geometry_msgs/Twist.h>
+
+int population_turtles;
+
+
+void velocity_generator(geometry_msgs::Twist &vel)
+{
+  if(vel.angular.z > 4.2)  vel.angular.z = -0.05;
+  if(vel.angular.z < -5.2)  vel.angular.z = 0.05;
+
+  if(vel.angular.z > 0.0)  
+    vel.angular.z = vel.angular.z + 0.005*(rand() % 50);
+  else
+    vel.angular.z = vel.angular.z - 0.005*(rand() % 50);
+    
+  return;
+}
+
+
+
+
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "turtles_threads");
+  ros::NodeHandle n;
+  ros::Rate loop(60.0);
+
+  // ros::Subscriber sub_pos_1 = ();
+
+  ros::Publisher pub_vel_1 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle2/cmd_vel", 1);
+  ros::Publisher pub_vel_2 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle3/cmd_vel", 1);
+  ros::Publisher pub_vel_3 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle4/cmd_vel", 1);
+  ros::Publisher pub_vel_4 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle5/cmd_vel", 1);
+  ros::Publisher pub_vel_5 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle6/cmd_vel", 1);
+  ros::Publisher pub_vel_6 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle7/cmd_vel", 1);
+  ros::Publisher pub_vel_7 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle8/cmd_vel", 1);
+  ros::Publisher pub_vel_8 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle9/cmd_vel", 1);
+  ros::Publisher pub_vel_9 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle10/cmd_vel", 1);
+  ros::Publisher pub_vel_10 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle11/cmd_vel", 1);
+  ros::Publisher pub_vel_11 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle12/cmd_vel", 1);
+  ros::Publisher pub_vel_12 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle13/cmd_vel", 1);
+  ros::Publisher pub_vel_13 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle14/cmd_vel", 1);
+  ros::Publisher pub_vel_14 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle15/cmd_vel", 1);
+  ros::Publisher pub_vel_15 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle16/cmd_vel", 1);
+  ros::Publisher pub_vel_16 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle17/cmd_vel", 1);
+  ros::Publisher pub_vel_17 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle18/cmd_vel", 1);
+  ros::Publisher pub_vel_18 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle19/cmd_vel", 1);
+  ros::Publisher pub_vel_19 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle20/cmd_vel", 1);
+  ros::Publisher pub_vel_20 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle21/cmd_vel", 1);
+  ros::Publisher pub_vel_goal = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle1/cmd_vel", 1);
+
+
+  geometry_msgs::Twist cmd_vel;
+
+  cmd_vel.angular.z = 0.01;
+  cmd_vel.linear.x = 2.2;
+
+  while( ros::ok() )
+    {
+      velocity_generator(cmd_vel);
+      pub_vel_goal.publish(cmd_vel);
+    
+      loop.sleep();
+    }
+  
+  
+  return 0;
+}

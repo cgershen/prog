@@ -1,0 +1,9 @@
+<launch>
+
+  <group ns="turtlesim1">
+    <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+  </group>
+
+  <node pkg="turtles" name="init_population" type="turtles_init_world"/>
+  
+</launch>
