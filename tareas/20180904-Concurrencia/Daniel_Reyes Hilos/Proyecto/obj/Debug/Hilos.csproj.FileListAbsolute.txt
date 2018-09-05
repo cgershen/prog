@@ -1,0 +1,7 @@
+C:\Users\W7\Downloads\ManagingProcesses\ManagingProcesses\obj\Debug\Hilos.csproj.GenerateResource.Cache
+C:\Users\W7\Downloads\ManagingProcesses\ManagingProcesses\obj\Debug\W7.Hilos.Hilos.resources
+C:\Users\W7\Downloads\ManagingProcesses\ManagingProcesses\obj\Debug\Hilos.csprojResolveAssemblyReference.cache
+C:\Users\W7\Downloads\ManagingProcesses\ManagingProcesses\bin\Debug\Hilos.exe
+C:\Users\W7\Downloads\ManagingProcesses\ManagingProcesses\bin\Debug\Hilos.pdb
+C:\Users\W7\Downloads\ManagingProcesses\ManagingProcesses\obj\Debug\Hilos.exe
+C:\Users\W7\Downloads\ManagingProcesses\ManagingProcesses\obj\Debug\Hilos.pdb
