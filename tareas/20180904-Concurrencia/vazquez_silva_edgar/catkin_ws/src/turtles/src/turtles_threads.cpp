@@ -1,66 +1,5 @@
-#include <ros/ros.h>
-#include <math.h>
-#include <turtlesim/Pose.h>
-#include <geometry_msgs/Twist.h>
-
-int population_turtles;
-float Kp, Kd; 
-turtlesim::Pose  goal_pose;
-turtlesim::Pose  current_pose_1;
-
-
-////////////////////////////////////////////////////////
-//       callbacks for current pose                   //
-void goalPoseCallback(const turtlesim::Pose::ConstPtr& msg)
-{
-  goal_pose.x = msg->x;
-  goal_pose.y = msg->y;
-}
-
-void currentPoseCallback1(const turtlesim::Pose::ConstPtr& msg)
-{
-  current_pose_1.x = msg->x;
-  current_pose_1.y = msg->y;
-}
-
-
-void controllSignal(turtlesim::Pose current_pose,
-		    turtlesim::Pose goal_pose,
-		    geometry_msgs::Twist& vel)
-{
-  // Error stimation
-  float angleError;
-  turtlesim::Pose error;
- 
-  error.x = goal_pose.x - current_pose.x;
-  error.y = goal_pose.y - current_pose.y;
-
-
-  //angleError = atan( double(error.y/error.x) );
-  angleError = atan2( error.y, error.x );
-  std::cout << "Angle error:  " << angleError;
-  
-  vel.angular.z = angleError*Kp;
-  vel.linear.x = sqrt(error.x*error.x  + error.y*error.y)*Kd;
-
-  std::cout << "   --   Angle correction :  " << vel.angular.z << std::endl;
-}
-
-
-void velocity_generator(geometry_msgs::Twist& vel)
-{
-  if(vel.angular.z > 4.2)  vel.angular.z = -0.05;
-  if(vel.angular.z < -5.2)  vel.angular.z = 0.05;
-
-  if(vel.angular.z > 0.0)  
-    vel.angular.z = vel.angular.z + 0.005*(rand() % 50);
-  else
-    vel.angular.z = vel.angular.z - 0.005*(rand() % 50);
-    
-  return;
-}
-
-
+#include "turtles.hpp"
+#include <boost/thread/thread.hpp>
 
 
 int main(int argc, char** argv)
@@ -71,6 +10,26 @@ int main(int argc, char** argv)
 
   ros::Subscriber sub_goal_pos = n.subscribe("/turtlesim1/turtle1/pose", 10, goalPoseCallback);
   ros::Subscriber sub_pos_1 = n.subscribe("/turtlesim1/turtle2/pose", 10, currentPoseCallback1);
+  ros::Subscriber sub_pos_2 = n.subscribe("/turtlesim1/turtle3/pose", 10, currentPoseCallback2);
+  ros::Subscriber sub_pos_3 = n.subscribe("/turtlesim1/turtle4/pose", 10, currentPoseCallback3);
+  ros::Subscriber sub_pos_4 = n.subscribe("/turtlesim1/turtle5/pose", 10, currentPoseCallback4);
+  ros::Subscriber sub_pos_5 = n.subscribe("/turtlesim1/turtle6/pose", 10, currentPoseCallback5);
+  ros::Subscriber sub_pos_6 = n.subscribe("/turtlesim1/turtle7/pose", 10, currentPoseCallback6);
+  ros::Subscriber sub_pos_7 = n.subscribe("/turtlesim1/turtle8/pose", 10, currentPoseCallback7);
+  ros::Subscriber sub_pos_8 = n.subscribe("/turtlesim1/turtle9/pose", 10, currentPoseCallback8);
+  ros::Subscriber sub_pos_9 = n.subscribe("/turtlesim1/turtle10/pose", 10, currentPoseCallback9);
+  ros::Subscriber sub_pos_10 = n.subscribe("/turtlesim1/turtle11/pose", 10, currentPoseCallback10);
+  ros::Subscriber sub_pos_11 = n.subscribe("/turtlesim1/turtle12/pose", 10, currentPoseCallback11);
+  ros::Subscriber sub_pos_12 = n.subscribe("/turtlesim1/turtle13/pose", 10, currentPoseCallback12);
+  ros::Subscriber sub_pos_13 = n.subscribe("/turtlesim1/turtle14/pose", 10, currentPoseCallback13);
+  ros::Subscriber sub_pos_14 = n.subscribe("/turtlesim1/turtle15/pose", 10, currentPoseCallback14);
+  ros::Subscriber sub_pos_15 = n.subscribe("/turtlesim1/turtle16/pose", 10, currentPoseCallback15);
+  ros::Subscriber sub_pos_16 = n.subscribe("/turtlesim1/turtle17/pose", 10, currentPoseCallback16);
+  ros::Subscriber sub_pos_17 = n.subscribe("/turtlesim1/turtle18/pose", 10, currentPoseCallback17);
+  ros::Subscriber sub_pos_18 = n.subscribe("/turtlesim1/turtle19/pose", 10, currentPoseCallback18);
+  ros::Subscriber sub_pos_19 = n.subscribe("/turtlesim1/turtle20/pose", 10, currentPoseCallback19);
+  ros::Subscriber sub_pos_20 = n.subscribe("/turtlesim1/turtle21/pose", 10, currentPoseCallback20);
+  
 
   ros::Publisher pub_vel_1 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle2/cmd_vel", 1);
   ros::Publisher pub_vel_2 = n.advertise<geometry_msgs::Twist>("/turtlesim1/turtle3/cmd_vel", 1);
@@ -98,8 +57,56 @@ int main(int argc, char** argv)
   geometry_msgs::Twist cmd_vel;
   geometry_msgs::Twist vel_1;
 
-  Kp = 0.6;
-  Kd = 0.6;
+  // Declaracion de hilos
+  int rate_b = 10;
+  
+  boost::thread  t1(controllSignal(), &current_pose[0], &goal_pose, &vel);
+  boost::thread  t2(controllSignal(), &current_pose[1], &goal_pose, &vel);
+  boost::thread  t3(controllSignal(), &current_pose[2], &goal_pose, &vel);
+  boost::thread  t4(controllSignal(), &current_pose[3], &goal_pose, &vel);
+  boost::thread  t5(controllSignal(), &current_pose[4], &goal_pose, &vel);
+  boost::thread  t6(controllSignal(), &current_pose[5], &goal_pose, &vel);
+  boost::thread  t7(controllSignal(), &current_pose[6], &goal_pose, &vel);
+  boost::thread  t8(controllSignal(), &current_pose[7], &goal_pose, &vel);
+  boost::thread  t9(controllSignal(), &current_pose[8], &goal_pose, &vel);
+  boost::thread  t10(controllSignal(), &current_pose[9], &goal_pose, &vel);
+  boost::thread  t11(controllSignal(), &current_pose[10], &goal_pose, &vel);
+  boost::thread  t12(controllSignal(), &current_pose[11], &goal_pose, &vel);
+  boost::thread  t13(controllSignal(), &current_pose[12], &goal_pose, &vel);
+  boost::thread  t14(controllSignal(), &current_pose[13], &goal_pose, &vel);
+  boost::thread  t15(controllSignal(), &current_pose[14], &goal_pose, &vel);
+  boost::thread  t16(controllSignal(), &current_pose[15], &goal_pose, &vel);
+  boost::thread  t17(controllSignal(), &current_pose[16], &goal_pose, &vel);
+  boost::thread  t18(controllSignal(), &current_pose[17], &goal_pose, &vel);
+  boost::thread  t19(controllSignal(), &current_pose[18], &goal_pose, &vel);
+  boost::thread  t20(controllSignal(), &current_pose[19], &goal_pose, &vel);
+
+
+  t1.join();
+  t2.join();
+  t3.join();
+  t4.join();
+  t5.join();
+  t6.join();
+  t7.join();
+  t8.join();
+  t9.join();
+  t10.join();
+  t11.join();
+  t12.join();
+  t13.join();
+  t14.join();
+  t15.join();
+  t16.join();
+  t17.join();
+  t18.join();
+  t19.join();
+  t20.join();
+  
+  Kp = 1.2;
+  Kd = 0.4;
+
+  current_pose.resize(20);
 
   cmd_vel.angular.z = 0.01;
   cmd_vel.linear.x = 2.2;
@@ -109,13 +116,6 @@ int main(int argc, char** argv)
       // This is for turtle objective
       velocity_generator(cmd_vel);
       pub_vel_goal.publish(cmd_vel);
-
-      // This is for turtle follower
-      controllSignal(current_pose_1, goal_pose, vel_1);
-      pub_vel_1.publish(vel_1);
-
-      // std::cout << "Goal_pose:  " << goal_pose << std::endl;
-      // std::cout << "Current_pose:  " << current_pose_1 << std::endl;
 
       ros::spinOnce();
       loop.sleep();

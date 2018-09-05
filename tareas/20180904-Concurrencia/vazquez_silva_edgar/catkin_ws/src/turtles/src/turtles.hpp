@@ -1,0 +1,195 @@
+#include <ros/ros.h>
+#include <math.h>
+#include <turtlesim/Pose.h>
+#include <geometry_msgs/Twist.h>
+
+int population_turtles;
+float Kp, Kd;
+
+turtlesim::Pose  goal_pose;
+std::vector<turtlesim::Pose> current_pose; 
+
+
+
+////////////////////////////////////////////////////////
+//       callbacks for current pose                   //
+void goalPoseCallback(const turtlesim::Pose::ConstPtr& msg)
+{
+  goal_pose.x = msg->x;
+  goal_pose.y = msg->y;
+  goal_pose.theta = msg->theta;
+}
+
+void currentPoseCallback1(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[0].x = msg->x;
+  current_pose[0].y = msg->y;
+  current_pose[0].theta = msg->theta;
+}
+
+void currentPoseCallback2(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[1].x = msg->x;
+  current_pose[1].y = msg->y;
+  current_pose[1].theta = msg->theta;
+}
+void currentPoseCallback3(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[2].x = msg->x;
+  current_pose[2].y = msg->y;
+  current_pose[2].theta = msg->theta;
+}
+void currentPoseCallback4(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[3].x = msg->x;
+  current_pose[3].y = msg->y;
+  current_pose[3].theta = msg->theta;
+}
+void currentPoseCallback5(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[4].x = msg->x;
+  current_pose[4].y = msg->y;
+  current_pose[4].theta = msg->theta;
+}
+void currentPoseCallback6(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[5].x = msg->x;
+  current_pose[5].y = msg->y;
+  current_pose[5].theta = msg->theta;
+}
+void currentPoseCallback7(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[6].x = msg->x;
+  current_pose[6].y = msg->y;
+  current_pose[6].theta = msg->theta;
+}
+void currentPoseCallback8(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[7].x = msg->x;
+  current_pose[7].y = msg->y;
+  current_pose[7].theta = msg->theta;
+}
+void currentPoseCallback9(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[8].x = msg->x;
+  current_pose[8].y = msg->y;
+  current_pose[8].theta = msg->theta;
+}
+void currentPoseCallback10(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[9].x = msg->x;
+  current_pose[9].y = msg->y;
+  current_pose[9].theta = msg->theta;
+}
+void currentPoseCallback11(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[10].x = msg->x;
+  current_pose[10].y = msg->y;
+  current_pose[10].theta = msg->theta;
+}
+
+void currentPoseCallback12(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[11].x = msg->x;
+  current_pose[11].y = msg->y;
+  current_pose[11].theta = msg->theta;
+}
+void currentPoseCallback13(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[12].x = msg->x;
+  current_pose[12].y = msg->y;
+  current_pose[12].theta = msg->theta;
+}
+void currentPoseCallback14(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[13].x = msg->x;
+  current_pose[13].y = msg->y;
+  current_pose[13].theta = msg->theta;
+}
+void currentPoseCallback15(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[14].x = msg->x;
+  current_pose[14].y = msg->y;
+  current_pose[14].theta = msg->theta;
+}
+void currentPoseCallback16(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[15].x = msg->x;
+  current_pose[15].y = msg->y;
+  current_pose[15].theta = msg->theta;
+}
+void currentPoseCallback17(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[16].x = msg->x;
+  current_pose[16].y = msg->y;
+  current_pose[16].theta = msg->theta;
+}
+void currentPoseCallback18(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[17].x = msg->x;
+  current_pose[17].y = msg->y;
+  current_pose[17].theta = msg->theta;
+}
+void currentPoseCallback19(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[18].x = msg->x;
+  current_pose[18].y = msg->y;
+  current_pose[18].theta = msg->theta;
+}
+void currentPoseCallback20(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[19].x = msg->x;
+  current_pose[19].y = msg->y;
+  current_pose[19].theta = msg->theta;
+}
+void currentPoseCallback21(const turtlesim::Pose::ConstPtr& msg)
+{
+  current_pose[20].x = msg->x;
+  current_pose[20].y = msg->y;
+  current_pose[20].theta = msg->theta;
+}
+
+
+
+
+
+
+void controllSignal(turtlesim::Pose current_pose,
+		    turtlesim::Pose goal_pose,
+		    geometry_msgs::Twist& vel)
+{
+  // Error stimation
+  float angleError;
+  turtlesim::Pose error;
+ 
+  error.x = goal_pose.x - current_pose.x;
+  error.y = goal_pose.y - current_pose.y;
+
+  angleError = atan2( error.y, error.x ) - current_pose.theta ;
+  if(error.x < 0 && error.y >0)
+  {
+    angleError = atan( error.y/ error.x ) - current_pose.theta;
+    if(angleError < 0) angleError = 3.141592 + angleError;
+    else if (angleError > 3.141592) angleError = -3.141592 + angleError;
+  }
+
+  vel.angular.z = angleError*Kp;
+  vel.linear.x = Kd*sqrt(error.x*error.x  + error.y*error.y)*(rand()%11)*0.8;
+
+  // std::cout << "Angle error:  " << angleError;
+  // std::cout << "   --   Angle correction :  " << vel.angular.z << std::endl;
+}
+
+
+void velocity_generator(geometry_msgs::Twist& vel)
+{
+  if(vel.angular.z > 4.2)  vel.angular.z = -0.05;
+  if(vel.angular.z < -5.2)  vel.angular.z = 0.05;
+
+  if(vel.angular.z > 0.0)  
+    vel.angular.z = vel.angular.z + 0.005*(rand() % 50);
+  else
+    vel.angular.z = vel.angular.z - 0.005*(rand() % 50);
+    
+  return;
+}
