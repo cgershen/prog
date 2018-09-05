@@ -1,4 +1,4 @@
-# Game of Life
+# Boids
 Esta implementación del modelo _Boids_ de C. Reynolds fue hecha como tarea para la clase de Programación Avanzada, del PCIC del IIMAS, UNAM.
 
 ## Pre-Requisitos
