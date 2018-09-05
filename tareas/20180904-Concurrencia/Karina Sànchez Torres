@@ -1,0 +1,1469 @@
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+
+public class sistemas_ecuaciones extends Thread {
+    javax.swing.JTable MatrizA;
+    javax.swing.JTable Vectorb;
+    javax.swing.JTextField M;
+    javax.swing.JTextArea Resultado;
+    javax.swing.JTable Vectorc;
+    javax.swing.JTable Vectorc1;
+    javax.swing.JTable MatrizC;
+    javax.swing.JTable MatrizC1;
+    javax.swing.JTextArea Resultado1;
+    public sistemas_ecuaciones(){
+        
+    }
+
+    
+    public void run(){
+        while(true){
+        int m;
+        m=Integer.parseInt(M.getText());
+        double[][] C=new double[m][m];
+        double[][] cc=new double[m][1];
+        C=this.MatrizC(m);
+        cc=this.MatrizCC(m);
+        this.generarMatriz1(C,m);
+        this.generarMatriz2(cc,m);
+        m=Integer.parseInt(M.getText());
+        double[][] C1=new double[m][m];
+        double[][] cc1=new double[m][1];
+        C1=this.MatrizC1(m);
+        cc1=this.MatrizCC1(m);
+        this.generarMatriz1_1(C,m);
+        this.generarMatriz2_1(cc,m);
+            try {
+                sleep(10000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(sistemas_ecuaciones.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    public void recibeMatrizA(javax.swing.JTable MatrizA){
+        this.MatrizA=MatrizA;
+    }
+    public void recibeVectorb(javax.swing.JTable Vectorb){
+        this.Vectorb=Vectorb;
+    }
+    public void recibeM(javax.swing.JTextField M){
+        this.M=M;
+    }
+    public void recibeResultado(javax.swing.JTextArea Resultado){
+        this.Resultado=Resultado;
+    }
+    public void recibeResultado1(javax.swing.JTextArea Resultado1){
+        this.Resultado1=Resultado1;
+    }
+    public void recibeVectorc (javax.swing.JTable Vectorc){
+        this.Vectorc=Vectorc;
+    }
+    public void recibeVectorc1 (javax.swing.JTable Vectorc1){
+        this.Vectorc1=Vectorc1;
+    }
+    public void recibeMatrizC(javax.swing.JTable MatrizC){
+        this.MatrizC=MatrizC;
+    }
+    public void recibeMatrizC1(javax.swing.JTable MatrizC1){
+        this.MatrizC1=MatrizC1;
+    }
+    public void generarMatriz1(double C[][],int m){
+        DefaultTableModel model3=(DefaultTableModel) MatrizC.getModel();
+        model3.setRowCount(m);
+        model3.setColumnCount(m);
+        
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                MatrizC.setValueAt(C[i][j],i,j);
+        
+            }
+        }
+    }
+public void generarMatriz2(double cc[][],int m){
+        DefaultTableModel model5=(DefaultTableModel) Vectorc.getModel();
+        model5.setRowCount(m);
+        model5.setColumnCount(1);
+        for(int i=0;i<m;i++){
+                Vectorc.setValueAt(cc[i][0],i,0);
+        }
+    }
+public void generarMatriz1_1(double C1[][],int m){
+        DefaultTableModel model3=(DefaultTableModel) MatrizC1.getModel();
+        model3.setRowCount(m);
+        model3.setColumnCount(m);
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                MatrizC1.setValueAt(C1[i][j],i,j);
+            }
+        }
+    }
+public void generarMatriz2_1(double cc1[][],int m){
+        DefaultTableModel model5=(DefaultTableModel) Vectorc1.getModel();
+        model5.setRowCount(m);
+        model5.setColumnCount(1);
+        for(int i=0;i<m;i++){
+                Vectorc1.setValueAt(cc1[i][0],i,0);
+        }
+    }
+    public double[][] MatrizC (int m) {
+      int s,t,n,c,H,G;
+      m=0;
+       double elem=0,eleme1=0,contador=0,h,contador1=0;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                try{
+                    elem=Double.parseDouble((String)MatrizA.getValueAt(i,j));
+                }catch(Exception e){
+                    contador=contador+1;
+                }
+            }
+        }
+        for(int i=0;i<m;i++){
+                try{
+                    eleme1=Double.parseDouble((String)Vectorb.getValueAt(i,0));
+                }catch(Exception e){
+                    contador1=contador1+1;
+            }
+        }
+        m=Integer.parseInt(M.getText());
+       double A[][]=new double[m][m];
+       double B[][]=new double[m][m];
+       double C[][]=new double[m][m];
+       double a[][]=new double[m][1];
+       double b[][]=new double[m][1];
+       double cc[][]=new double[m][1];
+       double X[]=new double[m];
+       double Y[]=new double[m];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                    A[i][j]=Double.parseDouble((String)MatrizA.getValueAt(i,j));
+            }
+        }
+        for(int i=0;i<m;i++){
+                    a[i][0]=Double.parseDouble((String)Vectorb.getValueAt(i,0));
+        }
+
+        s=0;
+  t=0;
+    while (A[s][t]==0){
+        s=s+1;
+        if(s>m-1){
+            if(t<m-1){
+            s=0;
+            t=t+1;}else{Resultado.setText("La matriz que ingresaste es la matriz nula.");
+            return C;}
+        }}
+    for(int i=0;i<m;i++){
+    for(int j=0;j<m;j++){
+        if(i==0){
+        B[i][j]=A[s][j];
+        A[s][j]=A[i][j];
+        A[i][j]=B[i][j];
+    }else{B[i][j]=0;}}}
+    for(int i=0;i<m;i++){
+        if(i==0){
+    b[i][0]=a[s][0];
+    a[s][0]=a[i][0];}else{b[i][0]=0;}}
+     n=m;
+     for(int i=0;i<=m-1;i++){
+         if(i<m-1){
+         if(i==0){
+         for(int j=i+1;j<m;j++){
+             for(int k=t;k<=n;k++){
+                 if(k!=n){
+                B[j][i+k]=A[j][i+k]-((A[j][t]/A[i][t])*A[i][i+k]);}else{
+                b[j][0]=a[j][0]-((A[j][t]/A[i][t])*a[i][0]);}
+             }  
+         }         
+                 for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     A[q][r]=B[q][r];                
+                    a[q][0]=b[q][0];                
+                   }            
+    } 
+         }else if(i>0){
+                  n=n-1;
+                  c=t;
+                for(int j=i+1;j<m;j++){
+                   for(int k=t;k<=n;k++){
+                       if(A[i][i+c]!=0){
+                           if(k!=n){
+                      B[j][i+k]=A[j][i+k]-((A[j][c+i]/A[i][c+i])*A[i][i+k]);}else{
+                      b[j][0]=a[j][0]-((A[j][c+i]/A[i][c+i])*a[i][0]);}
+                       }else{     
+   s=i;
+   c=t;
+    while (A[s][i+c]==0){
+        s=s+1;
+        if(s>m-1){
+            if(c<m-1){
+            s=i;
+            c=c+1;
+            if(i+c==m){
+                for(int f=0;f<m;f++){
+       
+                cc[f][0]=b[f][0];
+        for(int g=0;g<m;g++){
+       
+          C[f][g]=B[f][g];
+      }  
+        }
+                Resultado.append("Solución"+"\n");
+                
+         for(int l=m-1;l>=0;l--){
+              h=0;
+              if(l==m-1){
+          if(B[l][l]==0){
+              if(b[l][0]!=0){Resultado.setText("El sistema no tiene solución");return C;}else{
+                      H=l-1;
+                      G=H;
+                  while(B[H][G]==0){X[G]=999999;G=G+1;if (G>m-1){if(b[H][0]!=0){
+                      Resultado.setText("El sistema no tiene solución");return C;}else{ 
+                  H=H-1;G=H;}}} 
+                  if(G==l-1){
+                  if(B[H][G]!=0){
+                       if(b[H][0]!=0){
+                             X[G+1]=999999;
+                       }   
+                      }}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  h=h-(B[H][d]*X[d]);}
+                  X[G]=(b[H][0]+h)/B[H][G];
+                  }}else{
+           X[l]=b[l][0]/B[l][l];
+          }}else{ 
+                H=l;
+                  G=H;
+                  while(B[H][G]==0){X[G]=999999; G=G+1; if (G>m-1){H=H-1;G=H;}}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  h=h-(B[H][d]*X[d]);}
+                  X[G]=(b[H][0]+h)/B[H][G];
+                   
+              }
+          }
+         for(int r=0;r<m;r++){if(Y[r]==999999){
+             Resultado.append("X["+r+"]"+"pertenece a los reales"+"\n");
+             
+         }}
+         for(int r=0;r<m;r++){
+       
+   Resultado.append("X["+r+"]"+"="+X[r]+"\n");
+   
+   }
+        return C;
+            }}
+        }}
+       for(int d=i;d<m;d++){
+    for(int e=0;e<m;e++){
+        if(d==i){
+        B[d][e]=B[s][e];
+        A[s][e]=A[d][e];
+        A[d][e]=B[d][e];
+        B[s][e]=A[s][e];
+    }}}
+       b[i][0]=a[s][0];
+    a[s][0]=a[i][0];
+                       } 
+                       }             
+             }
+                 for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     A[q][r]=B[q][r];                
+                     a[q][0]=b[q][0];                 
+                   }            
+    }
+                }
+  }else{
+            for(int l=0;l<m;l++){
+       
+                cc[l][0]=b[l][0];
+        for(int j=0;j<m;j++){  
+       
+                C[l][j]=B[l][j];
+          
+      }  
+    }
+             Resultado.append("Solución"+"\n");
+             
+          for(int l=i;l>=0;l--){
+              h=0;
+              if(l==m-1){
+          if(B[l][l]==0){
+              if(b[l][0]!=0){Resultado.setText("El sistema no tiene solución");return C;}else{
+                  H=l-1;
+                  G=H;
+                  while(B[H][G]==0){X[G]=999999;G=G+1;if (G>m-1){if(b[H][0]!=0){
+                      Resultado.setText("El sistema no tiene solución");return C;}else{ 
+                  H=H-1;G=H;}}}
+                  if(G==l-1){
+                  if(B[H][G]!=0){
+                       if(b[H][0]!=0){
+                             X[G+1]=999999;
+                       }   
+                      }}
+                  for(int d=G;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  h=h-(B[H][d]*X[d]);}
+                  X[G]=(b[H][0]+h)/B[H][G];
+                  }}else{
+           X[l]=b[l][0]/B[l][l];
+          }}else{ 
+                H=l;
+                  G=H;
+                  while(B[H][G]==0){X[G]=999999; G=G+1; if (G>m){H=H-1;G=H;}}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  h=h-(B[H][d]*X[d]);}
+                  X[G]=(b[H][0]+h)/B[H][G];
+              }
+          }
+          }}
+     for(int r=0;r<m;r++){if(Y[r]==999999){
+             Resultado.append("X["+r+"]"+"pertenece a los reales"+"\n");
+     }}
+ 
+   for(int i=0;i<m;i++){
+       
+   Resultado.append("X["+i+"]"+"="+X[i]+"\n"); 
+   }
+   return C;
+}
+public double[][] MatrizCC (int m){
+      int s,t,n,c,H,G;
+       double h;
+       m=Integer.parseInt(M.getText());
+       double A[][]=new double[m][m];
+       double B[][]=new double[m][m];
+       double C[][]=new double[m][m];
+       double a[][]=new double[m][1];
+       double b[][]=new double[m][1];
+       double cc[][]=new double[m][1];
+       double X[]=new double[m];
+       double Y[]=new double[m];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                    A[i][j]=Double.parseDouble((String)MatrizA.getValueAt(i,j));
+            }
+        }
+        for(int i=0;i<m;i++){
+                    a[i][0]=Double.parseDouble((String)Vectorb.getValueAt(i,0));
+        }
+
+        s=0;
+  t=0;
+    while (A[s][t]==0){
+        s=s+1;
+        if(s>m-1){
+            if(t<m-1){
+            s=0;
+            t=t+1;}else{return cc;}
+        }}
+    for(int i=0;i<m;i++){
+    for(int j=0;j<m;j++){
+        if(i==0){
+        B[i][j]=A[s][j];
+        A[s][j]=A[i][j];
+        A[i][j]=B[i][j];
+    }else{B[i][j]=0;}}}
+    for(int i=0;i<m;i++){
+        if(i==0){
+    b[i][0]=a[s][0];
+    a[s][0]=a[i][0];}else{b[i][0]=0;}}
+     n=m;
+     for(int i=0;i<=m-1;i++){
+         if(i<m-1){
+         if(i==0){
+         for(int j=i+1;j<m;j++){
+             for(int k=t;k<=n;k++){
+                 if(k!=n){
+                B[j][i+k]=A[j][i+k]-((A[j][t]/A[i][t])*A[i][i+k]);}else{
+                b[j][0]=a[j][0]-((A[j][t]/A[i][t])*a[i][0]);}
+             }  
+         }         
+                 for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     A[q][r]=B[q][r];                
+                    a[q][0]=b[q][0];                
+                   }            
+    } 
+         }else if(i>0){
+                  n=n-1;
+                  c=t;
+                for(int j=i+1;j<m;j++){
+                   for(int k=t;k<=n;k++){
+                       if(A[i][i+c]!=0){
+                           if(k!=n){
+                      B[j][i+k]=A[j][i+k]-((A[j][c+i]/A[i][c+i])*A[i][i+k]);}else{
+                      b[j][0]=a[j][0]-((A[j][c+i]/A[i][c+i])*a[i][0]);}
+                       }else{     
+   s=i;
+   c=t;
+    while (A[s][i+c]==0){
+        s=s+1;
+        if(s>m-1){
+            if(c<m-1){
+            s=i;
+            c=c+1;
+            if(i+c==m){
+                for(int f=0;f<m;f++){
+        for(int g=0;g<=m;g++){
+            if(g!=m){
+       
+          C[f][g]=B[f][g];}else{
+       
+                cc[f][0]=b[f][0];  
+            }
+      }  
+        }
+                
+         for(int l=m-1;l>=0;l--){
+              h=0;
+              if(l==m-1){
+          if(B[l][l]==0){
+              if(b[l][0]!=0){return cc;}else{
+                      H=l-1;
+                      G=H;
+                  while(B[H][G]==0){X[G]=999999;G=G+1;if (G>m-1){if(b[H][0]!=0){
+                      return cc;}else{ 
+                  H=H-1;G=H;}}}
+                  if(G==l-1){
+                  if(B[l][l]!=0){
+                       if(b[l][0]!=0){
+                             X[l+1]=999999;
+                       }   
+                      }}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  h=h-(B[H][d]*X[d]);}
+                  X[G]=(b[H][0]+h)/B[H][G];
+                  }}else{
+           X[l]=b[l][0]/B[l][l];
+          }}else{ 
+                H=l;
+                  G=H;
+                  while(B[H][G]==0){X[G]=999999; G=G+1; if (G>m-1){H=H-1;G=H;}}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  h=h-(B[H][d]*X[d]);}
+                  X[G]=(b[H][0]+h)/B[H][G];
+                   
+              }
+          }
+        
+        return cc;
+            }}
+        }}
+       for(int d=i;d<m;d++){
+    for(int e=0;e<m;e++){
+        if(d==i){
+        B[d][e]=B[s][e];
+        A[s][e]=A[d][e];
+        A[d][e]=B[d][e];
+        B[s][e]=A[s][e];
+    }}}
+       b[i][0]=a[s][0];
+    a[s][0]=a[i][0];
+                       } 
+                       }             
+             }
+                 for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     A[q][r]=B[q][r];                
+                     a[q][0]=b[q][0];                 
+                   }            
+    }
+                }
+  }else{
+            for(int l=0;l<m;l++){
+        for(int j=0;j<=m;j++){  
+            if(j!=m){
+       
+                C[l][j]=B[l][j];
+          } else{
+       
+                cc[l][0]=b[l][0]; 
+            }
+      }  
+    }
+             
+          for(int l=i;l>=0;l--){
+              h=0;
+              if(l==m-1){
+          if(B[l][l]==0){
+              if(b[l][0]!=0){return cc;}else{
+                  H=l-1;
+                  G=H;
+                  while(B[H][G]==0){X[G]=999999;G=G+1;if (G>m-1){if(b[H][0]!=0){
+                      return cc;}else{ 
+                  H=H-1;G=H;}}}
+                  if(G==l-1){
+                  if(B[H][G]!=0){
+                       if(b[H][0]!=0){
+                             X[G+1]=999999;
+                       }   
+                      }}
+                  for(int d=G;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  h=h-(B[H][d]*X[d]);}
+                  X[G]=(b[H][0]+h)/B[H][G];
+                  }}else{
+           X[l]=b[l][0]/B[l][l];
+          }}else{ 
+                H=l;
+                  G=H;
+                  while(B[H][G]==0){X[G]=999999; G=G+1; if (G>m){H=H-1;G=H;}}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  h=h-(B[H][d]*X[d]);}
+                  X[G]=(b[H][0]+h)/B[H][G];
+              }
+          }
+          }}
+    
+   return cc;
+}
+public double[][] MatrizC1 (int m){
+      int s,t,n,c,H,G,f,g,u;
+       m=Integer.parseInt(M.getText());
+       double A[][]=new double[m][m];
+       double B[][]=new double[m][m];
+       double C1[][]=new double[m][m];
+       double D[][]=new double[m][m];
+       double a[][]=new double[m][1];
+       double b[][]=new double[m][1];
+       double o[][]=new double[m][1];
+       double cc1[][]=new double[m][1];
+       double X[]=new double[m];
+       double Y[]=new double[m];
+       double elem=0,eleme1=0,contador=0,h,contador1=0,V;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                try{
+                    elem=Double.parseDouble((String)MatrizA.getValueAt(i,j));
+                }catch(Exception e){
+                    contador=contador+1;
+                }
+            }
+        }
+        for(int i=0;i<m;i++){
+                try{
+                    eleme1=Double.parseDouble((String)Vectorb.getValueAt(i,0));
+                }catch(Exception e){
+                    contador1=contador1+1;
+            }
+        }
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                    A[i][j]=Double.parseDouble((String)MatrizA.getValueAt(i,j));
+            }
+        }
+        for(int i=0;i<m;i++){
+                    a[i][0]=Double.parseDouble((String)Vectorb.getValueAt(i,0));
+        }
+s=0;
+  t=0;
+    while (A[s][t]==0){
+        s=s+1;
+        if(s>m-1){
+            if(t<m-1){
+            s=0;
+            t=t+1;}else{Resultado1.append("La matriz que ingresaste es la matriz nula.");return D;}
+        }}
+    for(int i=0;i<m;i++){
+        if(i==0){
+    for(int j=0;j<m;j++){
+        B[i][j]=A[s][j];
+        A[s][j]=A[i][j];
+        A[i][j]=B[i][j];
+    } b[i][0]=a[s][0];
+    a[s][0]=a[i][0];
+    a[i][0]=b[i][0];}}
+    for(f=0;f<m;f++){
+        if(f==0){
+    for(g=t;g<m;g++){
+    C1[f][g]=B[f][g]*(1/B[f][t]);}
+    o[f][0]=b[f][0]*(1/B[f][t]);}}
+    n=m;
+     for(int i=0;i<=m-1;i++){
+         if(i<m-1){
+         if(i==0){
+         for(int j=i+1;j<m;j++){
+             for(int k=t;k<=n;k++){
+                 if(k<n){
+                B[j][i+k]=A[j][i+k]-((A[j][t]/A[i][t])*A[i][i+k]);}else{
+                b[j][0]=a[j][0]-((A[j][t]/A[i][t])*a[i][0]);     
+                 }}}         
+                 for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     A[q][r]=B[q][r];}
+                   a[q][0]=b[q][0];
+    }
+         }else if(i>0){
+                  n=n-1;
+                  c=t;
+                for(int j=i+1;j<m;j++){
+                   for(int k=t;k<=n;k++){
+                       if(A[i][i+c]!=0){
+                           if(k<n){
+                      B[j][i+k]=A[j][i+k]-((A[j][c+i]/A[i][c+i])*A[i][i+k]);}else{
+                           b[j][0]=a[j][0]-((A[j][c+i]/A[i][c+i])*a[i][0]);}                 
+                       }else{     
+   s=i;
+   c=t;
+    while (A[s][i+c]==0){
+        s=s+1;
+        if(s>m-1){
+            if(c<m-1){
+            s=i;
+            c=c+1;
+            if(i+c==m){
+     for(f=0;f<m;f++){
+        for(g=0;g<=m;g++){   
+          if(g!=m){
+               
+               D[f][g]=C1[f][g];
+          }else{
+              
+              cc1[f][0]=o[f][0];  
+            }
+      }  
+    } 
+     Resultado1.append("Solución"+"\n");
+      for(int l=m-1;l>=0;l--){
+              V=0;
+              if(l==m-1){
+          if(C1[l][l]==0){
+              if(o[l][0]!=0){Resultado1.setText("El sistema no tiene solución");return D;}else{
+                  H=l-1;
+                  G=H;
+                  while(C1[H][G]==0){X[G]=999999;G=G+1;if (G>m-1){if(o[H][0]!=0){
+                      Resultado1.setText("El sistema no tiene solución");return D;}else{ 
+                  H=H-1;G=H;}}}
+                  if(G==l-1){
+                  if(B[H][G]!=0){
+                       if(b[H][0]!=0){
+                             X[G+1]=999999;
+                       }   
+                      }}
+                  for(int d=G;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  V=V-(C1[H][d]*X[d]);}
+                  X[G]=o[H][0]+V;
+                  }}else{
+           X[l]=o[l][0];
+          }}else{ 
+                H=l;
+                  G=H;
+                  while(C1[H][G]==0){X[G]=999999; G=G+1; if (G>m-1){H=H-1;G=H;}}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  V=V-(C1[H][d]*X[d]);}
+                  X[G]=o[H][0]+V;
+              }
+          }
+      for(int r=0;r<m;r++){if(Y[r]==999999){
+             Resultado1.append("X["+r+"]"+"pertenece a los reales"+"\n");}}
+    for(int q=0;q<m;q++){
+        
+   Resultado1.append("X["+q+"]"+"="+X[q]+"\n");
+   }
+     return D;
+            }}
+        }}
+       for(int d=i;d<m;d++){
+    for(int e=0;e<m;e++){
+        if(d==i){
+        B[d][e]=B[s][e];
+        A[s][e]=A[d][e];
+        A[d][e]=B[d][e];
+        B[s][e]=A[s][e];
+    }}}
+        b[i][0]=a[s][0];
+        a[s][0]=a[i][0];
+                       } 
+                       }             
+             }
+                 for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     A[q][r]=B[q][r];}            
+                     a[q][0]=b[q][0];
+    }               
+   f=i;
+   g=0;
+    while(B[f][g]==0){g=g+1;}
+        if(B[f][g]!=0){
+            for(int k=g;k<m;k++){
+    C1[f][k]=B[f][k]*(1/B[f][g]);}
+        o[f][0]=b[f][0]*(1/B[f][g]);}
+                             }}else{if(i==m-1){   
+     
+  f=i;
+    g=0;
+    while(B[f][g]==0){g=g+1;
+    if(g>=m){o[f][0]=b[f][0];f=f-1; g=0;}
+    }if(B[f][g]!=0){
+            for(int k=g;k<m;k++){
+    C1[f][k]=B[f][k]*(1/B[f][g]);}
+    o[f][0]=b[f][0]*(1/B[f][g]);}
+                for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     B[q][r]=C1[q][r];}            
+                     b[q][0]=o[q][0];}
+    u=0;
+    for(int v=i;v>0;v--){
+    while(C1[v][u]==0){u=u+1;
+    if(u>=m){if(v>0){v=v-1;u=0;}}}
+    for(int k=v-1;k>=0;k--){
+        o[k][0]=o[k][0]-((C1[k][u]/C1[v][u])*o[v][0]);
+        for(int w=u;w<m;w++){
+            C1[k][w]=C1[k][w]-((B[k][u]/B[v][u])*C1[v][w]);}
+        }u=0;}
+        for(int l=0;l<m;l++){
+      for(int j=0;j<=m;j++){
+          if(j!=m){
+              
+              D[l][j]=C1[l][j];
+          }else{
+              
+              cc1[l][0]=o[l][0];
+          }
+      }  
+    }  
+        }
+      Resultado1.append("Solución"+"\n");
+      for(int l=i;l>=0;l--){
+              V=0;
+              if(l==m-1){
+          if(C1[l][l]==0){
+              if(o[l][0]!=0){Resultado1.setText("El sistema no tiene solución");return D;}else{
+                  H=l-1;
+                  G=H;
+                  while(C1[H][G]==0){X[G]=999999;G=G+1;if (G>m-1){if(o[H][0]!=0){
+                      Resultado1.setText("El sistema no tiene solución");return D;}else{ 
+                  H=H-1;G=H;}}}
+                  if(G==l-1){
+                  if(B[H][G]!=0){
+                       if(b[H][0]!=0){
+                             X[G+1]=999999;
+                       }   
+                      }}
+                  for(int d=G;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  V=V-(C1[H][d]*X[d]);}
+                  X[G]=o[H][0]+V;
+                  }}else{
+           X[l]=o[l][0];
+          }}else{ 
+                H=l;
+                  G=H;
+                  while(C1[H][G]==0){X[G]=999999; G=G+1; if (G>m){H=H-1;G=H;}}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  V=V-(C1[H][d]*X[d]);}
+                  X[G]=o[H][0]+V;
+              }
+          }
+         }}
+     for(int r=0;r<m;r++){if(Y[r]==999999){
+             Resultado1.append("X["+r+"]"+"pertenece a los reales"+"\n");}}
+    for(int q=0;q<m;q++){
+        
+   Resultado1.append("X["+q+"]"+"="+X[q]+"\n");
+   } 
+   return D;
+}
+public double[][] MatrizCC1 (int m){
+      int s,t,n,c,H,G,f,g,u;
+       m=Integer.parseInt(M.getText());
+       double A[][]=new double[m][m];
+       double B[][]=new double[m][m];
+       double C1[][]=new double[m][m];
+       double D[][]=new double[m][m];
+       double a[][]=new double[m][1];
+       double b[][]=new double[m][1];
+       double o[][]=new double[m][1];
+       double cc1[][]=new double[m][1];
+       double X[]=new double[m];
+       double Y[]=new double[m];
+       double V;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                    A[i][j]=Double.parseDouble((String)MatrizA.getValueAt(i,j));
+            }
+        }
+        for(int i=0;i<m;i++){
+                    a[i][0]=Double.parseDouble((String)Vectorb.getValueAt(i,0));
+        }
+
+ s=0;
+  t=0;
+    while (A[s][t]==0){
+        s=s+1;
+        if(s>m-1){
+            if(t<m-1){
+            s=0;
+            t=t+1;}else{return cc1;}
+        }}
+    for(int i=0;i<m;i++){
+        if(i==0){
+    for(int j=0;j<m;j++){
+        B[i][j]=A[s][j];
+        A[s][j]=A[i][j];
+        A[i][j]=B[i][j];
+    } b[i][0]=a[s][0];
+    a[s][0]=a[i][0];
+    a[i][0]=b[i][0];}}
+    for(f=0;f<m;f++){
+        if(f==0){
+    for(g=t;g<m;g++){
+    C1[f][g]=B[f][g]*(1/B[f][t]);}
+    o[f][0]=b[f][0]*(1/B[f][t]);}}
+    n=m;
+     for(int i=0;i<=m-1;i++){
+         if(i<m-1){
+         if(i==0){
+         for(int j=i+1;j<m;j++){
+             for(int k=t;k<=n;k++){
+                 if(k<n){
+                B[j][i+k]=A[j][i+k]-((A[j][t]/A[i][t])*A[i][i+k]);}else{
+                b[j][0]=a[j][0]-((A[j][t]/A[i][t])*a[i][0]);     
+                 }}}         
+                 for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     A[q][r]=B[q][r];}
+                   a[q][0]=b[q][0];
+    }
+         }else if(i>0){
+                  n=n-1;
+                  c=t;
+                for(int j=i+1;j<m;j++){
+                   for(int k=t;k<=n;k++){
+                       if(A[i][i+c]!=0){
+                           if(k<n){
+                      B[j][i+k]=A[j][i+k]-((A[j][c+i]/A[i][c+i])*A[i][i+k]);}else{
+                           b[j][0]=a[j][0]-((A[j][c+i]/A[i][c+i])*a[i][0]);}                 
+                       }else{     
+   s=i;
+   c=t;
+    while (A[s][i+c]==0){
+        s=s+1;
+        if(s>m-1){
+            if(c<m-1){
+            s=i;
+            c=c+1;
+            if(i+c==m){
+     for(f=0;f<m;f++){
+        for(g=0;g<=m;g++){   
+          if(g!=m){
+        
+               D[f][g]=C1[f][g];
+          }else{
+        
+              cc1[f][0]=o[f][0];  
+            }
+      }  
+    } 
+     
+      for(int l=m-1;l>=0;l--){
+              V=0;
+              if(l==m-1){
+          if(C1[l][l]==0){
+              if(o[l][0]!=0){return cc1;}else{
+                  H=l-1;
+                  G=H;
+                  while(C1[H][G]==0){X[G]=999999;G=G+1;if (G>m-1){if(o[H][0]!=0){
+                      return cc1;}else{ 
+                  H=H-1;G=H;}}}
+                  if(G==l-1){
+                  if(B[H][G]!=0){
+                       if(b[H][0]!=0){
+                             X[G+1]=999999;
+                       }   
+                      }}
+                  for(int d=G;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  V=V-(C1[H][d]*X[d]);}
+                  X[G]=o[H][0]+V;
+                  }}else{
+           X[l]=o[l][0];
+          }}else{ 
+                H=l;
+                  G=H;
+                  while(C1[H][G]==0){X[G]=999999; G=G+1; if (G>m-1){H=H-1;G=H;}}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  V=V-(C1[H][d]*X[d]);}
+                  X[G]=o[H][0]+V;
+              }
+          }
+     return cc1;
+            }}
+        }}
+       for(int d=i;d<m;d++){
+    for(int e=0;e<m;e++){
+        if(d==i){
+        B[d][e]=B[s][e];
+        A[s][e]=A[d][e];
+        A[d][e]=B[d][e];
+        B[s][e]=A[s][e];
+    }}}
+        b[i][0]=a[s][0];
+        a[s][0]=a[i][0];
+                       } 
+                       }             
+             }
+                 for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     A[q][r]=B[q][r];}            
+                     a[q][0]=b[q][0];
+    }               
+   f=i;
+   g=0;
+    while(B[f][g]==0){g=g+1;}
+        if(B[f][g]!=0){
+            for(int k=g;k<m;k++){
+    C1[f][k]=B[f][k]*(1/B[f][g]);}
+        o[f][0]=b[f][0]*(1/B[f][g]);}
+                             }}else{if(i==m-1){   
+     
+  f=i;
+    g=0;
+    while(B[f][g]==0){g=g+1;
+    if(g>=m){o[f][0]=b[f][0];f=f-1; g=0;}
+    }if(B[f][g]!=0){
+            for(int k=g;k<m;k++){
+    C1[f][k]=B[f][k]*(1/B[f][g]);}
+    o[f][0]=b[f][0]*(1/B[f][g]);}
+                for(int q=0;q<m;q++){
+                   for(int r=0;r<m;r++){
+                     B[q][r]=C1[q][r];}            
+                     b[q][0]=o[q][0];}
+    u=0;
+    for(int v=i;v>0;v--){
+    while(C1[v][u]==0){u=u+1;
+    if(u>=m){if(v>0){v=v-1;u=0;}}}
+    for(int k=v-1;k>=0;k--){
+        o[k][0]=o[k][0]-((C1[k][u]/C1[v][u])*o[v][0]);
+        for(int w=u;w<m;w++){
+            C1[k][w]=C1[k][w]-((B[k][u]/B[v][u])*C1[v][w]);}
+        }u=0;}
+        for(int l=0;l<m;l++){
+      for(int j=0;j<=m;j++){
+          if(j!=m){
+     
+              D[l][j]=C1[l][j];
+          }else{
+     
+              cc1[l][0]=o[l][0];
+          }
+      }  
+    }  
+        }
+      for(int l=i;l>=0;l--){
+              V=0;
+              if(l==m-1){
+          if(C1[l][l]==0){
+              if(o[l][0]!=0){return cc1;}else{
+                  H=l-1;
+                  G=H;
+                  while(C1[H][G]==0){X[G]=999999;G=G+1;if (G>m-1){if(o[H][0]!=0){
+                      return cc1;}else{ 
+                  H=H-1;G=H;}}}
+                  if(G==l-1){
+                  if(B[H][G]!=0){
+                       if(b[H][0]!=0){
+                             X[G+1]=999999;
+                       }   
+                      }}
+                  for(int d=G;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  V=V-(C1[H][d]*X[d]);}
+                  X[G]=o[H][0]+V;
+                  }}else{
+           X[l]=o[l][0];
+          }}else{ 
+                H=l;
+                  G=H;
+                  while(C1[H][G]==0){X[G]=999999; G=G+1; if (G>m){H=H-1;G=H;}}
+                  for(int d=G+1;d<m;d++){
+                      if(X[d]==999999){
+                          Y[d]=X[d];
+                          X[d]=1;}
+                  V=V-(C1[H][d]*X[d]);}
+                  X[G]=o[H][0]+V;
+              }
+          }
+         }}
+   return cc1;
+}
+}
+
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+
+public class Gauss extends javax.swing.JFrame{
+    sistemas_ecuaciones h;
+
+    public Gauss() {
+        initComponents();
+        h=new sistemas_ecuaciones();
+        h.recibeM(M);
+        h.recibeMatrizA(MatrizA);
+        h.recibeVectorb(Vectorb);
+        h.recibeResultado(Resultado);
+        h.recibeResultado1(Resultado1);
+        h.recibeMatrizC(MatrizC);
+        h.recibeMatrizC1(MatrizC1);
+        h.recibeVectorc(Vectorc);
+        h.recibeVectorc1(Vectorc1);
+        
+    }
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        M = new javax.swing.JTextField();
+        GenerarSistema = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        MatrizA = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Vectorb = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        MatrizC = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        Vectorc = new javax.swing.JTable();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        Resultado = new javax.swing.JTextArea();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        MatrizC1 = new javax.swing.JTable();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        Vectorc1 = new javax.swing.JTable();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        Resultado1 = new javax.swing.JTextArea();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        Aceptar = new javax.swing.JButton();
+        Detener = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setText("Número de Incognitas");
+
+        GenerarSistema.setText("Generar Sistema");
+        GenerarSistema.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GenerarSistemaActionPerformed(evt);
+            }
+        });
+
+        MatrizA.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(MatrizA);
+
+        jLabel2.setText("Matriz de Coeficientes");
+
+        Vectorb.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(Vectorb);
+
+        jLabel3.setText("Vector de Resultados");
+
+        jLabel4.setText("Matriz Aumentada Escalonada");
+
+        MatrizC.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane3.setViewportView(MatrizC);
+
+        Vectorc.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane4.setViewportView(Vectorc);
+
+        Resultado.setColumns(20);
+        Resultado.setRows(5);
+        jScrollPane5.setViewportView(Resultado);
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel5.setText("ELIMINACIÓN GAUSSIANA");
+
+        MatrizC1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane6.setViewportView(MatrizC1);
+
+        Vectorc1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane7.setViewportView(Vectorc1);
+
+        Resultado1.setColumns(20);
+        Resultado1.setRows(5);
+        jScrollPane8.setViewportView(Resultado1);
+
+        jLabel6.setText("Matriz Aumentada Escalonada Reducida");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel7.setText("GAUSS-JORDAN");
+
+        Aceptar.setText("Aceptar");
+        Aceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AceptarActionPerformed(evt);
+            }
+        });
+
+        Detener.setText("Stop");
+        Detener.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DetenerActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(627, 627, 627)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(M, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(GenerarSistema)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(77, 77, 77))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(187, 187, 187)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(104, 104, 104)
+                                .addComponent(Aceptar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(229, 229, 229)
+                                .addComponent(Detener)))))
+                .addGap(101, 101, 101))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(166, 166, 166)
+                .addComponent(jLabel4)
+                .addGap(516, 516, 516)
+                .addComponent(jLabel6)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(74, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(234, 234, 234)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(294, 294, 294))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(M, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(GenerarSistema))
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Aceptar)
+                        .addGap(57, 57, 57)
+                        .addComponent(Detener)
+                        .addGap(50, 50, 50)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel5))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(39, 39, 39)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>                        
+
+    private void GenerarSistemaActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        int m=0;
+        try{
+         m=Integer.parseInt(M.getText());
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(rootPane,"Tamaño de matriz no valido,Intenta de nuevo");
+        }
+        if(m<=1){
+            JOptionPane.showMessageDialog(rootPane,"Tamaño de matriz no valido,Intenta de nuevo");
+        }
+        double[][] A=new double[m][m];
+        double[][] b=new double[m][1];
+        double[][] C=new double[m][m];
+        double[][] C1=new double[m][m];
+        double[][] cc=new double[m][1];
+        double[][] cc1=new double[m][1];
+        A=this.MatrizNula(m);
+        b=this.MatrizNula1(m);
+        C=this.MatrizNula2(m);
+        C1=this.MatrizNula2_1(m);
+        cc=this.MatrizNula3(m);
+        cc1=this.MatrizNula3_1(m);
+        this.generarMatriz(A,cc,cc1,b,m);
+        this.generarMatriz1(C,C1,m);
+    }                                              
+
+    private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        h.start();
+    }                                       
+
+    private void DetenerActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        h.stop();
+    }                                       
+    public void generarMatriz(double A[][],double b[][],double cc[][],double cc1[][],int m){
+        DefaultTableModel model=(DefaultTableModel) MatrizA.getModel();
+        DefaultTableModel model1=(DefaultTableModel) Vectorb.getModel();
+        DefaultTableModel model4=(DefaultTableModel) Vectorc.getModel();
+        DefaultTableModel model4_1=(DefaultTableModel) Vectorc1.getModel();
+        model.setRowCount(m);
+        model.setColumnCount(m);
+        model1.setRowCount(m);
+        model1.setColumnCount(1);
+        model4.setRowCount(m);
+        model4.setColumnCount(1);
+        model4_1.setRowCount(m);
+        model4_1.setColumnCount(1);
+        
+        for(int i=0;i<m;i++){
+            Vectorb.setValueAt(b[i][0],i,0);
+            Vectorc.setValueAt(cc[i][0],i,0);
+            Vectorc1.setValueAt(cc1[i][0],i,0);
+            for(int j=0;j<m;j++){
+                MatrizA.setValueAt(A[i][j],i,j);
+        
+            }
+        }
+}
+public void generarMatriz1(double C[][],double C1[][],int m){
+        DefaultTableModel model3=(DefaultTableModel) MatrizC.getModel();
+        model3.setRowCount(m);
+        model3.setColumnCount(m);
+        DefaultTableModel model3_1=(DefaultTableModel) MatrizC1.getModel();
+        model3_1.setRowCount(m);
+        model3_1.setColumnCount(m);
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                MatrizC.setValueAt(C[i][j],i,j);
+                MatrizC1.setValueAt(C1[i][j],i,j);
+            }
+        }
+    }
+public void generarMatriz2(double cc[][],double cc1[][],int m){
+        DefaultTableModel model5=(DefaultTableModel) Vectorc.getModel();
+        model5.setRowCount(m);
+        model5.setColumnCount(1);
+        DefaultTableModel model5_1=(DefaultTableModel) Vectorc1.getModel();
+        model5_1.setRowCount(m);
+        model5_1.setColumnCount(1);
+        for(int i=0;i<m;i++){
+                Vectorc.setValueAt(cc[i][0],i,0);
+                Vectorc1.setValueAt(cc1[i][0],i,0);
+        }
+    }
+    public double[][] MatrizNula (int m){
+        double A[][]=new double[m][m];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                A[i][j]=0;
+            }
+        }
+        return A;
+    }
+        public double[][] MatrizNula1 (int m){
+        double b[][]=new double[m][1];
+        for(int i=0;i<m;i++){
+                b[i][0]=0;
+        }
+        return b;
+    }
+        public double[][] MatrizNula2 (int m){
+        double C[][]=new double[m][m];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                C[i][j]=0;
+        }}
+        return C;
+    }
+        public double[][] MatrizNula2_1(int m){
+        double C1[][]=new double[m][m];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<m;j++){
+                C1[i][j]=0;
+        }}
+        return C1;
+    }
+        public double[][] MatrizNula3 (int m){
+        double cc[][]=new double[m][1];
+        for(int i=0;i<m;i++){
+                cc[i][0]=0;
+        }
+        return cc;
+    }
+        public double[][] MatrizNula3_1 (int m){
+        double cc1[][]=new double[m][1];
+        for(int i=0;i<m;i++){
+                cc1[i][0]=0;
+        }
+        return cc1;
+        }
+       
+    public static void main(String args[]) {
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Gauss().setVisible(true);
+            }
+        });
+    }
